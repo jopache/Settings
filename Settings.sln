@@ -9,9 +9,30 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Settings.Common", "Settings
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Settings.DataAccess", "Settings.DataAccess\Settings.DataAccess.csproj", "{77BA3681-87F5-43E8-80BD-22FA24BACDE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Settings.Services", "Settings.Services\Settings.Services.csproj", "{6747102C-9EF3-4D36-ACF6-9E54CFB17DE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Settings.Services", "Settings.Services\Settings.Services.csproj", "{6747102C-9EF3-4D36-ACF6-9E54CFB17DE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Settings.Tests.Services", "Settings.Tests.Services\Settings.Tests.Services.csproj", "{947EA1B5-0EA8-48BF-BAD1-49E375370BC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Settings.Tests.Services", "Settings.Tests.Services\Settings.Tests.Services.csproj", "{947EA1B5-0EA8-48BF-BAD1-49E375370BC8}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Settings.Web", "Settings.Web\", "{19234F64-EE87-453C-9A10-CF1CF2195B81}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_61156"
+		Debug.AspNetCompiler.PhysicalPath = "Settings.Web\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_61156\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_61156"
+		Release.AspNetCompiler.PhysicalPath = "Settings.Web\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_61156\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "61156"
+		SlnRelativePath = "Settings.Web\"
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +60,10 @@ Global
 		{947EA1B5-0EA8-48BF-BAD1-49E375370BC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{947EA1B5-0EA8-48BF-BAD1-49E375370BC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{947EA1B5-0EA8-48BF-BAD1-49E375370BC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19234F64-EE87-453C-9A10-CF1CF2195B81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19234F64-EE87-453C-9A10-CF1CF2195B81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19234F64-EE87-453C-9A10-CF1CF2195B81}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{19234F64-EE87-453C-9A10-CF1CF2195B81}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Settings.Common.Interfaces;
 using Settings.DataAccess;
 using Settings.Services;
@@ -32,6 +33,26 @@ namespace Settings.Controllers.api
             }
             var appsTree = _hierarchyHelper.GetHierarchicalTree(applications.First());
             return Ok(appsTree);
+        }
+
+        [HttpGet("")]
+        public IActionResult GetAll()
+        {
+            var applications = _context
+                .Applications
+                .Include(x => x.Parent)
+                .Select(x => new
+                {
+                    Name = x.Name,
+                    Id = x.Id,
+                    ParentId = x.ParentId,
+                    ParentName = x.Parent.Name
+                })
+                .OrderBy(x => x.ParentId)
+                .ThenBy(x => x.Id)
+                .ToList();
+
+            return Ok(applications);
         }
     }
 }

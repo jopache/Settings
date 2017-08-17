@@ -1,0 +1,19 @@
+﻿span.tree-node-name {
+  padding-left: 5px;
+  cursor: pointer;
+  color: gray;
+  background-color: darkblue;
+
+  &:hover{
+    background-color: red;
+  }
+}
+
+ul.tree-node-list {
+  list-style-type: none;
+  padding-left: 30px;
+  margin-top: 5px;
+
+  li.tree-node-item {
+  }
+}

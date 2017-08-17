@@ -1,6 +1,11 @@
-﻿h2 {
-  //background-color: yellow;
-  a {
-    //background-color: red;
+﻿div.heading-selector {
+  display: inline-block;
+  border: 1px solid #000;
+
+  div.applications-list, div.environments-list {
+    display: inline-block;
+    border: 1px solid #000;
+    max-height: 300px;
+    overflow: scroll;
   }
 }

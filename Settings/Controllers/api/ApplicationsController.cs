@@ -41,18 +41,13 @@ namespace Settings.Controllers.api
             var applications = _context
                 .Applications
                 .Include(x => x.Parent)
-                .Select(x => new
-                {
-                    Name = x.Name,
-                    Id = x.Id,
-                    ParentId = x.ParentId,
-                    ParentName = x.Parent.Name
-                })
                 .OrderBy(x => x.ParentId)
                 .ThenBy(x => x.Id)
                 .ToList();
 
-            return Ok(applications);
+            var applicationsTree = _hierarchyHelper.GetHierarchicalTree(applications.First());
+
+            return Ok(applicationsTree);
         }
     }
 }

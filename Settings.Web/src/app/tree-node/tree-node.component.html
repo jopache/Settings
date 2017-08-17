@@ -1,0 +1,8 @@
+﻿<span class="tree-node-name" (click)="onSelect(node)">
+   {{node.name}}
+</span>
+<ul class="tree-node-list">
+     <li *ngFor="let childNode of node.children" class="tree-node-item">
+        <tree-node [node]="childNode"></tree-node>
+     </li>
+ </ul>

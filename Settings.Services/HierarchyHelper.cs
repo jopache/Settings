@@ -11,7 +11,11 @@ namespace Settings.Services
     public class HierarchyHelper
     {
 
-        //TODO: Good candidate for unit testing!
+        //TODO: Since I only intend on environments and applications to be hierarchical,
+        // would it be less messy to just write two distinct methods.  I like the reusability 
+        //of the method below using IHierarchicalMold<T> but seems kinda confusing
+
+
         //public HierarchyItem GetEnvironmentTree(Environment node, HierarchyItem parentNode)
         //{
         //    var rootNode = new HierarchyItem()
@@ -39,11 +43,12 @@ namespace Settings.Services
 
 
         //TODO: Good candidate for unit testing!
-        private HierarchicalModel GetHierarchicalTree<T>(IHierarchicalItem<T> node, HierarchicalModel parentNode) 
+        public HierarchicalModel GetHierarchicalTree<T>(IHierarchicalItem<T> node) 
             where T : IHierarchicalItem<T>
         {
             var rootNode = new HierarchicalModel()
             {
+                Id = node.Id,
                 LeftWeight = node.LeftWeight,
                 RightWeight = node.RightWeight,
                 Name = node.Name,
@@ -52,16 +57,10 @@ namespace Settings.Services
 
             foreach (var child in node.Children)
             {
-                rootNode.Children.Add(GetHierarchicalTree<T>(child, rootNode));
+                rootNode.Children.Add(GetHierarchicalTree<T>(child));
             }
 
             return rootNode;
-        }
-
-        public HierarchicalModel GetHierarchicalTree<T>(IHierarchicalItem<T> node) 
-            where T : IHierarchicalItem<T>
-        {
-            return GetHierarchicalTree<T>(node, null);
         }
     }
 }

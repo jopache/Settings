@@ -58,7 +58,8 @@ namespace Settings
                         .AllowAnyHeader()
                         .AllowCredentials());
             });
-            // Add framework services.
+
+
             services.AddMvc();
 
             services.AddDbContext<SettingsDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -87,7 +88,7 @@ namespace Settings
             }
 
             app.UseStaticFiles();
-
+            app.UseCors("CorsPolicy");
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

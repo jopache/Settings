@@ -1,11 +1,21 @@
-﻿<h1>Welcome to Settings Manager</h1>
+﻿<div class="container">
+
+    <h1>Not Settings Manager</h1>
+
+</div>
+
 
 <div class="heading-selector">
-  <div class="applications-list">
-    <tree-node [node]="node"></tree-node>
+  <div class="applications-list panel panel-primary">
+    <div class="panel-heading">Applications</div>
+    <div class="panel-body">
+      <tree-node [node]="rootApplication"></tree-node>
+    </div>
   </div>
-  <div class="environments-list">
-    <tree-node [node]="node"></tree-node>
+  <div class="environments-list panel panel-primary">
+    <div class="panel-heading">Environments</div>
+    <div class="panel-body">
+     <tree-node [node]="rootEnvironment"></tree-node>
   </div>
 
 </div>

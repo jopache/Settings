@@ -37,21 +37,17 @@ namespace Settings.Controllers.api
         [HttpGet("")]
         public IActionResult GetAll()
         {
-            var applications = _context
+            var environments = _context
                 .Environments
                 .Include(x => x.Parent)
-                .Select(x => new
-                {
-                    Name = x.Name,
-                    Id = x.Id,
-                    ParentId = x.ParentId,
-                    ParentName = x.Parent.Name
-                })
                 .OrderBy(x => x.ParentId)
                 .ThenBy(x => x.Id)
                 .ToList();
 
-            return Ok(applications);
+            var environmentsTree = _hierarchyHelper
+                .GetHierarchicalTree(environments.First());
+
+            return Ok(environmentsTree);
         }
     }
 }

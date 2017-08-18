@@ -1,5 +1,5 @@
 ﻿span.tree-node-name {
-  padding-left: 5px;
+  padding: 5px;
   cursor: pointer;
   color: gray;
   background-color: darkblue;
@@ -15,5 +15,6 @@ ul.tree-node-list {
   margin-top: 5px;
 
   li.tree-node-item {
+    padding-top: 4px;
   }
 }

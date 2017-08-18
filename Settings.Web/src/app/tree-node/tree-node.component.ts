@@ -12,7 +12,7 @@ export class TreeNodeComponent implements OnInit {
     constructor() { }
 
   onSelect(treeNode: TreeNode): void {
-    alert("selected: " + treeNode.name);
+    console.log(treeNode);
   }
 
   ngOnInit() {

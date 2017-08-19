@@ -15,17 +15,11 @@
       </div>
     </div>
 
+    <app-settings-view *ngIf="selectedEnvironmentModel.node"
+                       [selectedApplication]="selectedApplicationModel.node"
+                       [selectedEnvironment]="selectedEnvironmentModel.node"></app-settings-view>
+
   </div>
-  <div>
-    <span *ngIf="selectedApplicationModel.node"> Application: {{selectedApplicationModel.node.name}}  </span>  ---
-    <span *ngIf="selectedEnvironmentModel.node"> Environment: {{selectedEnvironmentModel.node.name}} </span>
-  </div>
-
-  <app-settings-view *ngIf="selectedEnvironmentModel.node"
-                     [selectedApplication]="selectedApplicationModel.node"
-                     [selectedEnvironment]="selectedEnvironmentModel.node" ></app-settings-view>
-
-
 </div>
 
 

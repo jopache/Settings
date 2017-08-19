@@ -1,5 +1,15 @@
-﻿<ul>
-  <li *ngFor="let setting of settings">
-    <span> {{ setting.key }} - {{setting.value}} </span>
-  </li>
-</ul>
+﻿<div class="settings-list panel panel-primary">
+  <div class="panel-heading">
+    <div>
+      Application: {{ selectedApplication.name }} --
+      Environment: {{ selectedEnvironment.name }}
+    </div>
+  </div>
+  <div class="panel-body">
+    <ul>
+      <li *ngFor="let setting of settings">
+        <span> {{ setting.key }} - {{setting.value}} </span>
+      </li>
+    </ul>
+  </div>
+</div>

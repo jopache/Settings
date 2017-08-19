@@ -2,23 +2,21 @@
 import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
-import { TreeNode } from '../treeNode';
 
 @Injectable()
-export class ApplicationService {
+export class SettingsService {
 
   private headers = new Headers({ 'Content-Type': 'application/json' });
-  private getAllApplicationsUrl = 'http://localhost:59579/api/applications/';
+  private getSettingsBaseUrl = 'http://localhost:59579/api/settings/';
 
   constructor(private http: Http) { }
 
-  getRootApplication(): Promise<TreeNode> {
-
+  getSettings(appName: string, envName: string): Promise<any> {
     return this.http
-      .get(this.getAllApplicationsUrl)
+      .get(this.getSettingsBaseUrl + appName + '/' + envName + '/')
       .toPromise()
       .then(response => {
-        return response.json() as TreeNode;
+        return response.json();
       })
       .catch((error: any ): Promise<any> => {
         return Promise.reject("fail");

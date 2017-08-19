@@ -1,23 +1,33 @@
 ﻿<div class="container">
 
-    <h1>Not Settings Manager</h1>
-
-</div>
-
-
-<div class="heading-selector">
-  <div class="applications-list panel panel-primary">
-    <div class="panel-heading">Applications</div>
-    <div class="panel-body">
-      <tree-node [node]="rootApplication"></tree-node>
+  <h1>Settings</h1>
+  <div class="heading-selector">
+    <div class="applications-list panel panel-primary">
+      <div class="panel-heading">Applications</div>
+      <div class="panel-body">
+        <tree-node [node]="rootApplication" [selectedNode]="selectedApplicationModel" *ngIf="rootApplication"></tree-node>
+      </div>
     </div>
+    <div class="environments-list panel panel-primary">
+      <div class="panel-heading">Environments</div>
+      <div class="panel-body">
+        <tree-node [node]="rootEnvironment" [selectedNode]="selectedEnvironmentModel" *ngIf="rootEnvironment"></tree-node>
+      </div>
+    </div>
+
   </div>
-  <div class="environments-list panel panel-primary">
-    <div class="panel-heading">Environments</div>
-    <div class="panel-body">
-     <tree-node [node]="rootEnvironment"></tree-node>
+  <div>
+    <span *ngIf="selectedApplicationModel.node"> Application: {{selectedApplicationModel.node.name}}  </span>  ---
+    <span *ngIf="selectedEnvironmentModel.node"> Environment: {{selectedEnvironmentModel.node.name}} </span>
   </div>
 
+  <app-settings-view *ngIf="selectedEnvironmentModel.node"
+                     [selectedApplication]="selectedApplicationModel.node"
+                     [selectedEnvironment]="selectedEnvironmentModel.node" ></app-settings-view>
+
+
 </div>
+
+
 
 

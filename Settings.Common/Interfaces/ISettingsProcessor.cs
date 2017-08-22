@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
-using Settings.Common.Domain;
+using Settings.Common.Models;
 
 namespace Settings.Common.Interfaces
 {
     public interface ISettingsProcessor
     {
-        ApplicationEnvironmentSettings CalculateEnvironmentSettings(IEnumerable<ApplicationEnvironmentSettings> appEnvSettings,
+        IEnumerable<SettingReadModel> CalculateEnvironmentSettings(IEnumerable<ApplicationEnvironmentSettings> appEnvSettings,
             string applicationName, string environmentName);
     }
 }

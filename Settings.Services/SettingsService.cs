@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Settings.Common.Domain;
 using Settings.Common.Interfaces;
+using Settings.Common.Models;
 
 namespace Settings.Services
 {
@@ -14,7 +14,7 @@ namespace Settings.Services
             _context = context;
             _settingsProcessor = settingsProcessor;
         }
-        public ApplicationEnvironmentSettings GetApplicationEnvironmentSettings(string applicationName, 
+        public IEnumerable<SettingReadModel> GetApplicationEnvironmentSettings(string applicationName, 
             string environmentName)
         {
             var requestedApplication = _context.Applications
@@ -36,11 +36,20 @@ namespace Settings.Services
                                       where app.LeftWeight <= requestedApplication.LeftWeight && app.RightWeight >= requestedApplication.RightWeight
                                       && env.LeftWeight <= requestedEnvironment.LeftWeight && env.RightWeight >= requestedEnvironment.RightWeight
                                       orderby app.LeftWeight, env.LeftWeight
-                                      select new ApplicationEnvironmentSettings(setting.Contents, applicationName, environmentName)).ToList();
+                                      select new ApplicationEnvironmentSettings
+                                      {
+                                          ApplicationId = app.Id,
+                                          ApplicationLeftWeight = app.LeftWeight,
+                                          ApplicationName = app.Name,
+                                          EnvironmentId = env.Id,
+                                          EnvironmentLeftWeight = env.LeftWeight,
+                                          EnvironmentName = env.Name,
+                                          ConfigurationJson = setting.Contents
+                                      }).ToList();
 
             if (!appEnvSettingsList.Any())
             {
-                return null;
+                return Enumerable.Empty<SettingReadModel>();
             }
 
             return _settingsProcessor.CalculateEnvironmentSettings(appEnvSettingsList, applicationName, environmentName);

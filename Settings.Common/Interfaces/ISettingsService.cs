@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json.Linq;
-using Settings.Common.Domain;
+﻿using System.Collections.Generic;
+using Settings.Common.Models;
 
 namespace Settings.Common.Interfaces
 {
     public interface ISettingsService
     {
-        ApplicationEnvironmentSettings GetApplicationEnvironmentSettings(string applicationName, 
+        IEnumerable<SettingReadModel> GetApplicationEnvironmentSettings(string applicationName, 
             string environmentName);
     }
 }

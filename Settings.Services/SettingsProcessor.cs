@@ -1,28 +1,29 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
-using Settings.Common.Domain;
 using Settings.Common.Interfaces;
+using Settings.Common.Models;
 
 namespace Settings.Services
 {
     public class SettingsProcessor : ISettingsProcessor
     {
-        public ApplicationEnvironmentSettings CalculateEnvironmentSettings(IEnumerable<ApplicationEnvironmentSettings> appEnvSettings,
+        public IEnumerable<SettingReadModel> CalculateEnvironmentSettings(IEnumerable<ApplicationEnvironmentSettings> appEnvSettings,
             string applicationName, string environmentName)
         {
             JObject settings = null;
+            //TODO: At this point we could just deal with Dictionary objects rather than parsing
+            //the jobject to strongly typed and back, but this is simpler and already done for now
             foreach (var appEnvSetting in appEnvSettings)
             {
-                var configurationJson = appEnvSetting.ConfigurationJson;
                 if (settings == null)
                 {
-                    settings = JObject.Parse(configurationJson);
+                    settings = ProjectConfigurationIntoSettingReadModel(appEnvSetting);
                     continue;
                 }
 
-                var settingsToMergeIn = JObject.Parse(configurationJson);
+                var settingsToMergeIn = ProjectConfigurationIntoSettingReadModel(appEnvSetting);
 
                 if (settingsToMergeIn != null)
                 {
@@ -34,10 +35,39 @@ namespace Settings.Services
             }
             if (settings == null)
             {
-                return null;
+                return Enumerable.Empty<SettingReadModel>();
             }
-            return new ApplicationEnvironmentSettings(settings.ToString(),
-                applicationName, environmentName);
+
+            var settingsList = new List<SettingReadModel>();
+            foreach (var token in settings)
+            {
+                settingsList.Add(token.Value.ToObject<SettingReadModel>());
+            }
+            return settingsList;
+        }
+
+        private JObject ProjectConfigurationIntoSettingReadModel(ApplicationEnvironmentSettings settings)
+        {
+            var source = JObject.Parse(settings.ConfigurationJson);
+            var projected = new JObject();
+
+            foreach (var x in source)
+            {
+                //TODO: Can centralize this logic using automapper
+                var settingReadModel = new SettingReadModel
+                {
+                    ApplicationId = settings.ApplicationId,
+                    ApplicationName = settings.ApplicationName,
+                    ApplicationLeftWeight = settings.ApplicationLeftWeight,
+                    EnvironmentId = settings.EnvironmentId,
+                    EnvironmentName = settings.EnvironmentName,
+                    EnvironmentLeftWeight = settings.EnvironmentLeftWeight,
+                    Name = x.Key,
+                    Value = x.Value.ToString()
+                };
+                projected.Add(x.Key, JObject.FromObject(settingReadModel));
+            }
+            return projected;
         }
 
         //TODO: Confusion with generics here. need to implement on add

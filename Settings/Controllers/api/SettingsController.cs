@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Serilog.Core;
 using Settings.Common.Interfaces;
 
@@ -25,7 +26,8 @@ namespace Settings.Controllers.api
                 return NotFound();
             }
 
-            return Ok(runningSettings.ConfigurationJson);
+          
+            return Ok(runningSettings.ToList().OrderBy(x => x.ApplicationName));
         }
     }
 }

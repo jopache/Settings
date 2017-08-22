@@ -1,9 +1,37 @@
 ﻿div.settings-list {
   min-height: 100px;
-  min-width: 300px;
-  max-width: 500px;
+  width: 1000px;
 
   div.panel-heading {
     text-align: center;
+  }
+
+  ul {
+    list-style-type: none;
+
+    li {
+      padding: 10px;
+      border: 1px solid #000;
+    }
+
+    li:nth-child(odd) {
+      background: #CCC
+    }
+  }
+
+  div.setting-source-data, div.setting-name, div.setting-value {
+    display: inline-block;
+  }
+
+  div.setting-source-data {
+    width: 200px;
+  }
+
+  div.setting-name {
+    width: 200px;
+  }
+
+  div.setting-value {
+    width: 400px;
   }
 }

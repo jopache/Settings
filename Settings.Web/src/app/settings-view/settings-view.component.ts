@@ -28,14 +28,15 @@ export class SettingsViewComponent implements OnChanges {
 
       this.settingsService.getSettings(appName, envName)
         .then(settings => {
-          //Should probably return as an array from backend? 
-          //should probably type this? this is getting hacky
-          var keys = Object.keys(settings);
-          var arr = [];
-          for (let theKey of keys) {
-            arr.push({ key : theKey, value : settings[theKey]});
+          for (var setting of settings) {
+            setting.sourceData = null;
+
+            if (this.selectedApplication.id != setting.applicationId ||
+              this.selectedEnvironment.id != setting.environmentId) {
+              setting.sourceData = setting.applicationName + " - " + setting.environmentName;
+            }
           }
-          this.settings = arr;
+          this.settings = settings;
         });
     }
 

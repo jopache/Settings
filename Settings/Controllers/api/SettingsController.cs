@@ -26,8 +26,13 @@ namespace Settings.Controllers.api
                 return NotFound();
             }
 
-          
-            return Ok(runningSettings.ToList().OrderBy(x => x.ApplicationName));
+            var result = runningSettings
+                .ToList()
+                .OrderBy(x => x.ApplicationLeftWeight)
+                .ThenBy(x => x.EnvironmentLeftWeight)
+                .ThenBy(x => x.Name);
+
+            return Ok(result);
         }
     }
 }

@@ -6,13 +6,13 @@
     </div>
   </div>
   <div class="panel-body">
-    <ul>
+    <ul *ngIf="settings">
       <li class="settings-list-item">
         <div class="setting-name">Name</div>
         <div class="setting-value">Value</div>
         <div class="setting-source-data">Inherited from</div>
       </li>
-      <li *ngFor="let setting of settings" class="settings-list-item">
+      <li *ngFor="let setting of settings"  class="settings-list-item">
         <div>
           <div class="setting-name">{{ setting.name }}</div>
           <div class="setting-value">{{setting.value}}</div>

@@ -16,7 +16,7 @@ export class TreeNodeComponent implements OnInit {
   onSelect(treeNode: TreeNode): void {
     //i should probably be doing this through a service
     //and maybe using an observable?  Not sure of
-    //the best approach here. 
+    //the best approach here.
     this.selectedNode.node = treeNode;
   }
 

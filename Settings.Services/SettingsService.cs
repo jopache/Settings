@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
+using Settings.Common.Domain;
 using Settings.Common.Interfaces;
 using Settings.Common.Models;
 
@@ -35,7 +38,8 @@ namespace Settings.Services
             var appEnvSettingsList = (from app in _context.Applications
                                       join setting in _context.Settings on app.Id equals setting.ApplicationId
                                       join env in _context.Environments on setting.EnvironmentId equals env.Id
-                                      where app.LeftWeight <= requestedApplication.LeftWeight && app.RightWeight >= requestedApplication.RightWeight
+                                      where app.LeftWeight <= requestedApplication.LeftWeight 
+                                        && app.RightWeight >= requestedApplication.RightWeight
                                       && env.LeftWeight <= requestedEnvironment.LeftWeight && env.RightWeight >= requestedEnvironment.RightWeight
                                       orderby app.LeftWeight, env.LeftWeight
                                       select new ApplicationEnvironmentSettings
@@ -55,6 +59,40 @@ namespace Settings.Services
             }
 
             return _settingsProcessor.CalculateEnvironmentSettings(appEnvSettingsList, applicationName, environmentName);
+        }
+
+        public void CreateOrEditSettings(string applicationName, string environmentName, SettingsWriteModel writeModel)
+        {
+            var app = _context.Applications.FirstOrDefault(x => x.Name == applicationName);
+            var env = _context.Environments.FirstOrDefault(x => x.Name == environmentName);
+
+            var settingsEntry = _context.Settings.FirstOrDefault(x => x.EnvironmentId == env.Id
+                                                                 && x.ApplicationId == app.Id);
+
+            if (settingsEntry == null)
+            {
+                settingsEntry = new Setting
+                {
+                    EnvironmentId = env.Id,
+                    ApplicationId = app.Id,
+                    Contents = "{}"
+                };
+            }
+
+            var settingsObj = JObject.Parse(settingsEntry.Contents);
+
+            foreach (var settingEntry in writeModel.SettingsToUpdate)
+            {
+                settingsObj[settingEntry.Name] = settingEntry.Value;
+            }
+            settingsEntry.Contents = settingsObj.ToString();
+            //todo: This is ugly, revise
+            if (settingsEntry.Id == 0)
+            {
+                _context.AddEntity(settingsEntry);
+            }
+            _context.SaveChanges();
+
         }
     }
 }

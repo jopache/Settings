@@ -2,6 +2,7 @@
 import { TreeNode } from './treenode'
 import { ApplicationService } from './services/application.service';
 import { EnvironmentService } from './services/environment.service';
+import {SettingsService} from "./services/settings.service";
 
 //remove hard coded data after fetching from service
 
@@ -12,7 +13,7 @@ import { EnvironmentService } from './services/environment.service';
 })
 export class AppComponent implements OnInit {
   constructor(private applicationService: ApplicationService,
-    private environmentService: EnvironmentService) { }
+    private environmentService: EnvironmentService, private settingsService: SettingsService) { }
 
 
   ngOnInit(): void {
@@ -35,6 +36,6 @@ export class AppComponent implements OnInit {
   rootApplication: TreeNode = null;
   rootEnvironment: TreeNode = null;
 
-  selectedApplicationModel: { node: TreeNode } = { node: null };;
-  selectedEnvironmentModel: { node: TreeNode } = { node: null };;
+  selectedApplicationModel: { node: TreeNode } = { node: null };
+  selectedEnvironmentModel: { node: TreeNode } = { node: null };
 }

@@ -1,0 +1,17 @@
+<form *ngIf="editSettingModel">
+  <div class="edit-name">
+    <label for="name"> Name: </label>
+    <input [(ngModel)]="editSettingModel.setting.name" id="name" name="name" />
+  </div>
+
+  <div class="edit-value">
+    <label for="value"> Value: </label>
+    <textarea id="value" [(ngModel)]="editSettingModel.setting.value" name="name"> </textarea>
+  </div>
+
+  <div class="edit-submit">
+    <button (click)="addEdit()">
+      Add/Edit
+    </button>
+  </div>
+</form>

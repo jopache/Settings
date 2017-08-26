@@ -7,5 +7,7 @@ namespace Settings.Common.Interfaces
     {
         IEnumerable<SettingReadModel> GetApplicationEnvironmentSettings(string applicationName, 
             string environmentName);
+
+        void CreateOrEditSettings(string applicationName, string environmentName, SettingsWriteModel writeModel);
     }
 }

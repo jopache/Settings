@@ -10,10 +10,10 @@ namespace Settings.DataAccess
         IQueryable<Setting> ISettingsDbContext.Settings => Settings;
         IQueryable<Application> ISettingsDbContext.Applications => Applications;
         IQueryable<Environment> ISettingsDbContext.Environments => Environments;
+        
 
         public SettingsDbContext(DbContextOptions<SettingsDbContext> options) : base(options)
-        {
-        }
+        {}
 
         public DbSet<Setting> Settings { get; set; }
 
@@ -31,6 +31,12 @@ namespace Settings.DataAccess
             modelBuilder.Entity<Environment>()
                 .HasOne<Environment>(x => x.Parent)
                 .WithMany(x => x.Children);
+        }
+
+        //todo: allowing obj seems kinda dirty here
+        public void AddEntity(object obj)
+        {
+            this.Add(obj);
         }
     }
 }

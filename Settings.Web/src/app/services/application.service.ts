@@ -2,7 +2,7 @@
 import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
-import { TreeNode } from '../treeNode';
+import { TreeNode } from '../treenode';
 
 @Injectable()
 export class ApplicationService {

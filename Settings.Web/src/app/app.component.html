@@ -15,9 +15,10 @@
       </div>
     </div>
 
-    <app-settings-view *ngIf="selectedEnvironmentModel.node"
+    <app-settings-view *ngIf="selectedEnvironmentModel.node && selectedApplicationModel.node"
                        [selectedApplication]="selectedApplicationModel.node"
                        [selectedEnvironment]="selectedEnvironmentModel.node"></app-settings-view>
+    <app-crud-setting></app-crud-setting>
 
   </div>
 </div>

@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { TreeNode } from '../treeNode';
+import { TreeNode } from '../treenode';
 import { SettingsService } from '../services/settings.service';
 
 @Component({
@@ -20,8 +20,6 @@ export class SettingsViewComponent implements OnChanges {
   constructor(private settingsService: SettingsService) { }
 
   updateSettings(): void {
-    console.log(this.selectedApplication);
-    console.log(this.selectedEnvironment);
     if (this.selectedApplication && this.selectedEnvironment) {
       let appName = this.selectedApplication.name;
       let envName = this.selectedEnvironment.name;
@@ -41,7 +39,7 @@ export class SettingsViewComponent implements OnChanges {
     }
 
   }
-    
+
 }
 
 

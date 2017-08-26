@@ -10,5 +10,9 @@ namespace Settings.Common.Interfaces
         IQueryable<Application> Applications { get; }
 
         IQueryable<Environment> Environments { get; }
+
+        int SaveChanges();
+
+        void AddEntity(object obj);
     }
 }

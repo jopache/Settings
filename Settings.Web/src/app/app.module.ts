@@ -10,13 +10,15 @@ import { SettingsViewComponent } from './settings-view/settings-view.component';
 import { ApplicationService } from './services/application.service';
 import { EnvironmentService } from './services/environment.service';
 import { SettingsService } from './services/settings.service';
+import { CrudSettingComponent } from './crud-setting/crud-setting.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     TreeNodeComponent,
-    SettingsViewComponent
+    SettingsViewComponent,
+    CrudSettingComponent
   ],
   imports: [
     BrowserModule,

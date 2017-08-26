@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Serilog.Core;
 using Settings.Common.Interfaces;
+using Settings.Common.Models;
 
 namespace Settings.Controllers.api
 {
@@ -25,7 +28,20 @@ namespace Settings.Controllers.api
                 return NotFound();
             }
 
-            return Ok(runningSettings.ConfigurationJson);
+            var result = runningSettings
+                .ToList()
+                .OrderBy(x => x.ApplicationLeftWeight)
+                .ThenBy(x => x.EnvironmentLeftWeight)
+                .ThenBy(x => x.Name);
+
+            return Ok(result);
+        }
+
+        [HttpPost("create-update/{applicationName}/{environmentName}")]
+        public IActionResult CreateOrUpdate(string applicationName, string environmentName, [FromBody] SettingsWriteModel settings)
+        {
+            _settingsService.CreateOrEditSettings(applicationName, environmentName, settings);
+            return Ok();
         }
     }
 }

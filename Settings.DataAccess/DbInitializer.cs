@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Settings.Common.Domain;
 
 namespace Settings.DataAccess
@@ -21,43 +22,43 @@ namespace Settings.DataAccess
                      RightWeight = 10
                  };
 
-                         var appLevel1 = new Application
+                         var app_global_engineering = new Application
                          {
-                             Name = "level1",
+                             Name = "Engineering",
                              LeftWeight = 2,
                              RightWeight = 9,
                              Parent = appGlobal
                          };
 
-                                var appLevel2a = new Application
+                                var app_global_engineering_userportal = new Application
                                 {
-                                    Name = "level2a",
+                                    Name = "UserPortal",
                                     LeftWeight = 3,
                                     RightWeight = 6,
-                                    Parent = appLevel1
+                                    Parent = app_global_engineering
                                 };
 
-                                         var appLevel2aNested1 = new Application
+                                         var app_global_engineering_userportal_dataintegration = new Application
                                          {
-                                             Name = "Level2aNested1",
+                                             Name = "DataIntegration",
                                              LeftWeight = 4,
                                              RightWeight = 5,
-                                             Parent = appLevel2a
+                                             Parent = app_global_engineering_userportal
                                          };
 
-                                var appLevel2b = new Application
+                                var app_global_engineering_paymentsapi = new Application
                                 {
-                                    Name = "Level2b",
+                                    Name = "PaymentsApi",
                                     LeftWeight = 7,
                                     RightWeight = 8,
-                                    Parent = appLevel1
+                                    Parent = app_global_engineering
                                 };
 
                 context.Applications.Add(appGlobal);
-                context.Applications.Add(appLevel1);
-                context.Applications.Add(appLevel2a);
-                context.Applications.Add(appLevel2aNested1);
-                context.Applications.Add(appLevel2b);
+                context.Applications.Add(app_global_engineering);
+                context.Applications.Add(app_global_engineering_userportal);
+                context.Applications.Add(app_global_engineering_userportal_dataintegration);
+                context.Applications.Add(app_global_engineering_paymentsapi);
                 context.SaveChanges();
 
                 
@@ -67,7 +68,7 @@ namespace Settings.DataAccess
                 {
                     Name = "All",
                     LeftWeight = 1,
-                    RightWeight = 8
+                    RightWeight = 10
                 };
 
                         var envProduction = new Environment
@@ -93,52 +94,113 @@ namespace Settings.DataAccess
                                      RightWeight = 6,
                                      Parent = envDevelopment
                                  };
+                        var envStaging = new Environment
+                        {
+                            Name = "Staging",
+                            LeftWeight = 8,
+                            RightWeight = 9,
+                            Parent = envAll
+                        };
 
                 context.Environments.Add(envAll);
                 context.Environments.Add(envProduction);
                 context.Environments.Add(envDevelopment);
                 context.Environments.Add(envDevelopmentJose);
+                context.Environments.Add(envStaging);
 
                 context.SaveChanges();
 
 
-                var configStringGlobalEnvAll = JsonConvert.SerializeObject(new
+                var config_global_all = JsonConvert.SerializeObject(new
                 {
                     CompanyName = "TestCompanyName",
                     Website = "www.testcompanyname.com",
-                    GlobalTimeout = 60                    
+                    ContactNumber = "1-800-222-2222"
                 });
-
-                    var configStringLevel1EnvAll = JsonConvert.SerializeObject(new
-                    {
-                        DbName = "DbNameLevel1EnvAll",
-                        Website = "level1.testcompanyname.com",
-                        GlobalTimeout = 20,
-                        Roles = new Newtonsoft.Json.Linq.JArray("foo")
-                    });
-
-                    var configStringLevel1EnvDevelopment = JsonConvert.SerializeObject(new
-                    {
-                        DbName = "DbNameLevel1EnvDevelopment",
-                        Website = "the.dev.url",
-                        Roles = new Newtonsoft.Json.Linq.JArray("bar")
-                    });
-
-                    var configStringLevel1EnvDevelopmentJose = JsonConvert.SerializeObject(new
-                    {
-                        Website = "localhost"
-                    });
-
-                        var configStringLevel2aNested1EnvDevelopmentJose = JsonConvert.SerializeObject(new
+                
+                   var config_userportal_all = JsonConvert.SerializeObject(new {
+                       PasswordExpirationDays = 90,                         //add
+                       ContactNumber = "1-800-222-1111",                    //override
+                       AdminRoles = new JArray("LocalAdmin", "SuperAdmin")  //add
+                   });
+                
+                       var config_userportal_production = JsonConvert.SerializeObject(new
+                       {
+                           DbConnection = "production.dbserver;database=userportal",    //add
+                           Website = "userportal.testcompanyname.com",                  //override
+                       });
+                
+                       var config_userportal_development = JsonConvert.SerializeObject(new
+                       {
+                           DbConnection = "development.dbserver;database=userportal",   //add
+                           Website = "development.userportal.testcompanyname.com"       //override
+                       });
+                
+                            var config_userportal_developmentJose = JsonConvert.SerializeObject(new
+                           {
+                               DbConnection = "localhost;database=userportal",  //add
+                               Website = "localhost:8080",                      //override
+                               InDevelopmentFeatureConfig = "test_value"        //add
+                           });
+                
+                        var config_userportal_stage = JsonConvert.SerializeObject(new
                         {
-                            GlobalTimeout = 10
+                            DbConnection = "stage.dbserver;database=userportal", //add
+                            Website = "stage.userportal.testcompanyname.com"     //override
+                        });
+                
+                        //Note that this is same environment as above,
+                        //but now data integration application
+                        var config_userportal__dataintegration_development = 
+                        JsonConvert.SerializeObject(new
+                        {
+                            MessageQueueConnection = "RabbitMq.development"      //add
                         });
 
-                context.Settings.Add(new Setting { Application = appGlobal, Environment = envAll, Contents = configStringGlobalEnvAll});
-                context.Settings.Add(new Setting { Application = appLevel1, Environment = envAll, Contents = configStringLevel1EnvAll });
-                context.Settings.Add(new Setting { Application = appLevel2aNested1, Environment = envDevelopmentJose, Contents = configStringLevel2aNested1EnvDevelopmentJose });
-                context.Settings.Add(new Setting { Application = appLevel1, Environment = envDevelopment, Contents = configStringLevel1EnvDevelopment });
-                context.Settings.Add(new Setting { Application = appLevel1, Environment = envDevelopmentJose, Contents = configStringLevel1EnvDevelopmentJose });
+                           
+
+                context.Settings.Add(new Setting
+                {
+                    Application = appGlobal,
+                    Environment = envAll,
+                    Contents = config_global_all
+                });
+                context.Settings.Add(new Setting
+                {
+                    Application = app_global_engineering_userportal,
+                    Environment = envAll,
+                    Contents = config_userportal_all
+                });
+                context.Settings.Add(new Setting
+                {
+                    Application = app_global_engineering_userportal,
+                    Environment = envProduction,
+                    Contents = config_userportal_production
+                });
+                context.Settings.Add(new Setting
+                {
+                    Application = app_global_engineering_userportal,
+                    Environment = envStaging,
+                    Contents = config_userportal_stage
+                });
+                context.Settings.Add(new Setting
+                {
+                    Application = app_global_engineering_userportal,
+                    Environment = envDevelopment,
+                    Contents = config_userportal_development
+                });
+                context.Settings.Add(new Setting
+                {
+                    Application = app_global_engineering_userportal,
+                    Environment = envDevelopmentJose,
+                    Contents = config_userportal_developmentJose
+                });
+                context.Settings.Add(new Setting()
+                {
+                    Application = app_global_engineering_userportal_dataintegration,
+                    Environment = envDevelopment,
+                    Contents = config_userportal__dataintegration_development
+                });
                 context.SaveChanges();
             }          
            

@@ -2,24 +2,7 @@
 import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
-import { TreeNode } from '../treeNode';
-
-
-const tree: TreeNode = {
-  name: "global", id: 1, children: [
-    {
-      name: "nested", id: 2, children: [
-        {
-          name: "nested-console", id: 3, children: [
-            { name: "nested-console-again", id: 3, children: [] }
-          ]
-        }
-      ]
-    },
-    { name: "nested-web app", id: 3, children: [] }
-  ]
-};
-
+import { TreeNode } from '../treenode';
 
 @Injectable()
 export class ApplicationService {

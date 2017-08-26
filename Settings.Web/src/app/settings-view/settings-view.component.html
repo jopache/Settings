@@ -1,0 +1,26 @@
+﻿<div class="settings-list panel panel-primary">
+  <div class="panel-heading">
+    <div>
+      Application: {{ selectedApplication.name }} --
+      Environment: {{ selectedEnvironment.name }}
+    </div>
+  </div>
+  <div class="panel-body">
+    <ul *ngIf="settings">
+      <li class="settings-list-item">
+        <div class="setting-name">Name</div>
+        <div class="setting-value">Value</div>
+        <div class="setting-source-data">Inherited from</div>
+      </li>
+      <li *ngFor="let setting of settings"  class="settings-list-item">
+        <div>
+          <div class="setting-name">{{ setting.name }}</div>
+          <div class="setting-value">{{setting.value}}</div>
+          <div class="setting-source-data">
+            <div *ngIf="setting.sourceData">{{setting.sourceData}}</div>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

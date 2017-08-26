@@ -3,7 +3,12 @@
 
   div.applications-list, div.environments-list {
     display: inline-block; 
-    height: 200px;
+    height: 250px;
     width: 250px;
+    overflow-y: auto;
   }
+}
+
+div.panel-heading {
+  text-align: center;
 }

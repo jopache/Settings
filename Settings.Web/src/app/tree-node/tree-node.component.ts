@@ -9,14 +9,17 @@ import { TreeNode } from '../treenode';
 })
 export class TreeNodeComponent implements OnInit {
   @Input() node: TreeNode;
-    constructor() { }
+  @Input() selectedNode:  { node: TreeNode };
+
+  constructor() { }
 
   onSelect(treeNode: TreeNode): void {
-    console.log(treeNode);
+    //i should probably be doing this through a service
+    //and maybe using an observable?  Not sure of
+    //the best approach here.
+    this.selectedNode.node = treeNode;
   }
 
   ngOnInit() {
-
   }
-
 }

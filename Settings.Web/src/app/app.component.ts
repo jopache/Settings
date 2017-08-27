@@ -21,6 +21,7 @@ export class AppComponent implements OnInit {
       .getRootApplication()
       .then(application => {
         this.rootApplication = application;
+        //application.active = true;
         this.selectedApplicationModel.node = application;
       });
 
@@ -28,6 +29,7 @@ export class AppComponent implements OnInit {
       .getRootEnvironment()
       .then(environment => {
         this.rootEnvironment = environment;
+        //environment.active = true;
         this.selectedEnvironmentModel.node = environment;
       });
   }

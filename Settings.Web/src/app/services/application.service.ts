@@ -18,7 +18,9 @@ export class ApplicationService {
       .get(this.getAllApplicationsUrl)
       .toPromise()
       .then(response => {
-        return response.json() as TreeNode;
+        var node = response.json() as TreeNode;
+        //node.active = false;
+        return node;
       })
       .catch((error: any ): Promise<any> => {
         return Promise.reject("fail");

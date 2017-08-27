@@ -5,9 +5,6 @@ import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class SettingsService {
-
-  //TODO: Pass this in when we do our write operations
-  private headers = new Headers({ 'Content-Type': 'application/json' });
   private getSettingsBaseUrl = 'http://localhost:59579/api/settings/';
   private persistSettingBaseUrl
     = 'http://localhost:59579/api/settings/create-update/';
@@ -45,7 +42,8 @@ export class SettingsService {
   persistSetting(): Promise<any>{
     var app = this.currentEditModel.appName;
     var env = this.currentEditModel.envName;
-    var url = `{persistSettingBaseUrl}{app}/{env}`;
+    var url = this.persistSettingBaseUrl + app + '/'  + env + '/';
+    //var url = `{this.persistSettingBaseUrl}{app}/{env}`;
     return this.http.post(url, {
       settingsToUpdate: [
         this.currentEditModel.setting

@@ -1,4 +1,4 @@
-﻿<span class="tree-node-name" (click)="onSelect(node)">
+﻿<span [ngClass]="{'tree-node-name': true, 'btn': true, 'btn-primary': true}" (click)="onSelect(node)">
    {{node.name}}
 </span>
 <ul class="tree-node-list ">

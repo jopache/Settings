@@ -10,7 +10,10 @@
   </div>
 
   <div class="edit-submit">
-    <button (click)="addEdit()">
+    <div *ngIf="message">
+      <span class="message"> {{message}}</span>
+    </div>
+    <button (click)="addEdit()" class="btn btn-primary">
       Add/Edit
     </button>
   </div>

@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+﻿import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { TreeNode } from '../treenode';
 import { SettingsService } from '../services/settings.service';
 
@@ -13,11 +13,16 @@ export class SettingsViewComponent implements OnChanges {
   settings: any;
 
   ngOnChanges(changes: SimpleChanges) {
+    console.log("settings view changes");
     this.updateSettings();
   }
 
 
   constructor(private settingsService: SettingsService) { }
+
+  setEditSetting(editModel: { name: string, value: string}): void {
+    this.settingsService.setEditModel({name: editModel.name, value: editModel.value});
+  }
 
   updateSettings(): void {
     if (this.selectedApplication && this.selectedEnvironment) {

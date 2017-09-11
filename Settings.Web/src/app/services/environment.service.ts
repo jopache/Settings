@@ -1,4 +1,4 @@
-﻿import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
@@ -8,7 +8,7 @@ import { TreeNode } from '../treenode';
 export class EnvironmentService {
 
   private headers = new Headers({ 'Content-Type': 'application/json' });
-  private getAllEnvironments = 'http://localhost:59579/api/environments/';
+  private getAllEnvironments = 'http://40.71.223.176:8001/api/environments/';
 
   constructor(private http: Http) { }
 

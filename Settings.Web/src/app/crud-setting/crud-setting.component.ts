@@ -24,7 +24,6 @@ export class CrudSettingComponent implements OnInit {
     } else {
       this.message = null;
     }
-    console.log(this.editSettingModel.setting.name, this.editSettingModel.setting.value, this.editSettingModel.appName, this.editSettingModel.envName);
     this.settingsService.persistSetting()
       .then(done => {
 

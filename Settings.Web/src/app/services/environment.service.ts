@@ -1,16 +1,25 @@
+import { TreeNodeSelector } from './treeNodeSelector';
 import { Injectable } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import { TreeNode } from '../treenode';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
-export class EnvironmentService {
+export class EnvironmentService implements TreeNodeSelector {
 
   private headers = new Headers({ 'Content-Type': 'application/json' });
   private getAllEnvironments = 'http://40.71.223.176:8001/api/environments/';
 
   constructor(private http: Http) { }
+
+  private _activeNode: BehaviorSubject<TreeNode> = new BehaviorSubject<TreeNode>(null);
+  activeNode = this._activeNode.asObservable();
+
+  setActiveNode(node: TreeNode): void {
+    this._activeNode.next(node);
+  }
 
   getRootEnvironment(): Promise<TreeNode> {
 
@@ -21,7 +30,7 @@ export class EnvironmentService {
         return response.json() as TreeNode;
       })
       .catch((error: any ): Promise<any> => {
-        return Promise.reject("fail");
+        return Promise.reject('fail');
       });
   }
 }

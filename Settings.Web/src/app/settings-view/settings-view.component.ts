@@ -13,7 +13,6 @@ export class SettingsViewComponent implements OnChanges {
   settings: any;
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log("settings view changes");
     this.updateSettings();
   }
 

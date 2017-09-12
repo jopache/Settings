@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
+
 import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
+
 
 
 @Injectable()
@@ -9,7 +11,7 @@ export class SettingsService {
   private persistSettingBaseUrl
   = 'http://40.71.223.176:8001/api/settings/create-update/';
 
-  //TODO: Need to create some types around this instead of this hackiness
+  // TODO: Need to create some types around this instead of this hackiness
   private currentEditModel:
     { setting: any, envName: string, appName: string } =
     { setting: { name : "", value: "" }, envName: null, appName: null };

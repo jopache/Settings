@@ -14,6 +14,7 @@ export class ApplicationService implements TreeNodeSelector {
 
   constructor(private http: Http) { }
 
+  // TODO: Probably can change this to just Subject as my initial value is null anyways
   private _activeNode: BehaviorSubject<TreeNode> = new BehaviorSubject<TreeNode>(null);
   activeNode = this._activeNode.asObservable();
 

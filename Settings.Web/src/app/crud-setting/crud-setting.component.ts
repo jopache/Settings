@@ -9,17 +9,17 @@ import {TreeNode} from "../treenode";
 })
 export class CrudSettingComponent implements OnInit {
 
-  @Input() selectedApplicationModel: { node: TreeNode } = { node: null };
-  @Input() selectedEnvironmentModel: { node: TreeNode } = { node: null };
+  @Input() selectedApplication: TreeNode = null;
+  @Input() selectedEnvironment: TreeNode = null;
   message: string = null;
 
 
-  //todo: once again, push this out to its own class
+  // todo: once again, push this out to its own class
   editSettingModel: { setting: any, appName: string, envName: string}  =  null;
   addEdit(): void {
     if (!this.editSettingModel.setting.name) {
-      //TODO: Add real validation
-      this.message = "Setting must have a valid name";
+      // TODO: Add real validation
+      this.message = 'Setting must have a valid name';
       return;
     } else {
       this.message = null;
@@ -27,14 +27,13 @@ export class CrudSettingComponent implements OnInit {
     this.settingsService.persistSetting()
       .then(done => {
 
-        //trying this out, not ideal, but want to see if it works.  Otherwise emit an event to parent?
-        //wondering about that vs doing some kind of flux like pattern for the whole application
-        var app = this.selectedApplicationModel.node;
-        var env = this.selectedEnvironmentModel.node;
-        this.selectedApplicationModel.node = { name: app.name, id: app.id, children: app.children }
-        this.selectedEnvironmentModel.node = { name: env.name, id: env.id, children: env.children }
+        // trying this out, not ideal, but want to see if it works.  Otherwise emit an event to parent?
+        // wondering about that vs doing some kind of flux like pattern for the whole application
+        const app = this.selectedApplication;
+        const env = this.selectedEnvironment;
+
       });
-    this.settingsService.setEditModel({ name: "", value: ""});
+    this.settingsService.setEditModel({ name: '', value: ''});
   }
   constructor(private settingsService: SettingsService) { }
 

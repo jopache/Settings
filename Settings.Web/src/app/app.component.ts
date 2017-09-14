@@ -10,8 +10,7 @@ import { Observable } from 'rxjs/Observable';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  constructor(private applicationService: ApplicationService,
-    private environmentService: EnvironmentService, private settingsService: SettingsService) {
+  constructor(public applicationService: ApplicationService, public environmentService: EnvironmentService) {
 
       this.activeAppNode$.subscribe(app => {
         if (app !== null) {

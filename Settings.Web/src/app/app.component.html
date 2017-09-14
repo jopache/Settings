@@ -21,21 +21,17 @@
       </div>
     </div>
 
-    <!--
-    <div class="setting-crud panel panel-primary" *ngIf="selectedEnvironmentModel.node && selectedApplicationModel.node">
+    <div class="setting-crud panel panel-primary" *ngIf="selectedEnvironment && selectedApplication">
       <div class="panel-heading">Add - Edit Setting </div>
       <div class="panel-body">
-        <app-crud-setting [selectedApplicationModel]="selectedApplicationModel"
-                          [selectedEnvironmentModel]="selectedEnvironmentModel"></app-crud-setting>
+        <app-crud-setting [selectedApplication]="selectedApplication"
+                          [selectedEnvironment]="selectedEnvironment"></app-crud-setting>
       </div>
     </div>
 
-
-    <app-settings-view *ngIf="selectedEnvironmentModel.node && selectedApplicationModel.node"
-                       [selectedApplication]="selectedApplicationModel.node"
-                       [selectedEnvironment]="selectedEnvironmentModel.node"></app-settings-view>
-  -->
-
+    <app-settings-view *ngIf="selectedEnvironment && selectedApplication"
+                       [selectedApplication]="selectedApplication"
+                       [selectedEnvironment]="selectedEnvironment"></app-settings-view>
   </div>
 </div>
 

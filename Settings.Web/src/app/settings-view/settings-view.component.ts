@@ -16,8 +16,11 @@ export class SettingsViewComponent implements OnChanges {
     this.updateSettings();
   }
 
-
-  constructor(private settingsService: SettingsService) { }
+  constructor(private settingsService: SettingsService) {
+    this.settingsService.settingsUpdated$.subscribe(x => {
+      this.updateSettings();
+    });
+  }
 
   setEditSetting(editModel: { name: string, value: string}): void {
     this.settingsService.setEditModel({name: editModel.name, value: editModel.value});
@@ -25,25 +28,23 @@ export class SettingsViewComponent implements OnChanges {
 
   updateSettings(): void {
     if (this.selectedApplication && this.selectedEnvironment) {
-      let appName = this.selectedApplication.name;
-      let envName = this.selectedEnvironment.name;
+      const appName = this.selectedApplication.name;
+      const envName = this.selectedEnvironment.name;
 
       this.settingsService.getSettings(appName, envName)
         .then(settings => {
-          for (var setting of settings) {
+          for (const setting of settings) {
             setting.sourceData = null;
 
-            if (this.selectedApplication.id != setting.applicationId ||
-              this.selectedEnvironment.id != setting.environmentId) {
-              setting.sourceData = setting.applicationName + " - " + setting.environmentName;
+            if (this.selectedApplication.id !== setting.applicationId ||
+              this.selectedEnvironment.id !== setting.environmentId) {
+              setting.sourceData = setting.applicationName + ' - ' + setting.environmentName;
             }
           }
           this.settings = settings;
         });
     }
-
   }
-
 }
 
 

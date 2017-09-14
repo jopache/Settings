@@ -8,10 +8,16 @@
 
   ul {
     list-style-type: none;
+    padding: 0px;
 
     li {
       padding: 10px;
       border: 1px solid #000;
+      cursor: pointer;
+    }
+
+    li.heading {
+      cursor: auto;
     }
 
     li:nth-child(odd) {

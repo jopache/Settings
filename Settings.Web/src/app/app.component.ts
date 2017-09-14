@@ -1,41 +1,57 @@
 ﻿import { Component, OnInit } from '@angular/core';
-import { TreeNode } from './treenode'
+import { TreeNode } from './treenode';
 import { ApplicationService } from './services/application.service';
 import { EnvironmentService } from './services/environment.service';
-import {SettingsService} from "./services/settings.service";
-
-//remove hard coded data after fetching from service
-
+import { SettingsService } from './services/settings.service';
+import { Observable } from 'rxjs/Observable';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  constructor(private applicationService: ApplicationService,
-    private environmentService: EnvironmentService, private settingsService: SettingsService) { }
+  constructor(public applicationService: ApplicationService, public environmentService: EnvironmentService) {
 
+      this.activeAppNode$.subscribe(app => {
+        if (app !== null) {
+          this.selectedApplication = app;
+        }
+      });
+
+      this.activeEnvNode$.subscribe(env => {
+        if (env !== null) {
+          this.selectedEnvironment = env;
+        }
+      });
+
+    }
+
+  activeAppNode$ = this.applicationService.activeNode;
+  activeEnvNode$ = this.environmentService.activeNode;
+
+  selectedApplication: TreeNode = null;
+  selectedEnvironment: TreeNode = null;
+
+  // need to rethink this. Eventually there may not be a root, there may be several "roots"
+  rootApplication: TreeNode = null;
+  rootEnvironment: TreeNode = null;
 
   ngOnInit(): void {
     this.applicationService
       .getRootApplication()
       .then(application => {
+        console.log('setting root application');
         this.rootApplication = application;
-        this.selectedApplicationModel.node = application;
+        this.selectedApplication = application;
+        this.applicationService.setActiveNode(application);
       });
 
     this.environmentService
       .getRootEnvironment()
       .then(environment => {
         this.rootEnvironment = environment;
-        this.selectedEnvironmentModel.node = environment;
+        this.selectedEnvironment = environment;
+        this.environmentService.setActiveNode(environment);
       });
   }
-
-  //need to fix this with a simple ngif in template
-  rootApplication: TreeNode = null;
-  rootEnvironment: TreeNode = null;
-
-  selectedApplicationModel: { node: TreeNode } = { node: null };
-  selectedEnvironmentModel: { node: TreeNode } = { node: null };
 }

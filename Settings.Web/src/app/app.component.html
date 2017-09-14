@@ -1,25 +1,37 @@
 ﻿<div class="container">
 
   <h1>Settings</h1>
-  <div class="heading-selector">
+
+  <div *ngIf="!rootApplication || !rootEnvironment">
+    Loading...
+  </div>
+
+  <div class="heading-selector" *ngIf="rootApplication && rootEnvironment">
     <div class="applications-list panel panel-primary">
       <div class="panel-heading">Applications</div>
       <div class="panel-body">
-        <tree-node [node]="rootApplication" [selectedNode]="selectedApplicationModel" *ngIf="rootApplication"></tree-node>
+        <tree-node [node]="rootApplication" [treeNodeSelector]="applicationService"></tree-node>
       </div>
     </div>
     <div class="environments-list panel panel-primary">
+
       <div class="panel-heading">Environments</div>
       <div class="panel-body">
-        <tree-node [node]="rootEnvironment" [selectedNode]="selectedEnvironmentModel" *ngIf="rootEnvironment"></tree-node>
+        <tree-node [node]="rootEnvironment" [treeNodeSelector]="environmentService"></tree-node>
       </div>
     </div>
 
-    <app-settings-view *ngIf="selectedEnvironmentModel.node && selectedApplicationModel.node"
-                       [selectedApplication]="selectedApplicationModel.node"
-                       [selectedEnvironment]="selectedEnvironmentModel.node"></app-settings-view>
-    <app-crud-setting></app-crud-setting>
+    <div class="setting-crud panel panel-primary" *ngIf="selectedEnvironment && selectedApplication">
+      <div class="panel-heading">Add - Edit Setting </div>
+      <div class="panel-body">
+        <app-crud-setting [selectedApplication]="selectedApplication"
+                          [selectedEnvironment]="selectedEnvironment"></app-crud-setting>
+      </div>
+    </div>
 
+    <app-settings-view *ngIf="selectedEnvironment && selectedApplication"
+                       [selectedApplication]="selectedApplication"
+                       [selectedEnvironment]="selectedEnvironment"></app-settings-view>
   </div>
 </div>
 

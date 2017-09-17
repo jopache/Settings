@@ -14,7 +14,7 @@
     - [`.NET Core SDK 1.0.4`](https://github.com/dotnet/core/blob/master/release-notes/download-archives/1.1.2-download.md)
     - [`Node LTS`](https://nodejs.org/en/download/)
 1. Build and run the project
-    - `scripts/ci`
+    - `scripts/cibuild`
     - `scripts/server`
 1. View the goods 
     - Browse to [localhost:4200](http://localhost:4200)

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash 
 
 script_dir=$(dirname "$0") && cd $script_dir && script_dir=$(pwd) && source ./_helpers
-requireDependency 'dotnet' '1.0.4'
+requireDependency 'dotnet'
 requireDependency 'npm'
 
 _log 'Restoring packages - Backend'

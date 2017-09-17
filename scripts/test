@@ -2,6 +2,7 @@
 
 script_dir=$(dirname "$0") && cd $script_dir && script_dir=$(pwd) && source ./_helpers
 requireDependency 'dotnet' '1.0.4'
+requireDependency 'npm'
 
 _log 'Running unit tests - Backend'
 

@@ -11,3 +11,5 @@ function executeStep {
         exit 1
     }
 }
+
+executeStep ./bootstrap

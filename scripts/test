@@ -1,8 +1,26 @@
 #!/usr/bin/env bash 
 
-script_dir=$(dirname "$0") && cd $script_dir && source ./_helpers
+script_dir=$(dirname "$0") && cd $script_dir && script_dir=$(pwd) && source ./_helpers
 requireDependency 'dotnet' '1.0.4'
 
-_log 'Running unit tests'
-cd ../src/Settings.Tests.Services
-dotnet test
+_log 'Running unit tests - Backend'
+
+for backend_tests_dir in $(find ../src -maxdepth 1 -type d -name '*\.Tests\.*'); do
+    cd "$backend_tests_dir"
+
+    _log "Running tests for: $backend_tests_dir"
+
+    dotnet test || {
+        _log 'Test failed'
+        exit 1
+    }
+    
+    cd $script_dir
+done
+
+_log 'Running unit tests - Frontend'
+cd ../src/Settings.Web
+_log 'Lint/test/e2e failing - so they are currently disabled'
+# npm run lint # currently failing some rules
+# npm run test # chrome failing to start fully locally 
+# npm run e2e # test 'should display welcome message' currently failing

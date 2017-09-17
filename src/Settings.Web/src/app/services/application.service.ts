@@ -4,7 +4,7 @@ import 'rxjs/add/operator/toPromise';
 import { TreeNode } from '../treenode';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { TreeNodeSelector } from "./treeNodeSelector";
+import { TreeNodeSelector } from './treeNodeSelector';
 
 @Injectable()
 export class ApplicationService implements TreeNodeSelector {

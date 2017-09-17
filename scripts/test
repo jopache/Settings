@@ -1,0 +1,8 @@
+#!/usr/bin/env bash 
+
+script_dir=$(dirname "$0") && cd $script_dir && source ./_helpers
+requireDependency 'dotnet' '1.0.4'
+
+_log 'Running unit tests'
+cd ../src/Settings.Tests.Services
+dotnet test

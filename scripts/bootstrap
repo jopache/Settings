@@ -1,8 +1,13 @@
 #!/usr/bin/env bash 
 
-script_dir=$(dirname "$0") && cd $script_dir && source ./_helpers
+script_dir=$(dirname "$0") && cd $script_dir && script_dir=$(pwd) && source ./_helpers
+
 requireDependency 'dotnet' '1.0.4'
 
 _log 'Restoring packages'
 cd ../src/Settings
 dotnet restore
+
+cd $script_dir
+cd ../src/Settings.Web
+npm install

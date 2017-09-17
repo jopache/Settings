@@ -8,7 +8,11 @@ _log 'Restoring packages - Backend'
 cd ../src/Settings
 dotnet restore
 
-_log 'Restoring packages - Frontend'
-cd $script_dir
-cd ../src/Settings.Web
-npm install
+# if in appveyor, don't do frontend things
+if [ -z "$APPVEYOR" ] ; then 
+    _log 'Restoring packages - Frontend'
+    cd $script_dir
+    cd ../src/Settings.Web
+
+    npm install
+fi

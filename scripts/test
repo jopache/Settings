@@ -19,9 +19,13 @@ for backend_tests_dir in $(find ../src -maxdepth 1 -type d -name '*\.Tests\.*');
     cd $script_dir
 done
 
-_log 'Running unit tests - Frontend'
-cd ../src/Settings.Web
-_log 'Lint/test/e2e failing - so they are currently disabled'
-# npm run lint # currently failing some rules
-# npm run test # chrome failing to start fully locally 
-# npm run e2e # test 'should display welcome message' currently failing
+
+# if in appveyor, don't do frontend things
+if [ -z "$APPVEYOR" ] ; then 
+    _log 'Running unit tests - Frontend'
+    cd ../src/Settings.Web
+    _log 'Lint/test/e2e failing - so they are currently disabled'
+    # npm run lint # currently failing some rules
+    # npm run test # chrome failing to start fully locally 
+    # npm run e2e # test 'should display welcome message' currently failing
+fi

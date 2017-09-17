@@ -13,3 +13,4 @@ function executeStep {
 }
 
 executeStep ./bootstrap
+executeStep ./build

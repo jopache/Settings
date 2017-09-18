@@ -4,7 +4,7 @@ import { TreeNode } from '../treenode';
 
 
 @Component({
-  selector: 'app-tree-node',
+  selector: 'tree-node',
   templateUrl: './tree-node.component.html',
   styleUrls: ['./tree-node.component.scss']
 })

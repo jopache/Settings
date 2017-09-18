@@ -5,12 +5,13 @@ import { TreeNode } from '../treenode';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { TreeNodeSelector } from './treeNodeSelector';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class ApplicationService implements TreeNodeSelector {
 
   private headers = new Headers({ 'Content-Type': 'application/json' });
-  private getAllApplicationsUrl = 'http://40.71.223.176:8001/api/applications/';
+  private getAllApplicationsUrl = environment.backendUrl + '/api/applications/';
 
   constructor(private http: Http) { }
 

@@ -3,14 +3,12 @@ import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
-
-
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class SettingsService {
-  private getSettingsBaseUrl = 'http://40.71.223.176:8001/api/settings/';
-  private persistSettingBaseUrl
-  = 'http://40.71.223.176:8001/api/settings/create-update/';
+  private getSettingsBaseUrl = environment.backendUrl + '/api/settings/';
+  private persistSettingBaseUrl = environment.backendUrl + '/api/settings/create-update/';
   private _settingsUpdated = new Subject();
   settingsUpdated$ = this._settingsUpdated.asObservable();
 

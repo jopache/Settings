@@ -1,15 +1,22 @@
 #!/usr/bin/env bash 
 
 script_dir=$(dirname "$0") && cd $script_dir && script_dir=$(pwd) && source ./_helpers
-# requireDependency 'dotnet' '1.0.4'
+requireDependency 'dotnet'
 requireDependency 'npm'
 
-# TODO: clarify intent for serving/hosting app - locally it appears to work fine from frotnend only
-# cd $script_dir
-# cd ../src/Settings
-# dotnet run
+_log 'Spinning up server - backend and frontend'
 
-_log 'Spinning up server'
-cd $script_dir
-cd ../src/Settings.Web
-npm run start
+{
+    cd $script_dir && \
+    cd ../src/Settings && \
+    dotnet run; 
+} &
+
+{ 
+    cd $script_dir && \
+    cd ../src/Settings.Web && \
+    npm run start:local;
+} & 
+
+wait -n
+kill 0

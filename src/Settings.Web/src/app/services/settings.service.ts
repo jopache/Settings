@@ -36,7 +36,7 @@ export class SettingsService {
       });
   }
 
-  getEditModel():  { setting: any, envName: string, appName: string }{
+  getEditModel():  { setting: any, envName: string, appName: string } {
     return this.currentEditModel;
   }
 
@@ -44,7 +44,7 @@ export class SettingsService {
     this.currentEditModel.setting = editModel;
   }
 
-  persistSetting(): Promise<any>{
+  persistSetting(): Promise<any> {
     const app = this.currentEditModel.appName;
     const env = this.currentEditModel.envName;
     const url = this.persistSettingBaseUrl + app + '/'  + env + '/';

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import {SettingsService} from "../services/settings.service";
-import {TreeNode} from "../treenode";
+import {SettingsService} from '../services/settings.service';
+import {TreeNode} from '../treenode';
 
 @Component({
   selector: 'app-crud-setting',

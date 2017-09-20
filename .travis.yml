@@ -1,0 +1,15 @@
+language: csharp
+dotnet: 1.0.4
+mono: none
+
+env:
+  - TRAVIS_NODE_VERSION="6.11.3"
+
+before_install:
+  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then ulimit -n 1024; fi
+
+install:
+  - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
+
+script:
+  - ./scripts/cibuild

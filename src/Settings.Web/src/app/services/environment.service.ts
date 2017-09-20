@@ -5,12 +5,13 @@ import 'rxjs/add/operator/toPromise';
 
 import { TreeNode } from '../treenode';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class EnvironmentService implements TreeNodeSelector {
 
   private headers = new Headers({ 'Content-Type': 'application/json' });
-  private getAllEnvironments = 'http://40.71.223.176:8001/api/environments/';
+  private getAllEnvironments = environment.backendUrl + '/api/environments/';
 
   constructor(private http: Http) { }
 

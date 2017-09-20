@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+function setScriptProperties {
+    set -e 
+    set -o pipefail
+}
+
+function _log {
+    local caller="$0"
+    local message="$1"
+    local logTime=$(date '+%Y-%m-%d %H:%M:%S');
+
+    printf "\n$logTime =====> $caller:  $message\n\n"
+}
+
+function requireDependency {
+    local dependency=$1
+    local version=$2
+
+    type "$dependency" &>/dev/null || { 
+        _log "$dependency is not available"; 
+        exit 1 
+    }
+
+    if [ ! -z "$version" ] ; then 
+        "$dependency" --version | grep -q "$version" || {
+            _log "$dependency version $version is not available"
+            exit 1
+        }
+    fi 
+
+}
+
+setScriptProperties

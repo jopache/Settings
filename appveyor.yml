@@ -1,0 +1,19 @@
+version: 1.0.0.{build}.{branch}
+
+image: Visual Studio 2017
+
+clone_folder: c:\projects\Settings
+
+nuget:
+  account_feed: false
+  
+init:
+ - git config --global core.autocrlf true
+ 
+install:
+ - cmd: nuget sources add -Name api.nuget.org -Source https://api.nuget.org/v3/index.json
+
+build_script:
+- cmd: >-
+    bash -lc "dotnet --version"
+    bash -lc "exec 0</dev/null && cd $APPVEYOR_BUILD_FOLDER && ./scripts/cibuild"

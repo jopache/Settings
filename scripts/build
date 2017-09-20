@@ -1,0 +1,18 @@
+#!/usr/bin/env bash 
+
+script_dir=$(dirname "$0") && cd $script_dir && script_dir=$(pwd) && source ./_helpers
+requireDependency 'dotnet'
+requireDependency 'npm'
+
+_log 'Building projects - Backend'
+cd ../src/Settings
+dotnet build
+
+# if in appveyor, don't do frontend things
+if [ -z "$APPVEYOR" ] ; then 
+    _log 'Building projects - Frontend'
+    cd "$script_dir"
+    cd ../src/Settings.Web
+
+    npm run build
+fi

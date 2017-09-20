@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+script_dir=$(dirname "$0") && cd $script_dir && script_dir=$(pwd) && source ./_helpers
+
+function executeStep {
+    local step=$1
+
+    _log "Executing Step: $step"
+    $step || {
+        _log "FAILED: $1";
+        exit 1
+    }
+}
+
+executeStep ./bootstrap
+executeStep ./build
+executeStep ./test

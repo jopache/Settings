@@ -25,6 +25,7 @@ namespace Settings
             Configuration = builder.Build();
         }
 
+        //TODO: This is test code that needs to be retired or stashed away for later
         //Todo: Need to add the elastic logger back in once I figure out where I'm going with it. 
         public Logger GetLogger()
         {
@@ -62,7 +63,9 @@ namespace Settings
 
             services.AddMvc();
 
-            services.AddDbContext<SettingsDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            //TODO: will want to switch this after we get it running on Linux.  Currently leaning Postgresql due to json support.
+            //services.AddDbContext<SettingsDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<SettingsDbContext>(options => options.UseInMemoryDatabase("settings"));
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<ISettingsProcessor, SettingsProcessor>();
             services.AddTransient<ISettingsDbContext, SettingsDbContext>();

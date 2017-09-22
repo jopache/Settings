@@ -11,7 +11,7 @@
 
 1. Clone the project 
 1. Install project requirements 
-    - [`.NET Core SDK 1.0.4`](https://github.com/dotnet/core/blob/master/release-notes/download-archives/1.1.2-download.md)
+    - [`.NET Core SDK 2.0.0`](https://github.com/dotnet/core/blob/master/release-notes/download-archives/2.0.0-download.md)
     - [`Node LTS`](https://nodejs.org/en/download/)
 1. Build and run the project
     - `scripts/cibuild`

@@ -25,6 +25,7 @@ namespace Settings
             Configuration = builder.Build();
         }
 
+        //TODO: This is test code that needs to be retired or stashed away for later
         //Todo: Need to add the elastic logger back in once I figure out where I'm going with it. 
         public Logger GetLogger()
         {

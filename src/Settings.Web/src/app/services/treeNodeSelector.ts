@@ -1,4 +1,4 @@
-import { TreeNode } from '../treeNode';
+import { TreeNode } from '../treenode';
 import { Observable } from 'rxjs/Observable';
 
 export interface TreeNodeSelector {

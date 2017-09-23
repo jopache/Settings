@@ -1,0 +1,18 @@
+version: "3"
+services:
+
+  backend:
+    build:
+      context: ./
+      dockerfile: scripts/backend/Dockerfile
+    container_name: settings_backend
+    ports:
+        - '5000:5000'
+
+  frontend:
+    build:
+      context: ./
+      dockerfile: scripts/frontend/Dockerfile
+    container_name: settings_frontend
+    ports:
+        - '4200:4200'

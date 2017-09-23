@@ -6,13 +6,11 @@ COPY src/Settings.Web/package.json .
 
 FROM base AS dependencies
 RUN npm set progress=false && npm config set depth 0
-RUN npm install --only=production
-RUN cp -R node_modules prod_node_modules
 RUN npm install
 
 FROM dependencies as build
 COPY src/Settings.Web/ .
-RUN  npm run lint
+RUN npm run lint
 RUN npm run build:local
 
 FROM nginx:alpine as release

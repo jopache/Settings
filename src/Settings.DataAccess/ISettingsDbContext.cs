@@ -1,7 +1,8 @@
 ﻿using System.Linq;
 using Settings.Common.Domain;
+using Microsoft.EntityFrameworkCore.Storage;
 
-namespace Settings.Common.Interfaces
+namespace Settings.DataAccess
 {
     public interface ISettingsDbContext
     {
@@ -14,5 +15,7 @@ namespace Settings.Common.Interfaces
         int SaveChanges();
 
         void AddEntity(object obj);
+
+        IDbContextTransaction BeginTransaction();
     }
 }

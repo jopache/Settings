@@ -49,5 +49,12 @@ namespace Settings.Controllers.api
 
             return Ok(applicationsTree);
         }
+
+        [HttpGet("add/{applicationName}/{parentApplicationName}")]
+        public IActionResult Add(string applicationName, string parentApplicationName)
+        {
+            //var parentAppId //
+            return Ok();
+        }
     }
 }

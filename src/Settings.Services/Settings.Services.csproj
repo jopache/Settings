@@ -5,7 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="ApplicationService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Settings.Common\Settings.Common.csproj" />
+    <ProjectReference Include="..\Settings.DataAccess\Settings.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>

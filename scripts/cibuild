@@ -13,3 +13,4 @@ function executeStep {
 }
 
 executeStep ./build
+executeStep ./cleanup

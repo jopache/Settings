@@ -10,11 +10,16 @@ using System;
 using Settings.Common.Interfaces;
 using Settings.DataAccess;
 using Settings.Services;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
+
 
 namespace Settings
 {
     public class Startup
     {
+        public IConfigurationRoot Configuration { get; }
+
+
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -46,9 +51,6 @@ namespace Settings
                 .CreateLogger();
         }
 
-        public IConfigurationRoot Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors(options =>
@@ -60,18 +62,34 @@ namespace Settings
                         .AllowCredentials());
             });
 
-
             services.AddMvc();
-
-            //TODO: will want to switch this after we get it running on Linux.  Currently leaning Postgresql due to json support.
-            //services.AddDbContext<SettingsDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDbContext<SettingsDbContext>(options => options.UseInMemoryDatabase("settings"));
+            AddDatabaseContext(services);
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<ISettingsProcessor, SettingsProcessor>();
             services.AddTransient<ISettingsDbContext, SettingsDbContext>();
             services.AddTransient<Queries>();
             services.AddTransient<HierarchyHelper>();
             services.AddSingleton(GetLogger());
+        }
+
+        public void AddDatabaseContext(IServiceCollection services)
+        {
+            var databaseType = Configuration["DatabaseType"];
+            switch (databaseType)
+            {
+                case "SqlServer":
+                    services.AddDbContext<SettingsDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
+                    break;
+                case "Postgres":
+                    services.AddDbContext<SettingsDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Postgres")));
+                    break;
+                case "InMemory":
+                    services.AddDbContext<SettingsDbContext>(options => options.UseInMemoryDatabase(Configuration.GetConnectionString("InMemory")));
+                    break;
+                default:
+                    services.AddDbContext<SettingsDbContext>(options => options.UseInMemoryDatabase(Configuration.GetConnectionString("InMemory")));
+                    break;
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

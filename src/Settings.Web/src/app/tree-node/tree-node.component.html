@@ -3,6 +3,6 @@
 </span>
 <ul class="tree-node-list ">
      <li *ngFor="let childNode of node.children" class="tree-node-item">
-        <tree-node [node]="childNode" [treeNodeSelector]="treeNodeSelector"></tree-node>
+        <app-tree-node [node]="childNode" [treeNodeSelector]="treeNodeSelector"></app-tree-node>
      </li>
  </ul>

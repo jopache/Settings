@@ -1,18 +1,15 @@
-#!/usr/bin/env bash 
+#!/usr/bin/env bash
 
 script_dir=$(dirname "$0") && cd $script_dir && script_dir=$(pwd) && source ./_helpers
-requireDependency 'dotnet'
-requireDependency 'npm'
+requireDependency 'docker'
+requireDependency 'docker-compose'
 
-_log 'Building projects - Backend'
-cd ../src/Settings
-dotnet build
+_log 'Building projects'
+cd ../
+docker-compose build backend
 
 # if in appveyor, don't do frontend things
-if [ -z "$APPVEYOR" ] ; then 
+if [ -z "$APPVEYOR" ] ; then
     _log 'Building projects - Frontend'
-    cd "$script_dir"
-    cd ../src/Settings.Web
-
-    npm run build
+    docker-compose build frontend
 fi

@@ -15,4 +15,4 @@ services:
       dockerfile: scripts/frontend/Dockerfile
     container_name: settings_frontend
     ports:
-        - '4200:4200'
+        - '8080:80'

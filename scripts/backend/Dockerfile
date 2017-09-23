@@ -1,22 +1,24 @@
-FROM microsoft/aspnetcore:2.0 AS base
+FROM microsoft/dotnet:2.0-sdk AS base
 WORKDIR /app
-EXPOSE 5000
 
-FROM microsoft/aspnetcore-build:2.0 AS builder
+FROM microsoft/aspnetcore-build:2.0 AS build
 WORKDIR /src
 COPY ./src/ .
 RUN dotnet restore
 WORKDIR /src/Settings
-RUN dotnet build -o /app
+RUN dotnet build -c Release -o /app
 
-FROM builder as test
+FROM build as test
 WORKDIR /src/Settings.Tests.Services
 RUN dotnet test
 
-FROM builder AS publish
-RUN dotnet publish -o /app
+FROM build AS publish
+WORKDIR /src/Settings
+RUN dotnet publish -c Release -o /app/published
 
-FROM base AS production
+FROM microsoft/dotnet:2.0-runtime-deps AS production
 WORKDIR /app
-COPY --from=publish /app .
+COPY --from=publish /app/published .
+RUN rm -rf *.pdb
+EXPOSE 5000
 ENTRYPOINT ["dotnet", "Settings.dll"]

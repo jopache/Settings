@@ -12,6 +12,5 @@ function executeStep {
     }
 }
 
-executeStep ./bootstrap
 executeStep ./build
-executeStep ./test
+executeStep ./cleanup

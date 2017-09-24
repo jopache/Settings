@@ -1,0 +1,20 @@
+version: "3"
+services:
+
+  frontend:
+    build:
+      context: ./
+      dockerfile: scripts/frontend/Dockerfile
+    container_name: settings_frontend
+    ports:
+        - '4200:80'
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./
+      dockerfile: scripts/backend/Dockerfile
+    container_name: settings_backend
+    ports:
+        - '5000:80'

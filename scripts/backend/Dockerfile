@@ -16,7 +16,7 @@ FROM build AS publish
 WORKDIR /src/Settings
 RUN dotnet publish -c Release -o /app/published
 
-FROM microsoft/dotnet:2.0-runtime-deps AS production
+FROM microsoft/aspnetcore-build:2.0 AS production
 WORKDIR /app
 COPY --from=publish /app/published .
 RUN rm -rf *.pdb

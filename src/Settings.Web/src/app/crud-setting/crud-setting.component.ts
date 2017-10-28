@@ -17,7 +17,7 @@ export class CrudSettingComponent implements OnInit {
   // todo: once again, push this out to its own class
   editSettingModel: { setting: any, appName: string, envName: string}  =  null;
 
-  //todo: make the call to persist settings pass in the setting name/value
+  // todo: make the call to persist settings pass in the setting name/value
   addEdit(): void {
     if (!this.editSettingModel.setting.name) {
       // TODO: Add real validation

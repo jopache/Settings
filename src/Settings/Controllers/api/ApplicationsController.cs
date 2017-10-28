@@ -14,13 +14,15 @@ namespace Settings.Controllers.api
         private readonly ISettingsDbContext _context;
         private readonly Queries _queries;
         private readonly HierarchyHelper _hierarchyHelper;
+        private readonly IApplicationService _appService;
 
         public ApplicationsController(ISettingsDbContext context, Queries queries,
-            HierarchyHelper hierarchyHelper)
+            HierarchyHelper hierarchyHelper, IApplicationService appService)
         {
             _context = context;
             _queries = queries;
             _hierarchyHelper = hierarchyHelper;
+            _appService = appService;
         }
         [HttpGet("{applicationName}")]
         public IActionResult Index(string applicationName)
@@ -44,8 +46,10 @@ namespace Settings.Controllers.api
                 .OrderBy(x => x.ParentId)
                 .ThenBy(x => x.Id)
                 .ToList();
-
-            var applicationsTree = _hierarchyHelper.GetHierarchicalTree(applications.First());
+            //todo: query above is not well thought out and since null comes last in postgres responds differently across ms and postgres
+            //adding this in for now since postgres but will have to be thought out again. 
+            var app = applications.First(x => x.ParentId != null);
+            var applicationsTree = _hierarchyHelper.GetHierarchicalTree(app);
 
             return Ok(applicationsTree);
         }
@@ -53,7 +57,16 @@ namespace Settings.Controllers.api
         [HttpGet("add/{applicationName}/{parentApplicationName}")]
         public IActionResult Add(string applicationName, string parentApplicationName)
         {
-            //var parentAppId //
+            var parentApplication= _context.Applications.FirstOrDefault(x => x.Name == parentApplicationName);
+            if(parentApplication == null)
+            {
+                return NotFound();
+            }
+            _appService.AddApplication(new Common.Domain.Application
+            {
+                Name = applicationName
+            }, parentApplication.Id);
+
             return Ok();
         }
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Settings.Common.Domain;
 using Settings.Common.Models;
+using System.Linq;
 
 namespace Settings.Services
 {
@@ -61,6 +62,49 @@ namespace Settings.Services
             }
 
             return rootNode;
+        }
+
+        public bool ValidateWeights<T>(IHierarchicalItem<T> topItem, ref int currentLeftWeight)
+           where T : IHierarchicalItem<T>
+        {
+            var right = currentLeftWeight + 1;
+            return ValidateWeights(topItem, ref currentLeftWeight, ref right);
+        }
+
+        private bool ValidateWeights<T>(IHierarchicalItem<T> topItem, ref int currentLeftWeight, ref int currentRightWeight)
+            where T : IHierarchicalItem<T>
+        {
+            if (topItem.LeftWeight != currentLeftWeight)
+            {
+                return false;
+            }
+
+            var children = topItem.Children.OrderBy(x => x.LeftWeight);
+
+            if (!children.Any())
+            {
+                //currentRightWeight++;
+            }
+
+            foreach (var child in children)
+            {
+                currentLeftWeight++;
+                currentRightWeight++;
+                if (!ValidateWeights(child, ref currentLeftWeight, ref currentRightWeight))
+                {
+                    return false;
+                }
+                currentLeftWeight++;
+                currentRightWeight++;
+
+            }
+
+            if (topItem.RightWeight != currentRightWeight)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

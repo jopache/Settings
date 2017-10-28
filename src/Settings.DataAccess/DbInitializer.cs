@@ -7,8 +7,31 @@ namespace Settings.DataAccess
 {
     public static class DbInitializer
     {
-        public static void Initialize(SettingsDbContext context)
+        public static void Initialize(SettingsDbContext context, bool refreshData)
         {
+            if(refreshData)
+            {
+                var settings = context.Settings.ToList();
+                foreach(var setting in settings)
+                {
+                    context.Remove(setting);
+                }
+                context.SaveChanges();
+
+                var envs = context.Environments.ToList();
+                foreach (var env in envs)
+                {
+                    context.Remove(env);
+                }
+                context.SaveChanges();
+
+                var apps = context.Applications.ToList();
+                foreach (var app in apps)
+                {
+                    context.Remove(app);
+                }
+                context.SaveChanges();
+            }
             //TODO: Need to add some contraints here and/or make sure they are created
             //1. Unique on application name and environment name
             context.Database.EnsureCreated();

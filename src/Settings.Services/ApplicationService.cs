@@ -2,6 +2,7 @@
 using Settings.Common.Domain;
 using Settings.DataAccess;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Settings.Services
 {
@@ -9,18 +10,24 @@ namespace Settings.Services
     {
         private readonly ISettingsDbContext _context;
 
-		public ApplicationService(ISettingsDbContext context)
+		public ApplicationService(ISettingsDbContext context, HierarchyHelper hierarchyHelper)
         {
             _context = context;
+            _hierarchyHelper = hierarchyHelper;
         }
+
+        private readonly HierarchyHelper _hierarchyHelper;
+
         public void AddApplication(Application application, int parentApplicationId)
         {
             var parentApplication = _context.Applications.First(x => x.Id == parentApplicationId);
-            var parentApplicationChildren = parentApplication.Children.ToList();
-            var parentApplicationHasChildren = parentApplicationChildren.Count > 0;
-            
-            if(parentApplicationHasChildren)
+            var parentAppExists = parentApplication != null;
+            var parentAppAlreadyHasChildren = _context.Applications.Count(x => x.ParentId == parentApplicationId) > 0;
+            application.ParentId = parentApplicationId;
+
+            if (parentAppAlreadyHasChildren)
             {
+                
                 var parentRight = parentApplication.RightWeight;
 
                 var descendants = _context.Applications.Where(x => x.RightWeight > parentRight);
@@ -61,11 +68,24 @@ namespace Settings.Services
                     rest.LeftWeight = rest.LeftWeight + 2;
                 }
 
+                
                 application.LeftWeight = parentLeft + 1;
                 application.RightWeight = parentLeft + 2;
 
+                _context.AddEntity(application);
                 _context.SaveChanges();
             }
+
+            var leftW = 1;
+            var appToValidate = _context
+                .Applications
+                .Include(x => x.Children)
+                //todo: Killing mme with the stuff tied to one hierarchy. 
+                .First(x => x.ParentId == null);
+                
+
+            
+            var isValid = _hierarchyHelper.ValidateWeights(appToValidate, ref leftW);
         }
     }
 }

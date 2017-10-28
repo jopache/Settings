@@ -12,17 +12,7 @@ import { Observable } from 'rxjs/Observable';
 export class AppComponent implements OnInit {
   constructor(public applicationService: ApplicationService, public environmentService: EnvironmentService) {
 
-      this.activeAppNode$.subscribe(app => {
-        if (app !== null) {
-          this.selectedApplication = app;
-        }
-      });
 
-      this.activeEnvNode$.subscribe(env => {
-        if (env !== null) {
-          this.selectedEnvironment = env;
-        }
-      });
 
     }
 
@@ -37,12 +27,23 @@ export class AppComponent implements OnInit {
   rootEnvironment: TreeNode = null;
 
   ngOnInit(): void {
+    this.activeAppNode$.subscribe(app => {
+      if (app !== null) {
+        this.selectedApplication = app;
+      }
+    });
+
+    this.activeEnvNode$.subscribe(env => {
+      if (env !== null) {
+        this.selectedEnvironment = env;
+      }
+    });
+
     this.applicationService
       .getRootApplication()
       .then(application => {
         console.log('setting root application');
         this.rootApplication = application;
-        this.selectedApplication = application;
         this.applicationService.setActiveNode(application);
       });
 
@@ -50,7 +51,6 @@ export class AppComponent implements OnInit {
       .getRootEnvironment()
       .then(environment => {
         this.rootEnvironment = environment;
-        this.selectedEnvironment = environment;
         this.environmentService.setActiveNode(environment);
       });
   }

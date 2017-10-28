@@ -40,7 +40,9 @@ namespace Settings.Controllers.api
             var environments = _context
                 .Environments
                 .Include(x => x.Parent)
+
                 .OrderBy(x => x.ParentId)
+                
                 .ThenBy(x => x.Id)
                 .ToList();
 

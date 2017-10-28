@@ -26,6 +26,7 @@ export class SettingsViewComponent implements OnChanges {
     this.settingsService.setEditModel({name: editModel.name, value: editModel.value});
   }
 
+
   updateSettings(): void {
     if (this.selectedApplication && this.selectedEnvironment) {
       const appName = this.selectedApplication.name;

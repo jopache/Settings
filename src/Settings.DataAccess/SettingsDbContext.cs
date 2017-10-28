@@ -2,6 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Settings.Common.Domain;
 using Settings.Common.Interfaces;
+using Microsoft.EntityFrameworkCore.Storage;
+using System.Transactions;
+using System.Data.Common;
 
 namespace Settings.DataAccess
 {
@@ -37,6 +40,11 @@ namespace Settings.DataAccess
         public void AddEntity(object obj)
         {
             this.Add(obj);
+        }
+
+        public IDbContextTransaction BeginTransaction()
+        {
+            return Database.BeginTransaction();
         }
     }
 }

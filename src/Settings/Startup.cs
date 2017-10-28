@@ -67,6 +67,7 @@ namespace Settings
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<ISettingsProcessor, SettingsProcessor>();
             services.AddTransient<ISettingsDbContext, SettingsDbContext>();
+            services.AddTransient<IApplicationService, ApplicationService>();
             services.AddTransient<Queries>();
             services.AddTransient<HierarchyHelper>();
             services.AddSingleton(GetLogger());
@@ -116,8 +117,8 @@ namespace Settings
                     name: "default",
                     template: "{controller=Settings}/{action=GetAllSettings}");
             });
-
-            DbInitializer.Initialize(context);
+            var refreshDataOnAppInint = Convert.ToBoolean(Configuration["RefreshDataOnAppInint"]);
+            DbInitializer.Initialize(context, refreshDataOnAppInint);
         }
     }
 }

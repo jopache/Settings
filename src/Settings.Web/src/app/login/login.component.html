@@ -1,8 +1,10 @@
 <div>
   <form>
     <label for="login">Login </label>
-    <input type="text" />
+    <input type="text" [(ngModel)]="username" />
     <label for="password">Password </label>
-    <input type="text" />
+    <input type="text" [(ngModel)]="password" />
+
+    <button (click)="login()"> login </button>
   </form>
 </div>>

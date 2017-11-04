@@ -10,13 +10,14 @@ import { SettingsViewComponent } from './settings-view/settings-view.component';
 import { ApplicationService } from './services/application.service';
 import { EnvironmentService } from './services/environment.service';
 import { SettingsService } from './services/settings.service';
+import { AuthenticationService } from './services/authentication.service';
 import { CrudSettingComponent } from './crud-setting/crud-setting.component';
 
 
 
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
-import { SettingsAdminComponent } from './settings-admin/settings-admin.component'
+import { SettingsAdminComponent } from './settings-admin/settings-admin.component';
 
 // todo: Add components
 const appRoutes: Routes = [
@@ -43,7 +44,7 @@ const appRoutes: Routes = [
     HttpModule,
     FormsModule
   ],
-  providers: [ApplicationService, EnvironmentService, SettingsService],
+  providers: [ApplicationService, EnvironmentService, SettingsService, AuthenticationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

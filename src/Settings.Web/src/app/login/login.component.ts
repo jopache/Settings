@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
   selector: 'app-login',
@@ -7,12 +9,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginComponent implements OnInit {
 
-  userName: string;
+  username: string;
   password: string;
-  
-  constructor() { }
+
+  constructor(private router: Router, private route: ActivatedRoute, private authService: AuthenticationService) { }
 
   ngOnInit() {
+  }
+
+  login(): void {
+     console.log(this.router, this.route, this.authService);
+     this.router.navigateByUrl('/');
   }
 
 }

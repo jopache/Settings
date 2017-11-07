@@ -1,10 +1,18 @@
 <div>
   <form>
-    <label for="login">Login </label>
-    <input type="text" [(ngModel)]="username" />
-    <label for="password">Password </label>
-    <input type="text" [(ngModel)]="password" />
-
-    <button (click)="login()"> login </button>
+    <div>
+      <label for="login">Login </label>
+      <input type="text" [(ngModel)]="username" name="username"/>
+    </div>
+    <div>
+      <label for="password">Password </label>
+      <input type="text" [(ngModel)]="password" name="password" />
+    </div>
+    <div class="error" *ngIf="error">
+      {{error}}
+    </div>
+    <div>
+      <button (click)="login()"> login </button>
+    </div>
   </form>
-</div>>
+</div>

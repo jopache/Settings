@@ -15,9 +15,13 @@ export class AuthenticationService {
 
   constructor(private http: Http) { }
 
-  authenticate(): void {
-      this.isAuthenticated = true;
-      console.log('test');
+  authenticate(username: string, password: string): boolean {
+      if (username === password) {
+        this.isAuthenticated = true;
+      } else {
+        this.isAuthenticated = false;
+      }
+      return this.isAuthenticated;
   }
 
 

@@ -11,6 +11,7 @@ export class LoginComponent implements OnInit {
 
   username: string;
   password: string;
+  error: string;
 
   constructor(private router: Router, private route: ActivatedRoute, private authService: AuthenticationService) { }
 
@@ -19,7 +20,14 @@ export class LoginComponent implements OnInit {
 
   login(): void {
      console.log(this.router, this.route, this.authService);
-     this.router.navigateByUrl('/');
+     this.error = '';
+     if (this.authService.authenticate(this.username, this.password))
+     {
+       this.router.navigateByUrl('/');
+     } else {
+       this.error = 'invalid username/password';
+     }
+
   }
 
 }

@@ -13,6 +13,8 @@ import { SettingsService } from './services/settings.service';
 import { AuthenticationService } from './services/authentication.service';
 import { CrudSettingComponent } from './crud-setting/crud-setting.component';
 
+import { AuthGuard } from './guards/auth.guard';
+
 
 
 import { RouterModule, Routes } from '@angular/router';
@@ -21,8 +23,13 @@ import { SettingsAdminComponent } from './settings-admin/settings-admin.componen
 
 // todo: Add components
 const appRoutes: Routes = [
-  { path: '', component: SettingsAdminComponent },
-  { path: 'login', component: LoginComponent },
+  { path: '',
+    component: SettingsAdminComponent,
+    canActivate: [ AuthGuard ]
+  },
+  { path: 'login',
+    component: LoginComponent
+  },
 ];
 
 
@@ -44,7 +51,7 @@ const appRoutes: Routes = [
     HttpModule,
     FormsModule
   ],
-  providers: [ApplicationService, EnvironmentService, SettingsService, AuthenticationService],
+  providers: [ApplicationService, EnvironmentService, SettingsService, AuthenticationService, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

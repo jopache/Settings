@@ -88,7 +88,8 @@ namespace Settings
                     {
                         ValidIssuer = "test",
                         ValidAudience = "test",
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("test"))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("a very much longer string that is sure to be longer")),
+                        
                     };
                 });
 
@@ -114,7 +115,6 @@ namespace Settings
             switch (databaseType)
             {
                 case "SqlServer":
-                
                     services.AddDbContext<SettingsDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
                     services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
                     break;

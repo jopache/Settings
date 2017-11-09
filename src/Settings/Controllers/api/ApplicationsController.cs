@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -38,7 +39,7 @@ namespace Settings.Controllers.api
             return Ok(appsTree);
         }
 
-        [HttpGet("")]
+        [HttpGet("cookie")]
         [Authorize]
         public IActionResult GetAll()
         {
@@ -58,6 +59,13 @@ namespace Settings.Controllers.api
 
         [HttpGet("unprotected")]
         public IActionResult GetAllUnprotected()
+        {
+            return GetAll();
+        }
+
+        [HttpGet("jwt")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult GetAllJwt()
         {
             return GetAll();
         }

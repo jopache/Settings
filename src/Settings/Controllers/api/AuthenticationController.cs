@@ -4,6 +4,11 @@ using Microsoft.AspNetCore.Authorization;
 using Settings.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using System;
 
 namespace Settings.Controllers.api
 {
@@ -16,6 +21,7 @@ namespace Settings.Controllers.api
            _signInManager = signInManager;
        }
        
+       // todo: make this a real login
        [HttpGet("login")]
        //[HttpPost]
        [AllowAnonymous]
@@ -24,5 +30,46 @@ namespace Settings.Controllers.api
             
             return Ok();
         }
+
+        [AllowAnonymous]
+    [HttpGet("jwt")]
+    public async Task<IActionResult> GenerateToken()
+    {
+        var username = "admin";
+        var password = "admin";
+        var user = await _userManager.FindByEmailAsync("admin@admin.com");
+
+        if (user != null)
+        {
+          var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
+          if (result.Succeeded)
+          {
+
+            var claims = new[]
+            {
+              new Claim(JwtRegisteredClaimNames.Sub, username),
+              new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("a very much longer string that is sure to be longer"));
+    
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            
+
+            // todo: drop this hardcoding habbit, it's getting out of hand
+            var token = new JwtSecurityToken("test", "test",
+              claims,
+              expires: DateTime.Now.AddDays(30),
+              signingCredentials: creds);
+
+            return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
+          }
+          
+        }
+
+        return BadRequest("Could not create token");
+      }
+
     }
 }

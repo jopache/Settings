@@ -68,7 +68,13 @@ namespace Settings
 
             AddDatabaseContext(services);
 
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentity<User, IdentityRole>(options => {
+                    // todo: These need some TLC
+                    options.Password.RequireDigit = false;
+                    options.Password.RequiredLength = 4;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                })
                 .AddEntityFrameworkStores<AuthDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -82,7 +88,7 @@ namespace Settings
                     {
                         ValidIssuer = "test",
                         ValidAudience = "test",
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"]))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("test"))
                     };
                 });
 
@@ -128,7 +134,8 @@ namespace Settings
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, SettingsDbContext context)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, SettingsDbContext context,
+            AuthDbSeeder authSeeder)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -145,6 +152,9 @@ namespace Settings
 
             app.UseStaticFiles();
             app.UseCors("CorsPolicy");
+
+            app.UseAuthentication();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -154,7 +164,7 @@ namespace Settings
             var refreshDataOnAppInint = Convert.ToBoolean(Configuration["RefreshDataOnAppInint"]);
             
             DbInitializer.Initialize(context, refreshDataOnAppInint);
-            
+            authSeeder.SeedAsync().Wait();
         }
     }
 }

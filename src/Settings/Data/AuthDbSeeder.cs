@@ -25,7 +25,8 @@ namespace Settings.Data{
 
                 var result = await _userManager.CreateAsync(user, "admin");
                 if(result.Succeeded) {
-                    
+                    user.EmailConfirmed = true;
+                    await _userManager.UpdateAsync(user);
                 }
             }
         }

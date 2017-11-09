@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Settings.Common.Interfaces;
@@ -38,6 +39,7 @@ namespace Settings.Controllers.api
         }
 
         [HttpGet("")]
+        [Authorize]
         public IActionResult GetAll()
         {
             var applications = _context
@@ -52,6 +54,12 @@ namespace Settings.Controllers.api
             var applicationsTree = _hierarchyHelper.GetHierarchicalTree(app);
 
             return Ok(applicationsTree);
+        }
+
+        [HttpGet("unprotected")]
+        public IActionResult GetAllUnprotected()
+        {
+            return GetAll();
         }
 
         [HttpGet("add/{applicationName}/{parentApplicationName}")]

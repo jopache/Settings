@@ -11,7 +11,11 @@ using Settings.Common.Interfaces;
 using Settings.DataAccess;
 using Settings.Services;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
-
+using Settings.Data;
+using Settings.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Settings
 {
@@ -62,8 +66,31 @@ namespace Settings
                         .AllowCredentials());
             });
 
-            services.AddMvc();
             AddDatabaseContext(services);
+
+            services.AddIdentity<User, IdentityRole>()
+                .AddEntityFrameworkStores<AuthDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddAuthentication()
+                .AddCookie(cfg => cfg.SlidingExpiration = true)
+                .AddJwtBearer(cfg =>
+                {
+                    cfg.RequireHttpsMetadata = false;
+                    cfg.SaveToken = true;
+                    cfg.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidIssuer = "test",
+                        ValidAudience = "test",
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"]))
+                    };
+                });
+
+
+
+            services.AddTransient<AuthDbSeeder>();
+          
+
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<ISettingsProcessor, SettingsProcessor>();
             services.AddTransient<ISettingsDbContext, SettingsDbContext>();
@@ -71,6 +98,8 @@ namespace Settings
             services.AddTransient<Queries>();
             services.AddTransient<HierarchyHelper>();
             services.AddSingleton(GetLogger());
+
+            services.AddMvc();
         }
 
         public void AddDatabaseContext(IServiceCollection services)
@@ -79,16 +108,21 @@ namespace Settings
             switch (databaseType)
             {
                 case "SqlServer":
+                
                     services.AddDbContext<SettingsDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
+                    services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
                     break;
                 case "Postgres":
                     services.AddDbContext<SettingsDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Postgres")));
+                    services.AddDbContext<AuthDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Postgres")));
                     break;
                 case "InMemory":
                     services.AddDbContext<SettingsDbContext>(options => options.UseInMemoryDatabase(Configuration.GetConnectionString("InMemory")));
+                    services.AddDbContext<AuthDbContext>(options => options.UseInMemoryDatabase(Configuration.GetConnectionString("InMemory")));
                     break;
                 default:
                     services.AddDbContext<SettingsDbContext>(options => options.UseInMemoryDatabase(Configuration.GetConnectionString("InMemory")));
+                    services.AddDbContext<AuthDbContext>(options => options.UseInMemoryDatabase(Configuration.GetConnectionString("InMemory")));
                     break;
             }
         }
@@ -118,7 +152,9 @@ namespace Settings
                     template: "{controller=Settings}/{action=GetAllSettings}");
             });
             var refreshDataOnAppInint = Convert.ToBoolean(Configuration["RefreshDataOnAppInint"]);
+            
             DbInitializer.Initialize(context, refreshDataOnAppInint);
+            
         }
     }
 }

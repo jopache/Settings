@@ -5,7 +5,7 @@ import { EnvironmentService } from '../services/environment.service';
 import { SettingsService } from '../services/settings.service';
 import { Observable } from 'rxjs/Observable';
 @Component({
-  selector: 'settings-admin',
+  selector: 'app-settings-admin',
   templateUrl: './settings-admin.component.html',
   styleUrls: ['./settings-admin.component.scss']
 })

@@ -22,32 +22,30 @@ namespace Settings.Controllers.api
        }
        
        // todo: make this a real login
-       [HttpGet("login")]
+       [HttpPost("login")]
        //[HttpPost]
        [AllowAnonymous]
-        public async Task<IActionResult> Login(){
-            var result = await _signInManager.PasswordSignInAsync("admin", "admin", true, false);
-            
+        public async Task<IActionResult> Login([FromBody]LoginModel model){
+            var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, true, false);
             return Ok();
         }
 
-        [AllowAnonymous]
-    [HttpGet("jwt")]
-    public async Task<IActionResult> GenerateToken()
+    [AllowAnonymous]
+    [HttpPost("jwt")]
+    public async Task<IActionResult> GenerateToken([FromBody]LoginModel model)
     {
-        var username = "admin";
-        var password = "admin";
-        var user = await _userManager.FindByEmailAsync("admin@admin.com");
+
+        var user = await _userManager.FindByNameAsync(model.UserName);
 
         if (user != null)
         {
-          var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
+          var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
           if (result.Succeeded)
           {
 
             var claims = new[]
             {
-              new Claim(JwtRegisteredClaimNames.Sub, username),
+              new Claim(JwtRegisteredClaimNames.Sub, model.UserName),
               new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 

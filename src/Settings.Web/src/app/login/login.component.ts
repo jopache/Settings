@@ -21,13 +21,16 @@ export class LoginComponent implements OnInit {
   login(): void {
      console.log(this.router, this.route, this.authService);
      this.error = '';
-     if (this.authService.authenticate(this.username, this.password))
-     {
-       this.router.navigateByUrl('/');
-     } else {
-       this.error = 'invalid username/password';
-     }
-
+     this.authService.authenticate(this.username, this.password)
+     .then(success => {
+        if (success) {
+          this.router.navigateByUrl('/');
+        } else {
+          this.error = 'invalid username/password';
+        }
+     })
+     .catch(exception => {
+       this.error = 'error attempting login';
+     });
   }
-
 }

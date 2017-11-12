@@ -57,7 +57,7 @@ namespace Settings.Controllers.api
             return Ok(applicationsTree);
         }
 
-        [HttpGet("unprotected")]
+        [HttpGet("")]
         public IActionResult GetAllUnprotected()
         {
             return GetAll();

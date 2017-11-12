@@ -1,20 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ApplicationsListComponent } from './applications-list.component';
+import { TreeNodeComponent } from './tree-node.component';
 
 describe('ApplicationsListComponent', () => {
-  let component: ApplicationsListComponent;
-  let fixture: ComponentFixture<ApplicationsListComponent>;
+  let component: TreeNodeComponent;
+  let fixture: ComponentFixture<TreeNodeComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ApplicationsListComponent ]
+      declarations: [ TreeNodeComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ApplicationsListComponent);
+    fixture = TestBed.createComponent(TreeNodeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

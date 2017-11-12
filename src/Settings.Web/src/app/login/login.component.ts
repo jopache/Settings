@@ -26,11 +26,11 @@ export class LoginComponent implements OnInit {
         if (success) {
           this.router.navigateByUrl('/');
         } else {
-          this.error = 'invalid username/password';
+          this.error = 'unable to login';
         }
      })
      .catch(exception => {
-       this.error = 'error attempting login';
+       this.error = 'invalid username/password';
      });
   }
 }

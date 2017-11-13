@@ -21,10 +21,10 @@ namespace Settings.Controllers.api
            _signInManager = signInManager;
        }
        
+       [AllowAnonymous]
        // todo: make this a real login
        [HttpPost("login")]
        //[HttpPost]
-       [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody]LoginModel model){
             var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, true, false);
             return Ok();
@@ -32,9 +32,9 @@ namespace Settings.Controllers.api
 
     [AllowAnonymous]
     [HttpPost("jwt")]
+  
     public async Task<IActionResult> GenerateToken([FromBody]LoginModel model)
     {
-
         var user = await _userManager.FindByNameAsync(model.UserName);
 
         if (user != null)

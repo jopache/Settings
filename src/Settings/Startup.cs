@@ -16,6 +16,10 @@ using Settings.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Settings
 {
@@ -79,7 +83,6 @@ namespace Settings
                 .AddDefaultTokenProviders();
 
             services.AddAuthentication()
-                .AddCookie(cfg => cfg.SlidingExpiration = true)
                 .AddJwtBearer(cfg =>
                 {
                     cfg.RequireHttpsMetadata = false;
@@ -91,7 +94,8 @@ namespace Settings
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("a very much longer string that is sure to be longer")),
                         
                     };
-                });
+                })
+                .AddCookie(cfg => cfg.SlidingExpiration = true);
 
 
 
@@ -106,7 +110,15 @@ namespace Settings
             services.AddTransient<HierarchyHelper>();
             services.AddSingleton(GetLogger());
 
-            services.AddMvc();
+
+            services.AddMvc(config =>
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                                 .RequireAuthenticatedUser()
+                                 .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                                 .Build();
+                config.Filters.Add(new AuthorizeFilter(policy));
+            });
         }
 
         public void AddDatabaseContext(IServiceCollection services)
@@ -153,7 +165,7 @@ namespace Settings
             app.UseStaticFiles();
             app.UseCors("CorsPolicy");
 
-            app.UseAuthentication();
+            app.UseAuthentication();    
 
             app.UseMvc(routes =>
             {

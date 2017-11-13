@@ -39,8 +39,7 @@ namespace Settings.Controllers.api
             return Ok(appsTree);
         }
 
-        [HttpGet("cookie")]
-        [Authorize]
+        [HttpGet("")]
         public IActionResult GetAll()
         {
             var applications = _context
@@ -55,20 +54,6 @@ namespace Settings.Controllers.api
             var applicationsTree = _hierarchyHelper.GetHierarchicalTree(app);
 
             return Ok(applicationsTree);
-        }
-
-        [HttpGet("")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult GetAllUnprotected()
-        {
-            return GetAll();
-        }
-
-        [HttpGet("jwt")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult GetAllJwt()
-        {
-            return GetAll();
         }
 
         [HttpGet("add/{applicationName}/{parentApplicationName}")]

@@ -110,15 +110,19 @@ namespace Settings
             services.AddTransient<HierarchyHelper>();
             services.AddSingleton(GetLogger());
 
-
-            services.AddMvc(config =>
-            {
-                var policy = new AuthorizationPolicyBuilder()
-                                 .RequireAuthenticatedUser()
-                                 .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-                                 .Build();
-                config.Filters.Add(new AuthorizeFilter(policy));
-            });
+            if (Convert.ToBoolean(Configuration["EnableAuthentication"])) {
+                services.AddMvc(config =>
+                {
+                    var policy = new AuthorizationPolicyBuilder()
+                                     .RequireAuthenticatedUser()
+                                     .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                                     .Build();
+                    config.Filters.Add(new AuthorizeFilter(policy));
+                });                
+            } else {
+                services.AddMvc();
+            }
+            
         }
 
         public void AddDatabaseContext(IServiceCollection services)

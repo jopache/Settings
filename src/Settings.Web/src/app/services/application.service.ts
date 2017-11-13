@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/operator/toPromise';
 import { TreeNode } from '../treenode';
 import { Observable } from 'rxjs/Observable';
@@ -9,11 +9,9 @@ import { environment } from '../../environments/environment';
 
 @Injectable()
 export class ApplicationService implements TreeNodeSelector {
-
-  private headers = new Headers({ 'Content-Type': 'application/json' });
   private getAllApplicationsUrl = environment.backendUrl + '/api/applications/';
 
-  constructor(private http: Http) { }
+  constructor(private http: HttpClient) { }
 
   // TODO: Probably can change this to just Subject as my initial value is null anyways
   private _activeNode: BehaviorSubject<TreeNode> = new BehaviorSubject<TreeNode>(null);
@@ -27,7 +25,7 @@ export class ApplicationService implements TreeNodeSelector {
       .get(this.getAllApplicationsUrl)
       .toPromise()
       .then(response => {
-        const node = response.json() as TreeNode;
+        const node = response as TreeNode;
         return node;
       })
       .catch((error: any ): Promise<any> => {

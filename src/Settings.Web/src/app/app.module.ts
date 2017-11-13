@@ -2,6 +2,10 @@
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ApplicationInterceptor } from './services/application.interceptor';
 
 import { AppComponent } from './app.component';
 import { TreeNodeComponent } from './tree-node/tree-node.component';
@@ -49,9 +53,20 @@ const appRoutes: Routes = [
     ),
     BrowserModule,
     HttpModule,
+    HttpClientModule,
     FormsModule
   ],
-  providers: [ApplicationService, EnvironmentService, SettingsService, AuthenticationService, AuthGuard],
+  providers: [
+    ApplicationService,
+    EnvironmentService,
+    SettingsService,
+    AuthenticationService,
+    AuthGuard,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ApplicationInterceptor,
+      multi: true
+    }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

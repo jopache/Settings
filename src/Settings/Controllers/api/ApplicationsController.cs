@@ -58,6 +58,7 @@ namespace Settings.Controllers.api
         }
 
         [HttpGet("")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetAllUnprotected()
         {
             return GetAll();

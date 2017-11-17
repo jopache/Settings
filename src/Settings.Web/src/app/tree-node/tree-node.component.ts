@@ -1,4 +1,4 @@
-﻿import { TreeNodeSelector } from '../services/treeNodeSelector';
+﻿import { TreeNodeSelector } from '../services/treeNode.service';
 import { Component, OnInit, Input} from '@angular/core';
 import { TreeNode } from '../treenode';
 

@@ -1,4 +1,4 @@
-import { TreeNodeSelector } from './treeNodeSelector';
+import { TreeNodeSelector } from './treeNode.service';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/operator/toPromise';

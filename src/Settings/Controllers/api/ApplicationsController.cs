@@ -26,6 +26,7 @@ namespace Settings.Controllers.api
             _hierarchyHelper = hierarchyHelper;
             _appService = appService;
         }
+
         [HttpGet("{applicationName}")]
         public IActionResult Index(string applicationName)
         {
@@ -56,10 +57,10 @@ namespace Settings.Controllers.api
             return Ok(applicationsTree);
         }
 
-        [HttpGet("add/{applicationName}/{parentApplicationName}")]
-        public IActionResult Add(string applicationName, string parentApplicationName)
+        [HttpPost("add/parent-application-{parentAppId}/new-application-{applicationName}/")]
+        public IActionResult Add(string applicationName, int parentAppId)
         {
-            var parentApplication= _context.Applications.FirstOrDefault(x => x.Name == parentApplicationName);
+            var parentApplication= _context.Applications.FirstOrDefault(x => x.Id == parentAppId);
             if(parentApplication == null)
             {
                 return NotFound();

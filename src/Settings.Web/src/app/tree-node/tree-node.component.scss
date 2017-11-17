@@ -1,7 +1,30 @@
-﻿
-span.active {
-  background-color: #000;
+﻿.node-info {
+  margin-top: 5px;
+  
+  
+
+
+  .node-commands {
+    display: inline-block;
+
+    input {
+      color: #000;
+    }
+    input, button {
+      display: inline-block;
+      padding: 4px;
+      border: 0;
+      margin-bottom: 2px;
+      margin-left: 15px;
+
+    }
+  }
 }
+.active {
+  background-color: #000;
+  display: inline-block;
+}
+
 ul.tree-node-list {
   list-style-type: none;
   padding-left: 30px;

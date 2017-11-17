@@ -1,4 +1,4 @@
-import { TreeNodeSelector } from './treeNode.service';
+import { TreeNodeService } from './treeNode.service';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/operator/toPromise';
@@ -8,7 +8,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { environment } from '../../environments/environment';
 
 @Injectable()
-export class EnvironmentService implements TreeNodeSelector {
+export class EnvironmentService implements TreeNodeService {
   private getAllEnvironments = environment.backendUrl + '/api/environments/';
 
   constructor(private http: HttpClient) { }
@@ -32,4 +32,6 @@ export class EnvironmentService implements TreeNodeSelector {
         return Promise.reject('fail');
       });
   }
+  // todo: implement this
+  createChildNode(parentId: number, nodeName: string): Promise<any> { return null; }
 }

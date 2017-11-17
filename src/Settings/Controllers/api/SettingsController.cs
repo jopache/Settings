@@ -41,7 +41,7 @@ namespace Settings.Controllers.api
         public IActionResult CreateOrUpdate(string applicationName, string environmentName, [FromBody] SettingsWriteModel settings)
         {
             _settingsService.CreateOrEditSettings(applicationName, environmentName, settings);
-            return Ok();
+            return Ok(true);
         }
     }
 }

@@ -4,12 +4,12 @@ import 'rxjs/add/operator/toPromise';
 import { TreeNode } from '../treenode';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { TreeNodeSelector } from './treeNode.service';
+import { TreeNodeService } from './treeNode.service';
 import { environment } from '../../environments/environment';
 
 @Injectable()
-export class ApplicationService implements TreeNodeSelector {
-  private getAllApplicationsUrl = environment.backendUrl + '/api/applications/';
+export class ApplicationService implements TreeNodeService {
+  private baseUrl = environment.backendUrl + '/api/applications/';
 
   constructor(private http: HttpClient) { }
 
@@ -22,7 +22,7 @@ export class ApplicationService implements TreeNodeSelector {
   }
   getRootApplication(): Promise<TreeNode> {
     return this.http
-      .get(this.getAllApplicationsUrl)
+      .get(this.baseUrl)
       .toPromise()
       .then(response => {
         const node = response as TreeNode;
@@ -31,5 +31,20 @@ export class ApplicationService implements TreeNodeSelector {
       .catch((error: any ): Promise<any> => {
         return Promise.reject('fail');
       });
+  }
+  createChildNode(parentId: number, nodeName: string): Promise<any> {
+    return this.createApplication(parentId, nodeName);
+  }
+
+  createApplication(parentId: number, applicationName: string): Promise<any> {
+    const url = this.baseUrl + `add/parent-application-${parentId}/new-application-${applicationName}/`;
+    return this.http.post(url, {})
+    .toPromise()
+    .then(response => {
+      console.log('success');
+    })
+    .catch(blah => {
+      console.log('fail');
+    });
   }
 }

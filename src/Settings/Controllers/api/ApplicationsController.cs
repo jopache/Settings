@@ -70,7 +70,7 @@ namespace Settings.Controllers.api
                 Name = applicationName
             }, parentApplication.Id);
 
-            return Ok();
+            return Ok(true);
         }
     }
 }

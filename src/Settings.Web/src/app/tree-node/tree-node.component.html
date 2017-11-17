@@ -1,8 +1,18 @@
-﻿<span [ngClass]="{'tree-node-name': true, 'btn': true, 'btn-primary': true, 'active' : active}" (click)="onSelect(node)">
-   {{node.name}}
-</span>
+﻿<div class="{'active' : active, node-info : true, btn-primary : true, btn : true }">
+    <span [ngClass]="{'tree-node-name': true}" (click)="onSelect()">
+        {{node.name}} 
+     </span>
+     <div class="node-commands">
+         <input [(ngModel)]="childApplicationName" placeholder="name" />
+         <button class="add-child btn btn-info" (click)="addChild()">
+             Add Child
+         </button>
+      </div>
+</div>
+
+
 <ul class="tree-node-list ">
      <li *ngFor="let childNode of node.children" class="tree-node-item">
-        <app-tree-node [node]="childNode" [treeNodeSelector]="treeNodeSelector"></app-tree-node>
+        <app-tree-node [node]="childNode" [treeNodeService]="treeNodeService"></app-tree-node>
      </li>
  </ul>

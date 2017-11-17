@@ -1,23 +1,4 @@
-﻿h1 {
-  text-align: center;
-  padding: 15px 0px;
-}
-
-div.heading-selector {
-  display: inline-block;
-
-  div.applications-list, div.environments-list, div.setting-crud {
-    display: inline-block;
-    height: 280px;
-    width: 250px;
-    overflow-y: auto;
-  }
-
-  div.setting-crud {
-    width: 490px;
-  }
-}
-
-div.panel-heading {
-  text-align: center;
+﻿h1{
+    width: 100%;
+    text-align: center;
 }

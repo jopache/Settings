@@ -14,44 +14,8 @@ export class AppComponent implements OnInit {
 
 
 
-    }
-
-  activeAppNode$ = this.applicationService.activeNode;
-  activeEnvNode$ = this.environmentService.activeNode;
-
-  selectedApplication: TreeNode = null;
-  selectedEnvironment: TreeNode = null;
-
-  // need to rethink this. Eventually there may not be a root, there may be several "roots"
-  rootApplication: TreeNode = null;
-  rootEnvironment: TreeNode = null;
+  }
 
   ngOnInit(): void {
-    this.activeAppNode$.subscribe(app => {
-      if (app !== null) {
-        this.selectedApplication = app;
-      }
-    });
-
-    this.activeEnvNode$.subscribe(env => {
-      if (env !== null) {
-        this.selectedEnvironment = env;
-      }
-    });
-
-    this.applicationService
-      .getRootApplication()
-      .then(application => {
-        console.log('setting root application');
-        this.rootApplication = application;
-        this.applicationService.setActiveNode(application);
-      });
-
-    this.environmentService
-      .getRootEnvironment()
-      .then(environment => {
-        this.rootEnvironment = environment;
-        this.environmentService.setActiveNode(environment);
-      });
   }
 }

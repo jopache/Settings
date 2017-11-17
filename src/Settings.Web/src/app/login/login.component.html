@@ -1,0 +1,23 @@
+<div class="login">
+  <div class="panel panel-primary">
+      <div class="panel-heading">
+          Login
+        </div>
+        <form>
+            <div class="login-field">
+              <label for="login">Login </label>
+              <input type="text" [(ngModel)]="username" name="username"/>
+            </div>
+            <div class="login-field">
+              <label for="password">Password </label>
+              <input type="password" [(ngModel)]="password" name="password" />
+            </div>
+            <div class="error" *ngIf="error">
+              {{error}}
+            </div>
+            <div>
+              <button class="btn btn-primary" (click)="login()"> login </button>
+            </div>
+        </form>
+  </div>
+</div>

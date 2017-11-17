@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
-import { Headers, Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/operator/toPromise';
 import { environment } from '../../environments/environment';
 
@@ -17,7 +17,7 @@ export class SettingsService {
     { setting: any, envName: string, appName: string } =
     { setting: { name : '', value: '' }, envName: null, appName: null };
 
-  constructor(private http: Http) { }
+  constructor(private http: HttpClient) { }
 
   getSettings(appName: string, envName: string): Promise<any> {
     return this.http
@@ -27,7 +27,7 @@ export class SettingsService {
         this.currentEditModel.appName = appName;
         this.currentEditModel.envName = envName;
 
-        return response.json();
+        return response;
       })
       .catch((error: any ): Promise<any> => {
         return Promise.reject('fail');

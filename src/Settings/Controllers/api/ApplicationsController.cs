@@ -59,8 +59,8 @@ namespace Settings.Controllers.api
             return Ok(applicationsTree);
         }
 
-        [HttpPost("add/parent-application-{parentAppId}/new-application-{applicationName}/")]
-        public IActionResult Add(string applicationName, int parentAppId)
+        [HttpPost("add/parent-{parentAppId}/new-{name}/")]
+        public IActionResult Add(string name, int parentAppId)
         {
             var parentApplication= _context.Applications.FirstOrDefault(x => x.Id == parentAppId);
             if(parentApplication == null)
@@ -69,7 +69,7 @@ namespace Settings.Controllers.api
             }
             var application = _appService.AddApplication(new Common.Domain.Application
             {
-                Name = applicationName
+                Name = name
             }, parentApplication.Id);
 
             return Ok(new {

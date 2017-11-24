@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,13 +14,15 @@ namespace Settings.Controllers.api
         private readonly ISettingsDbContext _context;
         private readonly Queries _queries;
         private readonly HierarchyHelper _hierarchyHelper;
+        private readonly IEnvironmentService _environmentService;
 
         public EnvironmentsController(ISettingsDbContext context, Queries queries, 
-            HierarchyHelper hierarchyHelper)
+            HierarchyHelper hierarchyHelper, IEnvironmentService environmentService)
         {
             _context = context;
             _queries = queries;
             _hierarchyHelper = hierarchyHelper;
+            _environmentService = environmentService;
         }
         [HttpGet("{environmentName}")]
         public IActionResult Index(string environmentName)
@@ -50,6 +53,27 @@ namespace Settings.Controllers.api
                 .GetHierarchicalTree(environments.First());
 
             return Ok(environmentsTree);
+        }
+
+
+        [HttpPost("add/parent-{parentEnvId}/new-{name}/")]
+        public IActionResult Add(string name, int parentEnvId)
+        {
+            var parentEnvironment = _context.Environments.FirstOrDefault(x => x.Id == parentEnvId);
+            if(parentEnvironment == null)
+            {
+                return NotFound();
+            }
+            var environment = _environmentService.AddEnvironment(new Common.Domain.Environment
+            {
+                Name = name
+            }, parentEnvironment.Id);
+
+            return Ok(new {
+                Name = environment.Name,
+                Id = environment.Id,
+                Children = new ArrayList()
+            });
         }
     }
 }

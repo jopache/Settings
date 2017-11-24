@@ -37,7 +37,7 @@ export class ApplicationService implements TreeNodeService {
   }
 
   createApplication(parentId: number, applicationName: string): Promise<any> {
-    const url = this.baseUrl + `add/parent-application-${parentId}/new-application-${applicationName}/`;
+    const url = this.baseUrl + `add/parent-${parentId}/new-${applicationName}/`;
     return this.http.post(url, {})
     .toPromise()
     .then(response => {

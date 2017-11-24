@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
 
 @Injectable()
 export class EnvironmentService implements TreeNodeService {
-  private getAllEnvironments = environment.backendUrl + '/api/environments/';
+  private baseUrl = environment.backendUrl + '/api/environments/';
 
   constructor(private http: HttpClient) { }
 
@@ -23,7 +23,7 @@ export class EnvironmentService implements TreeNodeService {
   getRootEnvironment(): Promise<TreeNode> {
 
     return this.http
-      .get(this.getAllEnvironments)
+      .get(this.baseUrl)
       .toPromise()
       .then(response => {
         return response as TreeNode;
@@ -32,6 +32,21 @@ export class EnvironmentService implements TreeNodeService {
         return Promise.reject('fail');
       });
   }
-  // todo: implement this
-  createChildNode(parentId: number, nodeName: string): Promise<any> { return null; }
+
+  createChildNode(parentId: number, nodeName: string): Promise<any> {
+    return this.createEnvironment(parentId, nodeName);
+  }
+
+  createEnvironment(parentId: number, name: string): Promise<any> {
+    const url = this.baseUrl + `add/parent-${parentId}/new-${name}/`;
+    return this.http.post(url, {})
+    .toPromise()
+    .then(response => {
+      console.log('success');
+      return response as TreeNode;
+    })
+    .catch(blah => {
+      console.log('fail');
+    });
+  }
 }

@@ -106,6 +106,7 @@ namespace Settings
             services.AddTransient<ISettingsProcessor, SettingsProcessor>();
             services.AddTransient<ISettingsDbContext, SettingsDbContext>();
             services.AddTransient<IApplicationService, ApplicationService>();
+            services.AddTransient<IEnvironmentService, EnvironmentService>();
             services.AddTransient<Queries>();
             services.AddTransient<HierarchyHelper>();
             services.AddSingleton(GetLogger());

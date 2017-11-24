@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -65,12 +67,16 @@ namespace Settings.Controllers.api
             {
                 return NotFound();
             }
-            _appService.AddApplication(new Common.Domain.Application
+            var application = _appService.AddApplication(new Common.Domain.Application
             {
                 Name = applicationName
             }, parentApplication.Id);
 
-            return Ok(true);
+            return Ok(new {
+                Name = application.Name,
+                Id = application.Id,
+                Children = new ArrayList()
+            });
         }
     }
 }

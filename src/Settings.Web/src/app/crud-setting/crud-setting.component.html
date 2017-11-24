@@ -1,7 +1,7 @@
 <form *ngIf="editSettingModel">
   <div class="edit-name">
     <label for="name"> Name: </label>
-    <input [(ngModel)]="editSettingModel.setting.name" id="name" name="name" />
+    <input [(ngModel)]="editSettingModel.setting.name" id="name" name="name" required />
   </div>
 
   <div class="edit-value">

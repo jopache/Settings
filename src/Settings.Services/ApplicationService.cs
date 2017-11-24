@@ -18,7 +18,7 @@ namespace Settings.Services
 
         private readonly HierarchyHelper _hierarchyHelper;
 
-        public void AddApplication(Application application, int parentApplicationId)
+        public Application AddApplication(Application application, int parentApplicationId)
         {
             var parentApplication = _context.Applications.First(x => x.Id == parentApplicationId);
             var parentAppExists = parentApplication != null;
@@ -83,9 +83,9 @@ namespace Settings.Services
                 //todo: Killing mme with the stuff tied to one hierarchy. 
                 .First(x => x.ParentId == null);
                 
-
-            
             var isValid = _hierarchyHelper.ValidateWeights(appToValidate, ref leftW);
+            
+            return application;
         }
     }
 }

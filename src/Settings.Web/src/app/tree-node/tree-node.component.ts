@@ -13,6 +13,7 @@ export class TreeNodeComponent implements OnInit {
   @Input() treeNodeService: TreeNodeService;
   active = false;
   childApplicationName = '';
+  showChildren = true;
 
   constructor() { }
 
@@ -34,7 +35,10 @@ export class TreeNodeComponent implements OnInit {
   addChild(): void {
     this.treeNodeService.createChildNode(this.node.id, this.childApplicationName)
       .then(result => {
+        const childNode = result as TreeNode;
+        this.node.children.push(childNode);
         this.childApplicationName = '';
+        this.showChildren = true;
       });
   }
 }

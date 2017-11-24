@@ -42,6 +42,7 @@ export class ApplicationService implements TreeNodeService {
     .toPromise()
     .then(response => {
       console.log('success');
+      return response as TreeNode;
     })
     .catch(blah => {
       console.log('fail');

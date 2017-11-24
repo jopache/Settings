@@ -5,6 +5,6 @@ namespace Settings.Common.Interfaces
 {
     public interface IApplicationService
     {
-        void AddApplication(Application application, int parentApplicationId);
+        Application AddApplication(Application application, int parentApplicationId);
     }
 }

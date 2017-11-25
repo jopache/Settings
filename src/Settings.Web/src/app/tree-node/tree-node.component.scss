@@ -1,12 +1,15 @@
 ﻿.node-info {
   margin-top: 5px;
-  
-  
+  text-align: left;
 
+  .add-child-link {
+    margin-left: 15px;
+    cursor: button;
+  }
 
   .node-commands {
-    display: inline-block;
-
+    padding-top: 15px;
+    padding-bottom: 5px;
     input {
       color: #000;
     }
@@ -16,8 +19,9 @@
       border: 0;
       margin-bottom: 2px;
       margin-left: 15px;
-
     }
+
+    
   }
 }
 .active {
@@ -27,7 +31,7 @@
 
 ul.tree-node-list {
   list-style-type: none;
-  padding-left: 30px;
+  padding-left: 12px;
   margin-top: 5px;
 
   li.tree-node-item {

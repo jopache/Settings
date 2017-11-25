@@ -11,9 +11,6 @@ import { Observable } from 'rxjs/Observable';
 })
 export class SettingsAdminComponent implements OnInit {
   constructor(public applicationService: ApplicationService, public environmentService: EnvironmentService) {
-
-
-
   }
 
   activeAppNode$ = this.applicationService.activeNode;

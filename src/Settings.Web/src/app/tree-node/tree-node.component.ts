@@ -2,7 +2,6 @@
 import { Component, OnInit, Input} from '@angular/core';
 import { TreeNode } from '../treenode';
 
-
 @Component({
   selector: 'app-tree-node',
   templateUrl: './tree-node.component.html',
@@ -11,9 +10,11 @@ import { TreeNode } from '../treenode';
 export class TreeNodeComponent implements OnInit {
   @Input() node: TreeNode;
   @Input() treeNodeService: TreeNodeService;
+  @Input() nodeLabel: String;
   active = false;
-  childApplicationName = '';
+  childName = '';
   showChildren = true;
+  showAddChild = false;
 
   constructor() { }
 
@@ -33,11 +34,11 @@ export class TreeNodeComponent implements OnInit {
   }
 
   addChild(): void {
-    this.treeNodeService.createChildNode(this.node.id, this.childApplicationName)
+    this.treeNodeService.createChildNode(this.node.id, this.childName)
       .then(result => {
         const childNode = result as TreeNode;
         this.node.children.push(childNode);
-        this.childApplicationName = '';
+        this.childName = '';
         this.showChildren = true;
       });
   }

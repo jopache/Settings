@@ -7,14 +7,14 @@
         <div class="applications-list panel panel-primary">
           <div class="panel-heading">Applications</div>
           <div class="panel-body">
-            <app-tree-node [node]="rootApplication" [treeNodeService]="applicationService"></app-tree-node>
+              <app-tree-node [node]="rootApplication" [treeNodeService]="applicationService" [nodeLabel]="Application"></app-tree-node>
           </div>
         </div>
         <div class="environments-list panel panel-primary">
     
           <div class="panel-heading">Environments</div>
           <div class="panel-body">
-            <app-tree-node [node]="rootEnvironment" [treeNodeService]="environmentService"></app-tree-node>
+            <app-tree-node [node]="rootEnvironment" [treeNodeService]="environmentService" [nodeLabel]="Environment"></app-tree-node>
           </div>
         </div>
     

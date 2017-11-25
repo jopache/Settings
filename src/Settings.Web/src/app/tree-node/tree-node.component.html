@@ -1,4 +1,5 @@
 ﻿<div class="{'active' : active, node-info : true, btn-primary : true, btn : true }">
+    <div>
     <span *ngIf="showChildren && node.children.length > 0"(click)="showChildren = !showChildren;">
        -
     </span>
@@ -7,13 +8,23 @@
     </span>
     <span [ngClass]="{'tree-node-name': true}" (click)="onSelect()">
         {{node.name}} 
-     </span>
-     <div class="node-commands">
-         <input [(ngModel)]="childApplicationName" placeholder="Application Name" />
-         <button class="add-child btn btn-info" [disabled]="!childApplicationName" (click)="addChild()">
-             Add Child
-         </button>
-      </div>
+    </span>
+    <span class="add-child-link btn btn-info" (click)="showAddChild = !showAddChild"> 
+        <span *ngIf="!showAddChild">
+                Add Child {{nodeLabel}} 
+        </span>
+        <span *ngIf="showAddChild">
+                Cancel
+        </span>
+    </span>
+    </div>
+        <div class="node-commands" *ngIf="showAddChild">  
+         
+            <input [(ngModel)]="childName" placeholder="Name" />
+            <button class="add-child btn btn-info" [disabled]="!childName" (click)="addChild()">
+                Add
+            </button>
+        </div>
 </div>
 
 

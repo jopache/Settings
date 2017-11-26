@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Settings.Common.Interfaces;
+using Settings.Common.Models;
 using Settings.DataAccess;
 using Settings.Services;
 
@@ -30,6 +31,7 @@ namespace Settings.Controllers.api
         }
 
         [HttpGet("{applicationName}")]
+        [ProducesResponseType(typeof(HierarchicalModel), 200)]
         public IActionResult Index(string applicationName)
         {
             var applications = _queries.GetApplicationAndChildren(applicationName)
@@ -43,6 +45,7 @@ namespace Settings.Controllers.api
         }
 
         [HttpGet("")]
+        [ProducesResponseType(typeof(HierarchicalModel), 200)]
         public IActionResult GetAll()
         {
             var applications = _context
@@ -60,6 +63,7 @@ namespace Settings.Controllers.api
         }
 
         [HttpPost("add/parent-{parentAppId}/new-{name}/")]
+        [ProducesResponseType(typeof(HierarchicalModel), 200)]
         public IActionResult Add(string name, int parentAppId)
         {
             var parentApplication= _context.Applications.FirstOrDefault(x => x.Id == parentAppId);
@@ -72,11 +76,14 @@ namespace Settings.Controllers.api
                 Name = name
             }, parentApplication.Id);
 
-            return Ok(new {
+            var response = new HierarchicalModel{
                 Name = application.Name,
                 Id = application.Id,
-                Children = new ArrayList()
-            });
+                Children = new List<HierarchicalModel>(),
+                LeftWeight = application.LeftWeight,
+                RightWeight = application.RightWeight
+            };
+            return Ok(response);
         }
     }
 }

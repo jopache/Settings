@@ -8,8 +8,8 @@ export interface Token {
   token: string;
 }
 @Injectable()
-export class AuthenticationService {
-  private authUrl = environment.backendUrl + '/api/authentication/jwt';
+export class AuthorizationService {
+  private authUrl = environment.backendUrl + '/api/authorization/jwt';
   private localStorageTokenKey = 'jwt_token';
   private token: string = null;
 

@@ -1,8 +1,11 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Settings.Common.Domain;
 using Settings.Common.Interfaces;
+using Settings.Common.Models;
 using Settings.DataAccess;
 using Settings.Services;
 
@@ -25,6 +28,7 @@ namespace Settings.Controllers.api
             _environmentService = environmentService;
         }
         [HttpGet("{environmentName}")]
+        [ProducesResponseType(typeof(HierarchicalModel), 200)]
         public IActionResult Index(string environmentName)
         {
             var environments = _queries.GetEnvironmentAndChildren(environmentName)
@@ -38,6 +42,7 @@ namespace Settings.Controllers.api
         }
 
         [HttpGet("")]
+        [ProducesResponseType(typeof(HierarchicalModel), 200)]
         public IActionResult GetAll()
         {
             var environments = _context
@@ -57,6 +62,7 @@ namespace Settings.Controllers.api
 
 
         [HttpPost("add/parent-{parentEnvId}/new-{name}/")]
+        [ProducesResponseType(typeof(HierarchicalModel), 200)]
         public IActionResult Add(string name, int parentEnvId)
         {
             var parentEnvironment = _context.Environments.FirstOrDefault(x => x.Id == parentEnvId);
@@ -64,15 +70,15 @@ namespace Settings.Controllers.api
             {
                 return NotFound();
             }
-            var environment = _environmentService.AddEnvironment(new Common.Domain.Environment
+            var environment = _environmentService.AddEnvironment(new Environment
             {
                 Name = name
             }, parentEnvironment.Id);
 
-            return Ok(new {
+            return Ok(new HierarchicalModel {
                 Name = environment.Name,
                 Id = environment.Id,
-                Children = new ArrayList()
+                Children = new List<HierarchicalModel>()
             });
         }
     }

@@ -14,7 +14,7 @@ import { SettingsViewComponent } from './settings-view/settings-view.component';
 import { ApplicationService } from './services/application.service';
 import { EnvironmentService } from './services/environment.service';
 import { SettingsService } from './services/settings.service';
-import { AuthenticationService } from './services/authentication.service';
+import { AuthorizationService } from './services/authorization.service';
 import { CrudSettingComponent } from './crud-setting/crud-setting.component';
 
 import { AuthGuard } from './guards/auth.guard';
@@ -60,7 +60,7 @@ const appRoutes: Routes = [
     ApplicationService,
     EnvironmentService,
     SettingsService,
-    AuthenticationService,
+    AuthorizationService,
     AuthGuard,
     {
       provide: HTTP_INTERCEPTORS,

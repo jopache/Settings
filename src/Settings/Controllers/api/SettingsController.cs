@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Serilog.Core;
@@ -19,6 +20,7 @@ namespace Settings.Controllers.api
         }
 
         [HttpGet("{applicationName}/{environmentName}")]
+        [ProducesResponseType(typeof(IEnumerable<SettingReadModel>), statusCode: 200)]
         public IActionResult GetSettingsForApplicationEnvironment(string applicationName, string environmentName)
         {
             var runningSettings = _settingsService.GetApplicationEnvironmentSettings(applicationName, environmentName);
@@ -38,6 +40,7 @@ namespace Settings.Controllers.api
         }
 
         [HttpPost("create-update/{applicationName}/{environmentName}")]
+        [ProducesResponseType(typeof(Boolean), 200)]
         public IActionResult CreateOrUpdate(string applicationName, string environmentName, [FromBody] SettingsWriteModel settings)
         {
             _settingsService.CreateOrEditSettings(applicationName, environmentName, settings);

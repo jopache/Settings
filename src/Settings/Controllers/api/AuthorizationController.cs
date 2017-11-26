@@ -12,11 +12,11 @@ using System;
 
 namespace Settings.Controllers.api
 {
-    [Route("api/authentication/")]
-    public class AuthenticationController : Controller{
+    [Route("api/authorization/")]
+    public class AuthorizationController : Controller{
        private readonly UserManager<User> _userManager;
        private readonly SignInManager<User> _signInManager;
-       public AuthenticationController(UserManager<User> userManager, SignInManager<User> signInManager){
+       public AuthorizationController(UserManager<User> userManager, SignInManager<User> signInManager){
            _userManager = userManager;
            _signInManager = signInManager;
        }
@@ -32,7 +32,7 @@ namespace Settings.Controllers.api
 
     [AllowAnonymous]
     [HttpPost("jwt")]
-  
+    [ProducesResponseType(typeof(JwtToken), 200)]
     public async Task<IActionResult> GenerateToken([FromBody]LoginModel model)
     {
         var user = await _userManager.FindByNameAsync(model.UserName);
@@ -61,7 +61,7 @@ namespace Settings.Controllers.api
               expires: DateTime.Now.AddDays(30),
               signingCredentials: creds);
 
-            return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
+            return Ok(new JwtToken{ Token = new JwtSecurityTokenHandler().WriteToken(token) });
           }
           
         }

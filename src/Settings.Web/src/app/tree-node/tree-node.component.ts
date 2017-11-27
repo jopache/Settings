@@ -40,6 +40,7 @@ export class TreeNodeComponent implements OnInit {
         this.node.children.push(childNode);
         this.childName = '';
         this.showChildren = true;
+        this.showAddChild = false;
       });
   }
 }

@@ -1,12 +1,15 @@
-﻿<div class="{'active' : active, node-info : true, btn-primary : true, btn : true }">
+﻿<div [ngClass]="{'active' : active, 'node-info' : true, 'btn-primary' : true, 'btn' : true }"
+    (click)="onSelect($event)">
     <div>
-    <span *ngIf="showChildren && node.children.length > 0"(click)="showChildren = !showChildren;">
+
+        <!--todo: look in to https://stackoverflow.com/questions/35274028/stop-event-propagation-in-angular-2-->
+    <span *ngIf="showChildren && node.children.length > 0"(click)="showChildren = !showChildren; $event.stopPropagation();">
        -
     </span>
-    <span *ngIf="!showChildren && node.children.length > 0" (click)="showChildren = !showChildren;">
+    <span *ngIf="!showChildren && node.children.length > 0" (click)="showChildren = !showChildren; $event.stopPropagation();">
        +
     </span>
-    <span [ngClass]="{'tree-node-name': true}" (click)="onSelect()">
+    <span [ngClass]="{'tree-node-name': true}">
         {{node.name}} 
     </span>
     <span class="add-child-link btn btn-info" (click)="showAddChild = !showAddChild"> 

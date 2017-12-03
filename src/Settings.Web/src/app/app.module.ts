@@ -24,6 +24,8 @@ import { AuthGuard } from './guards/auth.guard';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { SettingsAdminComponent } from './settings-admin/settings-admin.component';
+import { UserAdministrationComponent } from './user-administration/user-administration.component';
+import { AddEdditUserComponent } from './add-eddit-user/add-eddit-user.component';
 
 // todo: Add components
 const appRoutes: Routes = [
@@ -34,6 +36,11 @@ const appRoutes: Routes = [
   { path: 'login',
     component: LoginComponent
   },
+  {
+    path: 'user-administration',
+    component: UserAdministrationComponent,
+    canActivate: [AuthGuard]
+  }
 ];
 
 
@@ -44,7 +51,9 @@ const appRoutes: Routes = [
     SettingsViewComponent,
     CrudSettingComponent,
     LoginComponent,
-    SettingsAdminComponent
+    SettingsAdminComponent,
+    UserAdministrationComponent,
+    AddEdditUserComponent
   ],
   imports: [
     RouterModule.forRoot(

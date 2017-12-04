@@ -1,3 +1,30 @@
-<p>
-  add-eddit-user works!
-</p>
+<form #addEditUserForm="ngForm">
+  <div>
+    <label for="username">
+      Username:
+    </label> 
+    <input name="username" 
+      [(ngModel)]="username" 
+      required
+      minlength="4"
+      #usernameInput="ngModel" />
+  </div>
+
+  <div class="error" *ngIf="!usernameInput.valid && (usernameInput.dirty || usernameInput.touched)">
+    Username must be at least 4 characters long.
+  </div>
+
+  <div>
+    <div>
+      <label for="isAdmin">
+        Is Admin:
+      </label>
+      <input type="checkbox" [(ngModel)]="isAdmin" name="isAdmin" />
+    </div>
+  </div>
+  <button class="btn btn-primary" 
+      [disabled]="!addEditUserForm.form.valid" 
+      (click)="createUser()">
+    Create User
+  </button>
+</form>

@@ -1,0 +1,21 @@
+
+
+form {
+    padding-left: 10px;
+    label {
+        width: 90px;
+    }
+    input { 
+        padding-left: 5px;
+    }
+    .ng-valid[required], .ng-valid.required {
+        border-left: 5px solid green;
+    }
+    .ng-invalid:not(form)  {
+        border-left: 5px solid red;
+    }
+
+    .error {
+        color: red;
+    }
+}

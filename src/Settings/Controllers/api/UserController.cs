@@ -1,9 +1,12 @@
-using System;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Settings.Models;
+using System.Linq;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace Settings.Controllers.api {
+namespace Settings.Controllers.api
+{
     [Route("/api/users/")]
     public class UserController : Controller {
         private readonly UserManager<User> userManager;
@@ -12,11 +15,38 @@ namespace Settings.Controllers.api {
             this.userManager = userManager;
         }
         
+        //TODO: Implement proper security, not just auto setting a password
         [Route("add-edit/")]
         [HttpPost]
-        public IActionResult AddEditUser([FromBody]AddEditUserModel addEditUserModel) {
-            //TODO: Implement this.
-            return Ok();
+        [ProducesResponseType(typeof(int), 200)]
+        public async Task<IActionResult> AddEditUser(
+            [FromBody]AddEditUserModel addEditUserModel) {
+            var user = new User{
+                    UserName = addEditUserModel.Username
+                };
+
+            var result = await userManager.CreateAsync(user, "admin");
+            if(result.Succeeded) {
+                    //figure out why it needs an object in response
+                return Ok(user.Id);
+            }
+            return BadRequest();
+        }
+
+        //TODO: Need to paginate this
+        [Route("")]
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<User>), 200)]
+        public IActionResult ViewUsers() {
+            var listOfUsers = userManager.Users.Select(x => 
+                                new { 
+                                    Username = x.UserName,
+                                    IsAdmin = x.IsAdmin,
+                                    Id = x.Id
+                                })
+                                .ToList();
+
+            return Ok(listOfUsers);
         }
     }
 }

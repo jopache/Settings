@@ -25,7 +25,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { SettingsAdminComponent } from './settings-admin/settings-admin.component';
 import { UserAdministrationComponent } from './user-administration/user-administration.component';
-import { AddEdditUserComponent } from './add-eddit-user/add-eddit-user.component';
+import { AddEdditUserComponent } from './add-eddit-user/add-eddit-user.componen;
+import { UserListComponent } from './user-list/user-list.component't';
 
 // todo: Add components
 const appRoutes: Routes = [
@@ -53,7 +54,8 @@ const appRoutes: Routes = [
     LoginComponent,
     SettingsAdminComponent,
     UserAdministrationComponent,
-    AddEdditUserComponent
+    AddEdditUserCompone,
+    UserListComponentnt
   ],
   imports: [
     RouterModule.forRoot(

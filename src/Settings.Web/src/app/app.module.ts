@@ -25,8 +25,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { SettingsAdminComponent } from './settings-admin/settings-admin.component';
 import { UserAdministrationComponent } from './user-administration/user-administration.component';
-import { AddEdditUserComponent } from './add-eddit-user/add-eddit-user.component';
+import { AddUserComponent } from './add-user/add-user.component';
 import { UserListComponent } from './user-list/user-list.component';
+import { UserService } from './services/user.service';
 
 // todo: Add components
 const appRoutes: Routes = [
@@ -54,7 +55,7 @@ const appRoutes: Routes = [
     LoginComponent,
     SettingsAdminComponent,
     UserAdministrationComponent,
-    AddEdditUserComponent,
+    AddUserComponent,
     UserListComponent
   ],
   imports: [
@@ -72,6 +73,7 @@ const appRoutes: Routes = [
     EnvironmentService,
     SettingsService,
     AuthorizationService,
+    UserService,
     AuthGuard,
     {
       provide: HTTP_INTERCEPTORS,

@@ -16,18 +16,23 @@ namespace Settings.Controllers.api
         }
         
         //TODO: Implement proper security, not just auto setting a password
-        [Route("add-edit/")]
+        [Route("add/")]
         [HttpPost]
         [ProducesResponseType(typeof(int), 200)]
+        [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> AddEditUser(
             [FromBody]AddEditUserModel addEditUserModel) {
             var user = new User{
                     UserName = addEditUserModel.Username
                 };
-
+            
+            if (await userManager.FindByNameAsync(addEditUserModel.Username) != null) {
+                return BadRequest("User already exists");
+            }
+        
             var result = await userManager.CreateAsync(user, "admin");
             if(result.Succeeded) {
-                    //figure out why it needs an object in response
+                //todo: figure out why it needs an object in response
                 return Ok(user.Id);
             }
             return BadRequest();

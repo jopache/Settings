@@ -15,27 +15,31 @@ namespace Settings.Controllers.api
             this.userManager = userManager;
         }
         
-        //TODO: Implement proper security, not just auto setting a password
+        //TODO: Implement better security
         [Route("add/")]
         [HttpPost]
-        [ProducesResponseType(typeof(int), 200)]
-        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(typeof(IEnumerable<string>), 400)]
         public async Task<IActionResult> AddEditUser(
-            [FromBody]AddEditUserModel addEditUserModel) {
+            [FromBody]AddUserModel addEditUserModel) {
+            
             var user = new User{
                     UserName = addEditUserModel.Username
                 };
             
             if (await userManager.FindByNameAsync(addEditUserModel.Username) != null) {
-                return BadRequest("User already exists");
+                return BadRequest(new List<string>(){
+                    $"Username {addEditUserModel.Username} not available"
+                });
             }
         
-            var result = await userManager.CreateAsync(user, "admin");
+            var result = await userManager.CreateAsync(user, addEditUserModel.Password);
             if(result.Succeeded) {
-                //todo: figure out why it needs an object in response
-                return Ok(user.Id);
+               return NoContent();
+            } else {
+               return BadRequest(result.Errors.Select(x => x.Description));
             }
-            return BadRequest();
+            
         }
 
         //TODO: Need to paginate this

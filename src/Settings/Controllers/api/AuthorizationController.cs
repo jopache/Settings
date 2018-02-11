@@ -47,6 +47,7 @@ namespace Settings.Controllers.api
             {
               new Claim(JwtRegisteredClaimNames.Sub, model.UserName),
               new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+              new Claim("isAdmin", user.IsAdmin.ToString())
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("a very much longer string that is sure to be longer"));

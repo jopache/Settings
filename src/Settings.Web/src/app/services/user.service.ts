@@ -9,16 +9,20 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  createUser(username: string, isAdmin: boolean): Promise<any> {
+  createUser(username: string, isAdmin: boolean, password: string): Promise<any> {
     const url = this.baseUrl + 'add/';
-    return this.http.post(url, {})
-    .toPromise()
-    .then(response => {
-      console.log('success adding user');
-      return true;
+    return this.http.post(url, {
+      username: username,
+      isAdmin: isAdmin,
+      password: password
     })
-    .catch(blah => {
-      console.log('fail');
+    .toPromise()
+    .then( () => {
+      console.log('success adding user');
+      return Promise.resolve();
+    })
+    .catch(resp => {
+      return Promise.reject(resp.error);
     });
   }
 }

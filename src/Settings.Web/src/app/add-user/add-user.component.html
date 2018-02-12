@@ -1,46 +1,50 @@
-<form #addEditUserForm="ngForm">
-  
-  <div>
-    <label for="username"> Username: </label> 
-    <input name="username" 
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    Add User
+  </div>
+  <form #addEditUserForm="ngForm">
+    
+    <div>
+      <label for="username"> Username: </label> 
+      <input name="username" 
       [(ngModel)]="username" 
       required
       minlength="4"
       #usernameInput="ngModel" />
-  </div>
-  <div class="error" *ngIf="!usernameInput.valid && (usernameInput.dirty || usernameInput.touched)">
-    Username must be at least 4 characters long.
-  </div>
-
-  <div>
-    <label for="isAdmin"> Is Admin: </label>
-    <input type="checkbox" [(ngModel)]="isAdmin" name="isAdmin" />
-  </div>
-
-  <!-- todo: add proper validation to field -->
-  <div>
-    <label for="password">Password: </label>
-    <input name="password"
+    </div>
+    <div class="error" *ngIf="!usernameInput.valid && (usernameInput.dirty || usernameInput.touched)">
+      Username must be at least 4 characters long.
+    </div>
+    
+    <div>
+      <label for="isAdmin"> Is Admin: </label>
+      <input type="checkbox" [(ngModel)]="isAdmin" name="isAdmin" />
+    </div>
+    
+    <!-- todo: add proper validation to field -->
+    <div>
+      <label for="password">Password: </label>
+      <input name="password"
       [(ngModel)]="password"
       required
       minlength="6"
       #passwordInput="ngModel" />
-  </div>
-  <div>
-    <label for="passwordConfirmation">Confirm Password: </label>
-    <input name="passwordConfirmation"
+    </div>
+    <div>
+      <label for="passwordConfirmation">Confirm Password: </label>
+      <input name="passwordConfirmation"
       [(ngModel)]="passwordConfirmation"
       required
       minlength="6"
       #passwordConfirmationInput="ngModel" />
-  </div>
-  <div class="error" *ngIf="(!passwordConfirmationInput.valid || !passwordInput.valid) && (passwordInput.dirty || passwordConfirmationInput.dirty)">
-    Invalid password or password does not match
-  </div>
-
-  <button class="btn btn-primary" 
-      [disabled]="!addEditUserForm.form.valid" 
-      (click)="createUser()">
+    </div>
+    <div class="error" *ngIf="(!passwordConfirmationInput.valid || !passwordInput.valid) && (passwordInput.dirty || passwordConfirmationInput.dirty)">
+      Invalid password or password does not match
+    </div>
+    
+    <button class="btn btn-primary" 
+    [disabled]="!addEditUserForm.form.valid" 
+    (click)="createUser()">
     Create User
   </button>
   <div class="error" *ngIf="errorResponse">
@@ -50,3 +54,4 @@
     {{ response }}
   </div>
 </form>
+</div>

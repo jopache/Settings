@@ -1,4 +1,15 @@
 ﻿<div>
   <h1>Settings Admin</h1>
+  <ul class="top-navigation">
+    <li> 
+      <a [routerLink]="['/login']"> Login </a>
+    </li>
+    <li> 
+      <a [routerLink]="['/']"> Settings</a>
+    </li>
+    <li> 
+      <a [routerLink]='["/user-administration"]'> User Administration</a>
+    </li>
+  </ul>
   <router-outlet></router-outlet>
 </div>

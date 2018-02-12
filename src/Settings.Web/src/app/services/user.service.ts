@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/operator/toPromise';
 import { environment } from '../../environments/environment';
+import { User } from '../models/user';
 
 @Injectable()
 export class UserService {
@@ -24,5 +25,17 @@ export class UserService {
     .catch(resp => {
       return Promise.reject(resp.error);
     });
+  }
+
+  loadUsers(): Promise<User[]> {
+    const url = this.baseUrl;
+    return this.http.get(url)
+      .toPromise()
+      .then(response => {
+        return Promise.resolve(<User[]>response);
+      })
+      .catch(error => {
+        return Promise.reject(error.error);
+      });
   }
 }

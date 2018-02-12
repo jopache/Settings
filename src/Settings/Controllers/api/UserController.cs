@@ -23,8 +23,10 @@ namespace Settings.Controllers.api
         public async Task<IActionResult> AddEditUser(
             [FromBody]AddUserModel addEditUserModel) {
             
+            // todo: ensure they are admin before allowing create users/admin users
             var user = new User{
-                    UserName = addEditUserModel.Username
+                    UserName = addEditUserModel.Username,
+                    IsAdmin = addEditUserModel.IsAdmin
                 };
             
             if (await userManager.FindByNameAsync(addEditUserModel.Username) != null) {

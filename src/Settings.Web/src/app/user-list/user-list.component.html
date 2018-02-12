@@ -1,3 +1,13 @@
-<p>
-  user-list works!
-</p>
+<div>
+  <h3>Users</h3>
+  <ul>
+    <li *ngFor="let user of users">
+      <span>
+        {{ user.username }}
+      </span>
+      <span *ngIf="user.isAdmin">
+        (Admin)
+      </span>
+    </li>
+  </ul>
+</div>

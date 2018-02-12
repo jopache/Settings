@@ -19,13 +19,14 @@ namespace Settings.Data{
             if(!_context.Users.Any())
             {
                 var user = new User{
-                    UserName = "admin",
+                    UserName = "administrator",
                     Email = "admin@admin.com"
                 };
 
-                var result = await _userManager.CreateAsync(user, "admin");
+                var result = await _userManager.CreateAsync(user, "administrator");
                 if(result.Succeeded) {
                     user.EmailConfirmed = true;
+                    user.IsAdmin = true;
                     await _userManager.UpdateAsync(user);
                 }
             }

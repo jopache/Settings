@@ -34,7 +34,7 @@
       minlength="6"
       #passwordConfirmationInput="ngModel" />
   </div>
-  <div class="error" *ngIf="(!passwordConfirmationInput.valid || !passwordInput.valid)">
+  <div class="error" *ngIf="(!passwordConfirmationInput.valid || !passwordInput.valid) && (passwordInput.dirty || passwordConfirmationInput.dirty)">
     Invalid password or password does not match
   </div>
 

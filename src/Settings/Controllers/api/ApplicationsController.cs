@@ -34,32 +34,20 @@ namespace Settings.Controllers.api
         [ProducesResponseType(typeof(HierarchicalModel), 200)]
         public IActionResult Index(string applicationName)
         {
-            var applications = _queries.GetApplicationAndChildren(applicationName)
-                .ToList();
-            if (!applications.Any())
+            var application = _queries.LoadApplicationAndAllChildren(applicationName);
+            if (application == null)
             {
                 return NotFound();
             }
-            var appsTree = _hierarchyHelper.GetHierarchicalTree(applications.First());
-            return Ok(appsTree);
+            return Ok(application);
         }
 
         [HttpGet("")]
         [ProducesResponseType(typeof(HierarchicalModel), 200)]
         public IActionResult GetAll()
         {
-            var applications = _context
-                .Applications
-                .Include(x => x.Parent)
-                .OrderBy(x => x.ParentId)
-                .ThenBy(x => x.Id)
-                .ToList();
-            //todo: query above is not well thought out and since null comes last in postgres responds differently across ms and postgres
-            //adding this in for now since postgres but will have to be thought out again. 
-            var app = applications.First(x => x.ParentId != null);
-            var applicationsTree = _hierarchyHelper.GetHierarchicalTree(app);
-
-            return Ok(applicationsTree);
+            // todo: fix once have permissions stuff
+            return Index("Global");
         }
 
         [HttpPost("add/parent-{parentAppId}/new-{name}/")]
@@ -79,9 +67,7 @@ namespace Settings.Controllers.api
             var response = new HierarchicalModel{
                 Name = application.Name,
                 Id = application.Id,
-                Children = new List<HierarchicalModel>(),
-                LeftWeight = application.LeftWeight,
-                RightWeight = application.RightWeight
+                Children = new List<HierarchicalModel>()
             };
             return Ok(response);
         }

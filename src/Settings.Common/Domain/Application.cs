@@ -11,8 +11,6 @@ namespace Settings.Common.Domain
         public virtual Application Parent { get; set; }
         public virtual ICollection<Application> Children { get; set; }
         public int? ParentId { get; set; }
-        public int LeftWeight { get; set; }
-        public int RightWeight { get; set; }
         public int HierarchyId { get; set; }
 
         public Application()

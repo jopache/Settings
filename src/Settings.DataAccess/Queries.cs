@@ -1,9 +1,13 @@
 ﻿using System.Linq;
+using System;
 using Settings.Common.Domain;
+using System.Collections.Generic;
 using Settings.Common.Interfaces;
+using Settings.Common.Models;
 
 namespace Settings.DataAccess
 {
+    // todo: rename this to not queries
     public class Queries
     {
         private ISettingsDbContext Context { get; }
@@ -13,36 +17,67 @@ namespace Settings.DataAccess
             Context = context;
         }
 
-        public IQueryable<Application> GetApplicationAndChildren(string applicationName)
+        public HierarchicalModel LoadApplicationAndAllChildren(string applicationName)
         {
             var application = Context.Applications
                 .FirstOrDefault(x => x.Name == applicationName);
             
-            //TODO: How should I handle if requested application isn't found?
-            //returning the above as queryable seems silly since I already know nothing is there
-            //returning a new list that's empty seems silly as well. 
+            if (application == null) 
+            {
+                return null;
+            }
 
-            return (from app in Context.Applications
-                where app.LeftWeight >= application.LeftWeight
-                      && app.RightWeight <= application.RightWeight
-                orderby app.LeftWeight
-                    select app);
+            // todo: fix
+            return LoadApplicationAndAllChildren(application);
         }
 
-        public IQueryable<Environment> GetEnvironmentAndChildren(string environmentName)
+        public HierarchicalModel LoadApplicationAndAllChildren(Application app) {
+
+           var hm = new HierarchicalModel{
+               Name = app.Name,
+               Id = app.Id,
+               ParentId = app.ParentId,
+               Children = new List<HierarchicalModel>()
+           };
+
+           var childApps = Context.Applications
+               .Where(x => x.ParentId == app.Id)
+               .ToList();
+
+           foreach(var childApp in childApps) {
+               hm.Children.Add(LoadApplicationAndAllChildren(childApp));
+           }
+           return hm;
+        }
+
+        public HierarchicalModel LoadEnvironmentAndAllChildren(
+            Settings.Common.Domain.Environment env) {
+            var hm = new HierarchicalModel {
+                Name = env.Name,
+                Id = env.Id,
+                ParentId = env.ParentId,
+                Children = new List<HierarchicalModel>()
+            };
+
+           var childEnvs = Context.Environments
+               .Where(x => x.ParentId == env.Id)
+               .ToList();
+
+           foreach(var childEnv in childEnvs) {
+               hm.Children.Add(LoadEnvironmentAndAllChildren(childEnv));
+           }
+           return hm;
+        }
+
+        public HierarchicalModel LoadEnvironmentAndAllChildren(string environmentName)
         {
             var environment = Context.Environments
                 .FirstOrDefault(x => x.Name == environmentName);
 
-            //TODO: How should I handle if requested application isn't found?
-            //returning the above as queryable seems silly since I already know nothing is there
-            //returning a new list that's empty seems silly as well. 
-
-            return (from env in Context.Environments
-                where env.LeftWeight >= environment.LeftWeight
-                      && env.RightWeight <= environment.RightWeight
-                orderby env.LeftWeight
-                select env);
+            if (environment == null) {
+                return  null;
+            }
+            return LoadEnvironmentAndAllChildren(environment);
         }
     }
 }

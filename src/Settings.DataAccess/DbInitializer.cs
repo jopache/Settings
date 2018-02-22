@@ -40,40 +40,30 @@ namespace Settings.DataAccess
             {
                  var appGlobal = new Application
                  {
-                     Name = "Global",
-                     LeftWeight = 1,
-                     RightWeight = 10
+                     Name = "Global"
                  };
 
                          var app_global_engineering = new Application
                          {
                              Name = "Engineering",
-                             LeftWeight = 2,
-                             RightWeight = 9,
                              Parent = appGlobal
                          };
 
                                 var app_global_engineering_userportal = new Application
                                 {
                                     Name = "UserPortal",
-                                    LeftWeight = 3,
-                                    RightWeight = 6,
                                     Parent = app_global_engineering
                                 };
 
                                          var app_global_engineering_userportal_dataintegration = new Application
                                          {
                                              Name = "DataIntegration",
-                                             LeftWeight = 4,
-                                             RightWeight = 5,
                                              Parent = app_global_engineering_userportal
                                          };
 
                                 var app_global_engineering_paymentsapi = new Application
                                 {
                                     Name = "PaymentsApi",
-                                    LeftWeight = 7,
-                                    RightWeight = 8,
                                     Parent = app_global_engineering
                                 };
 
@@ -90,38 +80,28 @@ namespace Settings.DataAccess
                 var envAll = new Environment
                 {
                     Name = "All",
-                    LeftWeight = 1,
-                    RightWeight = 10
                 };
 
                         var envProduction = new Environment
                         {
                             Name = "Production",
-                            LeftWeight = 2,
-                            RightWeight = 3,
                             Parent = envAll
                         };
 
                         var envDevelopment = new Environment
                         {
                             Name = "Development",
-                            LeftWeight = 4,
-                            RightWeight = 7,
                             Parent = envAll
                         };
 
                                  var envDevelopmentJose = new Environment
                                  {
                                      Name = "Development-Jose",
-                                     LeftWeight = 5,
-                                     RightWeight = 6,
                                      Parent = envDevelopment
                                  };
                         var envStaging = new Environment
                         {
                             Name = "Staging",
-                            LeftWeight = 8,
-                            RightWeight = 9,
                             Parent = envAll
                         };
 

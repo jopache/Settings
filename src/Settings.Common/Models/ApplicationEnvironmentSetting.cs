@@ -8,8 +8,9 @@
         public string EnvironmentName { get; set; }
         public int ApplicationId { get; set; }
         public int EnvironmentId { get; set; }
-        public int ApplicationLeftWeight { get; set; }
-        public int EnvironmentLeftWeight { get; set; }
+
+        public int EnvironmentDepth { get; set; }
+        public int ApplicationDepth { get; set; }
     }
 
 }

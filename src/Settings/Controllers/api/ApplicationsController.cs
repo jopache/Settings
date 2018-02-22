@@ -34,7 +34,7 @@ namespace Settings.Controllers.api
         [ProducesResponseType(typeof(HierarchicalModel), 200)]
         public IActionResult Index(string applicationName)
         {
-            var application = _queries.LoadApplicationAndAllChildren(applicationName);
+            var application = _queries.LoadApplicationAndAllChildrenByName(applicationName);
             if (application == null)
             {
                 return NotFound();

@@ -27,44 +27,54 @@ namespace Settings.Services
         public IEnumerable<SettingReadModel> GetApplicationEnvironmentSettings(string applicationName, 
             string environmentName)
         {
-            var requestedApplication = _context.Applications
-               .Select(x => new { x.Id, x.Name, x.ParentId})
-               .FirstOrDefault(x => x.Name == applicationName);
+            var appHierarchyModel = _queries.LoadApplicationAndItsAncestorsByName(applicationName);
+            var envHierarchyModel = _queries.LoadEnvironmentAndItsAncestorsByName(environmentName);
 
-            var requestedEnvironment = _context.Environments
-                .Select(x => new { x.Id, x.Name, x.ParentId})
-                .FirstOrDefault(x => x.Name == environmentName);
-
-            if (requestedApplication == null || requestedEnvironment == null)
+            if (appHierarchyModel == null || envHierarchyModel == null)
             {
                 // todo: better way to handle? 
                 return null;
             }
 
-            var appHierarchyModel = _queries.LoadApplicationAndChildren()
+            var appAndAncestorIds = HierarchicalModel.GetIdOfSelfAndAncestors(appHierarchyModel);
+            var envAndAncestorIds = HierarchicalModel.GetIdOfSelfAndAncestors(envHierarchyModel);
 
-            
+            var flattennedAppAncestors = HierarchicalModel.FlattenAncestors(appHierarchyModel);
+            var flattennedEnvAncestors = HierarchicalModel.FlattenAncestors(envHierarchyModel);
 
-            throw new NotImplementedException();
-/* 
-            var appEnvSettingsList = (from app in _context.Applications
-                                      join setting in _context.Settings on app.Id equals setting.ApplicationId
-                                      join env in _context.Environments on setting.EnvironmentId equals env.Id
-                                      where app.LeftWeight <= requestedApplication.LeftWeight 
-                                        && app.RightWeight >= requestedApplication.RightWeight
-                                      && env.LeftWeight <= requestedEnvironment.LeftWeight && env.RightWeight >= requestedEnvironment.RightWeight
-                                      orderby app.LeftWeight, env.LeftWeight
-                                      select new ApplicationEnvironmentSettings
-                                      {
-                                          ApplicationId = app.Id,
-                                          ApplicationLeftWeight = app.LeftWeight,
-                                          ApplicationName = app.Name,
-                                          EnvironmentId = env.Id,
-                                          EnvironmentLeftWeight = env.LeftWeight,
-                                          EnvironmentName = env.Name,
-                                          ConfigurationJson = setting.Contents
-                                      }).ToList();
-                                      
+            var appEnvSettingsQuery = from app in _context.Applications
+                    join setting in _context.Settings 
+                        on app.Id equals setting.ApplicationId
+                    join env in _context.Environments 
+                        on setting.EnvironmentId equals env.Id
+                    where appAndAncestorIds.Contains(setting.ApplicationId)
+                        && envAndAncestorIds.Contains(setting.EnvironmentId)
+                    select new ApplicationEnvironmentSettings
+                        {
+                            ApplicationId = app.Id,
+                            ApplicationName = app.Name,
+                            EnvironmentId = env.Id,
+                            EnvironmentName = env.Name,
+                            ConfigurationJson = setting.Contents
+                        };
+            var appSettingsList = appEnvSettingsQuery.ToList();
+            var appEnvSettingsList = (from setting in appSettingsList
+                    join app in flattennedAppAncestors 
+                        on setting.ApplicationId equals app.Id
+                    join env in flattennedEnvAncestors
+                        on setting.EnvironmentId equals env.Id
+                    select new ApplicationEnvironmentSettings { 
+                        ApplicationId = setting.ApplicationId,
+                        ApplicationName = setting.ApplicationName,
+                        EnvironmentId = setting.EnvironmentId,
+                        EnvironmentName = setting.EnvironmentName,
+                        ConfigurationJson = setting.ConfigurationJson,
+                        ApplicationDepth = app.Depth,
+                        EnvironmentDepth = env.Depth
+                    })
+                    .ToList()
+                    .OrderBy(x => x.ApplicationDepth)
+                    .ThenBy(x => x.EnvironmentDepth);
 
             if (!appEnvSettingsList.Any())
             {
@@ -72,7 +82,6 @@ namespace Settings.Services
             }
 
             return _settingsProcessor.CalculateEnvironmentSettings(appEnvSettingsList, applicationName, environmentName);
-        */
         
         }
 

@@ -33,7 +33,7 @@ namespace Settings.Controllers.api
         [ProducesResponseType(typeof(HierarchicalModel), 200)]
         public IActionResult Index(string environmentName)
         {
-            var environment = _queries.LoadEnvironmentAndAllChildren(environmentName);
+            var environment = _queries.LoadEnvironmentAndAllChildrenByName(environmentName);
             if (environment == null)
             {
                 return NotFound();

@@ -32,8 +32,8 @@ namespace Settings.Controllers.api
 
             var result = runningSettings
                 .ToList()
-                .OrderBy(x => x.ApplicationLeftWeight)
-                .ThenBy(x => x.EnvironmentLeftWeight)
+                .OrderBy(x => x.ApplicationDepth)
+                .ThenBy(x => x.EnvironmentDepth)
                 .ThenBy(x => x.Name);
 
             return Ok(result);

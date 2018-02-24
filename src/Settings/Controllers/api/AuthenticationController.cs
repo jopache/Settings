@@ -12,23 +12,23 @@ using System;
 
 namespace Settings.Controllers.api
 {
-    [Route("api/authorization/")]
-    public class AuthorizationController : Controller{
-       private readonly UserManager<User> _userManager;
-       private readonly SignInManager<User> _signInManager;
-       public AuthorizationController(UserManager<User> userManager, SignInManager<User> signInManager){
-           _userManager = userManager;
-           _signInManager = signInManager;
-       }
+    [Route("api/authentication/")]
+    public class AuthenticationController : Controller{
+    private readonly UserManager<User> _userManager;
+    private readonly SignInManager<User> _signInManager;
+    public AuthenticationController(UserManager<User> userManager, SignInManager<User> signInManager){
+        _userManager = userManager;
+        _signInManager = signInManager;
+    }
        
-       [AllowAnonymous]
-       // todo: make this a real login
-       [HttpPost("login")]
-       //[HttpPost]
-        public async Task<IActionResult> Login([FromBody]LoginModel model){
-            var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, true, false);
-            return Ok();
-        }
+    [AllowAnonymous]
+    // todo: make this a real login
+    [HttpPost("login")]
+    //[HttpPost]
+     public async Task<IActionResult> Login([FromBody]LoginModel model){
+         var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, true, false);
+         return Ok();
+     }
 
     [AllowAnonymous]
     [HttpPost("jwt")]

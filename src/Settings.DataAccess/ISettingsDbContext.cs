@@ -12,6 +12,8 @@ namespace Settings.DataAccess
 
         IQueryable<Environment> Environments { get; }
 
+        IQueryable<Permission> Permissions { get; }
+
         int SaveChanges();
 
         void AddEntity(object obj);

@@ -17,15 +17,13 @@ namespace Settings.Controllers.api
     {
         private readonly ISettingsDbContext _context;
         private readonly Queries _queries;
-        private readonly HierarchyHelper _hierarchyHelper;
         private readonly IApplicationService _appService;
 
-        public ApplicationsController(ISettingsDbContext context, Queries queries,
-            HierarchyHelper hierarchyHelper, IApplicationService appService)
+        public ApplicationsController(ISettingsDbContext context, Queries queries,  
+            IApplicationService appService)
         {
             _context = context;
             _queries = queries;
-            _hierarchyHelper = hierarchyHelper;
             _appService = appService;
         }
 

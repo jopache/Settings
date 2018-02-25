@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
+using IAuthorizationService = Settings.Common.Interfaces.IAuthorizationService;
 
 namespace Settings
 {
@@ -108,7 +109,7 @@ namespace Settings
             services.AddTransient<IApplicationService, ApplicationService>();
             services.AddTransient<IEnvironmentService, EnvironmentService>();
             services.AddTransient<Queries>();
-            services.AddTransient<HierarchyHelper>();
+            services.AddTransient<IAuthorizationService, AuthorizationService>();
             
             services.AddSingleton(GetLogger());
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

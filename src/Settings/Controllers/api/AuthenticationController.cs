@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Linq;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using Settings.Data;
 
 namespace Settings.Controllers.api
 {
@@ -16,9 +18,17 @@ namespace Settings.Controllers.api
     public class AuthenticationController : Controller{
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
-    public AuthenticationController(UserManager<User> userManager, SignInManager<User> signInManager){
+    private readonly AuthDbContext _authDbContext;
+    private readonly IAuthorizationService _authorizationService;
+
+    public AuthenticationController(UserManager<User> userManager, 
+      SignInManager<User> signInManager,
+      AuthDbContext authDbContext,
+      IAuthorizationService authorizationService){
         _userManager = userManager;
         _signInManager = signInManager;
+        _authDbContext = authDbContext;
+        _authorizationService = authorizationService;
     }
        
     [AllowAnonymous]
@@ -36,18 +46,21 @@ namespace Settings.Controllers.api
     public async Task<IActionResult> GenerateToken([FromBody]LoginModel model)
     {
         var user = await _userManager.FindByNameAsync(model.UserName);
-
         if (user != null)
         {
+          
           var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
           if (result.Succeeded)
           {
-
+            // todo: need to see about using Identity claims stuff for storing/reading this stuff.
+            //  will eventually be helpful to stick the permissions inside the jwt token rather than 
+            // looking them up each time. 
             var claims = new[]
             {
               new Claim(JwtRegisteredClaimNames.Sub, model.UserName),
               new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-              new Claim("isAdmin", user.IsAdmin.ToString())
+              new Claim("isAdmin", user.IsAdmin.ToString()),
+              new Claim("userId",user.Id)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("a very much longer string that is sure to be longer"));

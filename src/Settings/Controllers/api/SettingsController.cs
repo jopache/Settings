@@ -13,16 +13,31 @@ namespace Settings.Controllers.api
     public class SettingsController : Controller
     {
         private readonly ISettingsService _settingsService;
+        private readonly IAuthorizationService _authorizationService;
 
-        public SettingsController(ISettingsService settingsService)
+        public SettingsController(ISettingsService settingsService, 
+            IAuthorizationService authorizationService)
         {
             _settingsService = settingsService;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet("{applicationName}/{environmentName}")]
         [ProducesResponseType(typeof(IEnumerable<SettingReadModel>), statusCode: 200)]
         public IActionResult GetSettingsForApplicationEnvironment(string applicationName, string environmentName)
         {
+            // todo: can probably centralize this logic as it will be used in more places
+            var userIdClaim = HttpContext.User.Claims.FirstOrDefault( x => x.Type == "userId");
+            var userId = userIdClaim.Value;
+
+            var userCanReadSettings = _authorizationService
+                .UserCanReadSettings(userId, applicationName, environmentName);
+
+            // todo bleh
+            if (!userCanReadSettings) {
+                return Forbid("no access");
+            }
+
             var runningSettings = _settingsService.GetApplicationEnvironmentSettings(applicationName, environmentName);
 
             if (runningSettings == null)

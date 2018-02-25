@@ -10,13 +10,10 @@ namespace Settings.Services
     {
         private readonly ISettingsDbContext _context;
 
-		public ApplicationService(ISettingsDbContext context, HierarchyHelper hierarchyHelper)
+		public ApplicationService(ISettingsDbContext context)
         {
             _context = context;
-            _hierarchyHelper = hierarchyHelper;
         }
-
-        private readonly HierarchyHelper _hierarchyHelper;
 
         public Application AddApplication(Application application, int parentApplicationId)
         {

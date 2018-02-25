@@ -13,18 +13,15 @@ namespace Settings.Controllers.api
 {
     [Route("api/environments/")]
     public class EnvironmentsController : Controller {
-
         private readonly ISettingsDbContext _context;
         private readonly Queries _queries;
-        private readonly HierarchyHelper _hierarchyHelper;
         private readonly IEnvironmentService _environmentService;
 
         public EnvironmentsController(ISettingsDbContext context, Queries queries, 
-            HierarchyHelper hierarchyHelper, IEnvironmentService environmentService)
+            IEnvironmentService environmentService)
         {
             _context = context;
             _queries = queries;
-            _hierarchyHelper = hierarchyHelper;
             _environmentService = environmentService;
         }
 

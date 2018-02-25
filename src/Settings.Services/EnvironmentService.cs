@@ -9,11 +9,9 @@ namespace Settings.Services {
     public class EnvironmentService : IEnvironmentService
     {
         private readonly ISettingsDbContext _context;
-        private readonly HierarchyHelper _hierarchyHelper;
 
-        public EnvironmentService(ISettingsDbContext context, HierarchyHelper hierarchyHelper){
+        public EnvironmentService(ISettingsDbContext context){
             this._context = context;
-            this._hierarchyHelper = hierarchyHelper;
         }
 
         // todo: This has been intentionally copy pasted from application controller.  Will be abandoning 

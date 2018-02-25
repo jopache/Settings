@@ -23,7 +23,6 @@ namespace Settings.Services {
                 .ToList();
         }
 
-        //
         public bool UserCanReadSettings(string userId, string applicationName, string environmentName) {
             var userPermissions = GetPermissionsForUserWithId(userId);
             if (!userPermissions.Any()) {
@@ -35,9 +34,9 @@ namespace Settings.Services {
                     continue;
                 }
                 var application = _settingsDbContext.Applications
-                    .FirstOrDefault(app => app.Name == applicationName);
+                    .FirstOrDefault(app => app.Id == permission.ApplicationId);
                 var environment = _settingsDbContext.Environments
-                    .FirstOrDefault(env => env.Name == environmentName);
+                    .FirstOrDefault(env => env.Id == permission.EnvironmentId);
                 
                 if(application == null || environment == null) {
                     continue;
@@ -59,7 +58,5 @@ namespace Settings.Services {
             }
             return userCanReadSettings;
         }
-
-
     }
 }

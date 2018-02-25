@@ -57,7 +57,6 @@ namespace Settings.DataAccess
             return LoadEnvironmentAndAllChildren(env, 0);
         }
 
-
         private HierarchicalModel LoadEnvironmentAndAllChildren(Environment env, int depth) {
             var hm = new HierarchicalModel {
                 Name = env.Name,

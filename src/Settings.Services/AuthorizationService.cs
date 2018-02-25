@@ -42,13 +42,14 @@ namespace Settings.Services {
                     continue;
                 }
                 var applicationHierarchyModel = _queries.LoadApplicationAndAllChildren(application);
-                var envHierarchyModel = _queries.LoadEnvironmentAndAllChildrenByName(environmentName);
+                var envHierarchyModel = _queries.LoadEnvironmentAndAllChildren(environment);
 
                 var appIdsInHierarchy = HierarchicalModel.FlattenChildren(applicationHierarchyModel);
                 var envIdsInHierarchy = HierarchicalModel.FlattenChildren(envHierarchyModel);
 
-                var appIncludedInPermission = appIdsInHierarchy.Any(x => x.Id == application.Id);
-                var envIncludedInPermission = envIdsInHierarchy.Any(x => x.Id == environment.Id);
+                // todo: don't like the way im doing this by name
+                var appIncludedInPermission = appIdsInHierarchy.Any(x => x.Name == applicationName);
+                var envIncludedInPermission = envIdsInHierarchy.Any(x => x.Name == environmentName);
 
                 if(appIncludedInPermission 
                     && envIncludedInPermission) {

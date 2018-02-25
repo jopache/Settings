@@ -15,7 +15,6 @@ namespace Settings.Controllers.api
     [Route("api/applications/")]
     public class ApplicationsController : Controller
     {
-
         private readonly ISettingsDbContext _context;
         private readonly Queries _queries;
         private readonly HierarchyHelper _hierarchyHelper;
@@ -34,6 +33,7 @@ namespace Settings.Controllers.api
         [ProducesResponseType(typeof(HierarchicalModel), 200)]
         public IActionResult Index(string applicationName)
         {
+            
             var application = _queries.LoadApplicationAndAllChildrenByName(applicationName);
             if (application == null)
             {

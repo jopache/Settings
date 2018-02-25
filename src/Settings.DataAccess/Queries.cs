@@ -30,9 +30,11 @@ namespace Settings.DataAccess
 
             return LoadApplicationAndAllChildren(application, 0);
         }
+        public HierarchicalModel LoadApplicationAndAllChildren(Application app){
+            return LoadApplicationAndAllChildren(app, 0);
+        }
 
-        public HierarchicalModel LoadApplicationAndAllChildren(Application app, int depth) {
-
+        private HierarchicalModel LoadApplicationAndAllChildren(Application app, int depth) {
            var hm = new HierarchicalModel{
                Name = app.Name,
                Id = app.Id,
@@ -51,7 +53,12 @@ namespace Settings.DataAccess
            return hm;
         }
 
-        public HierarchicalModel LoadEnvironmentAndAllChildren(Environment env, int depth) {
+        public HierarchicalModel LoadEnvironmentAndAllChildren(Environment env) {
+            return LoadEnvironmentAndAllChildren(env, 0);
+        }
+
+
+        private HierarchicalModel LoadEnvironmentAndAllChildren(Environment env, int depth) {
             var hm = new HierarchicalModel {
                 Name = env.Name,
                 Id = env.Id,
@@ -80,7 +87,11 @@ namespace Settings.DataAccess
             return LoadEnvironmentAndAllChildren(environment, 0);
         }
 
-        public HierarchicalModel LoadApplicationAndItsAncestors(Application app, int depth) {
+        public HierarchicalModel LoadApplicationAndItsAncestors(Application app) {
+            return LoadApplicationAndItsAncestors(app, 0);
+        }
+
+        private HierarchicalModel LoadApplicationAndItsAncestors(Application app, int depth) {
             var hm = new HierarchicalModel {
                 Name = app.Name,
                 Id = app.Id,

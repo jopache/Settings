@@ -7,15 +7,15 @@ import {
   HttpHeaders
 } from '@angular/common/http';
 
-import { AuthorizationService } from './authorization.service';
+import { AuthenticationService } from './authentication.service';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class ApplicationInterceptor implements HttpInterceptor {
   constructor(private inj: Injector) {}
 
-  getAuthService(): AuthorizationService {
-    return this.inj.get(AuthorizationService);
+  getAuthService(): AuthenticationService {
+    return this.inj.get(AuthenticationService);
   }
 
   // constructor() {}

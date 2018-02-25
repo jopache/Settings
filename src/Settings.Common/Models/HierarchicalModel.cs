@@ -55,10 +55,5 @@ namespace Settings.Common.Models
             }
             return models;
         }
-
-
-
-
-        
     }
 }

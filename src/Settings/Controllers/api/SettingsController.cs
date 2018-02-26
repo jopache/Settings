@@ -5,12 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 using Serilog.Core;
 using Settings.Common.Interfaces;
 using Settings.Common.Models;
+using Settings.Controllers;
 
 namespace Settings.Controllers.api
 {
 
     [Route("api/settings/")]
-    public class SettingsController : Controller
+    public class SettingsController : SettingsApiController
     {
         private readonly ISettingsService _settingsService;
         private readonly IAuthorizationService _authorizationService;
@@ -26,9 +27,7 @@ namespace Settings.Controllers.api
         [ProducesResponseType(typeof(IEnumerable<SettingReadModel>), statusCode: 200)]
         public IActionResult GetSettingsForApplicationEnvironment(string applicationName, string environmentName)
         {
-            // todo: can probably centralize this logic as it will be used in more places
-            var userIdClaim = HttpContext.User.Claims.FirstOrDefault( x => x.Type == "userId");
-            var userId = userIdClaim.Value;
+            var userId = this.UserId;
 
             var userCanReadSettings = _authorizationService
                 .UserCanReadSettings(userId, applicationName, environmentName);

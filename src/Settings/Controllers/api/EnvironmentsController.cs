@@ -8,21 +8,26 @@ using Settings.Common.Interfaces;
 using Settings.Common.Models;
 using Settings.DataAccess;
 using Settings.Services;
+using IAuthorizationService = Settings.Common.Interfaces.IAuthorizationService;
 
 namespace Settings.Controllers.api
 {
     [Route("api/environments/")]
-    public class EnvironmentsController : Controller {
+    public class EnvironmentsController : SettingsApiController {
         private readonly ISettingsDbContext _context;
         private readonly Queries _queries;
         private readonly IEnvironmentService _environmentService;
+        private readonly IAuthorizationService _authorizationService;
 
-        public EnvironmentsController(ISettingsDbContext context, Queries queries, 
-            IEnvironmentService environmentService)
+        public EnvironmentsController(ISettingsDbContext context, 
+            Queries queries, 
+            IEnvironmentService environmentService,
+            IAuthorizationService authorizationService)
         {
-            _context = context;
-            _queries = queries;
-            _environmentService = environmentService;
+            this._context = context;
+            this._queries = queries;
+            this._environmentService = environmentService;
+            this._authorizationService = authorizationService;
         }
 
         //todo: project Environment object
@@ -44,8 +49,16 @@ namespace Settings.Controllers.api
         [ProducesResponseType(typeof(HierarchicalModel), 200)]
         public IActionResult GetAll()
         {
-            // todo: hack until I get permissions stuff working
-            return Index("All");
+            var permissions = _authorizationService.GetPermissionsForUserWithId(this.UserId);
+            if (permissions.Any()) {
+                // todo: need to do more than just get first permission entry here
+                var envId = permissions.First().EnvironmentId;
+                var env = _context.Environments.First(x => x.Id == envId);
+                var model = _queries.LoadEnvironmentAndAllChildren(env);
+                return Ok(model);
+            } else {
+                return Forbid();
+            }
         }
 
 

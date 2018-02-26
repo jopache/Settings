@@ -9,22 +9,27 @@ using Settings.Common.Interfaces;
 using Settings.Common.Models;
 using Settings.DataAccess;
 using Settings.Services;
+using IAuthorizationService = Settings.Common.Interfaces.IAuthorizationService;
 
 namespace Settings.Controllers.api
 {
     [Route("api/applications/")]
-    public class ApplicationsController : Controller
+    public class ApplicationsController : SettingsApiController
     {
         private readonly ISettingsDbContext _context;
         private readonly Queries _queries;
         private readonly IApplicationService _appService;
+        private readonly IAuthorizationService _authorizationService;
 
-        public ApplicationsController(ISettingsDbContext context, Queries queries,  
-            IApplicationService appService)
+        public ApplicationsController(ISettingsDbContext context, 
+            Queries queries,  
+            IApplicationService appService,
+            IAuthorizationService authorizationService)
         {
-            _context = context;
-            _queries = queries;
-            _appService = appService;
+            this._context = context;
+            this._queries = queries;
+            this._appService = appService;
+            this._authorizationService = authorizationService;
         }
 
         [HttpGet("{applicationName}")]
@@ -44,8 +49,16 @@ namespace Settings.Controllers.api
         [ProducesResponseType(typeof(HierarchicalModel), 200)]
         public IActionResult GetAll()
         {
-            // todo: fix once have permissions stuff
-            return Index("Global");
+            var permissions = _authorizationService.GetPermissionsForUserWithId(this.UserId);
+            if (permissions.Any()) {
+                // todo: need to do more than just get first permission entry here
+                var appId = permissions.First().ApplicationId;
+                var app = _context.Applications.First(x => x.Id == appId);
+                var model = _queries.LoadApplicationAndAllChildren(app);
+                return Ok(model);
+            } else {
+                return Forbid();
+            }
         }
 
         [HttpPost("add/parent-{parentAppId}/new-{name}/")]

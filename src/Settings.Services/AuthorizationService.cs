@@ -11,7 +11,8 @@ namespace Settings.Services {
         private readonly ISettingsDbContext _settingsDbContext;
         private readonly Queries _queries;
 
-        public AuthorizationService(ISettingsDbContext settingsDbContext, Queries queries)
+        public AuthorizationService(ISettingsDbContext settingsDbContext,
+            Queries queries)
         {
             this._settingsDbContext = settingsDbContext;
             this._queries = queries;
@@ -59,5 +60,32 @@ namespace Settings.Services {
             }
             return userCanReadSettings;
         }
-    }
+
+/* 
+        public bool UserCanAccessApplication(string userId, string applicationName) {
+            var userPermissions = GetPermissionsForUserWithId(userId);
+            if (!userPermissions.Any()) {
+                return false;
+            }
+            var userCanReadSettings = false;
+            foreach(var permission in userPermissions) {
+                if (!permission.CanReadSettings) {
+                    continue;
+                }
+                var application = _settingsDbContext.Applications
+                    .FirstOrDefault(app => app.Id == permission.ApplicationId);
+
+                var applicationHierarchyModel = _queries.LoadApplicationAndAllChildren(application);
+                var appIdsInHierarchy = HierarchicalModel.FlattenChildren(applicationHierarchyModel);
+
+                // todo: don't like the way im doing this by name
+                var appIncludedInPermission = appIdsInHierarchy.Any(x => x.Name == applicationName);
+
+                if (appIncludedInPermission) {
+                    userCanReadSettings = true;
+                    break;
+            }
+            return userCanReadSettings;
+        } */
+    } 
 }

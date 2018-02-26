@@ -15,7 +15,7 @@ using Settings.Data;
 namespace Settings.Controllers.api
 {
     [Route("api/authentication/")]
-    public class AuthenticationController : Controller{
+    public class AuthenticationController : SettingsApiController {
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
     private readonly AuthDbContext _authDbContext;

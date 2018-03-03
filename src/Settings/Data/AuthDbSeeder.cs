@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -59,19 +60,26 @@ namespace Settings.Data{
 
                 _settingsContext.SaveChanges();
 
-                var engineeringApp = _settingsContext.Applications.First( x => x.Name == "Engineering");
+                var appsToGivePermissionsTo = new List<Application>{
+                    _settingsContext.Applications.First( x => x.Name == "UserPortal"),
+                    _settingsContext.Applications.First( x => x.Name == "PaymentsApi"),
+                    _settingsContext.Applications.First( x => x.Name == "DataIntegration"),
+                };
                 var developmentEnv = _settingsContext.Environments.First( x => x.Name == "Development");
-
-                _settingsContext.Permissions.Add(new Permission {
-                    UserId = nonAdminUser.Id,
-                    CanCreateChildApplications = true,
-                    CanCreateChildEnvironments = true,
-                    CanDecryptSetting = true,
-                    CanReadSettings = true,
-                    CanWriteSettings = false,
-                    EnvironmentId = developmentEnv.Id,
-                    ApplicationId = engineeringApp.Id
+                appsToGivePermissionsTo.ForEach( app => {
+                    _settingsContext.Permissions.Add(new Permission {
+                        UserId = nonAdminUser.Id,
+                        CanCreateChildApplications = true,
+                        CanCreateChildEnvironments = true,
+                        CanDecryptSetting = true,
+                        CanReadSettings = true,
+                        CanWriteSettings = false,
+                        EnvironmentId = developmentEnv.Id,
+                        ApplicationId = app.Id
+                    });
                 });
+                
+                
 
                 _settingsContext.SaveChanges();
             }

@@ -46,16 +46,12 @@ namespace Settings.Controllers.api
         }
 
         [HttpGet("")]
-        [ProducesResponseType(typeof(HierarchicalModel), 200)]
+        [ProducesResponseType(typeof(IEnumerable<HierarchicalModel>), 200)]
         public IActionResult GetAll()
         {
-            var permissions = _authorizationService.GetPermissionsForUserWithId(this.UserId);
-            if (permissions.Any()) {
-                // todo: need to do more than just get first permission entry here
-                var appId = permissions.First().ApplicationId;
-                var app = _context.Applications.First(x => x.Id == appId);
-                var model = _queries.LoadApplicationAndAllChildren(app);
-                return Ok(model);
+            var rootApps = _authorizationService.GetUserApplications(this.UserId);
+            if (rootApps.Any()) {
+                return Ok(rootApps);
             } else {
                 return Forbid();
             }

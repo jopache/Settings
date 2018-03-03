@@ -8,56 +8,57 @@ using Settings.Common.Interfaces;
 using Settings.Common.Models;
 using Settings.DataAccess;
 using Settings.Services;
+using IAuthorizationService = Settings.Common.Interfaces.IAuthorizationService;
 
 namespace Settings.Controllers.api
 {
     [Route("api/environments/")]
-    public class EnvironmentsController : Controller {
-
+    public class EnvironmentsController : SettingsApiController {
         private readonly ISettingsDbContext _context;
         private readonly Queries _queries;
-        private readonly HierarchyHelper _hierarchyHelper;
         private readonly IEnvironmentService _environmentService;
+        private readonly IAuthorizationService _authorizationService;
 
-        public EnvironmentsController(ISettingsDbContext context, Queries queries, 
-            HierarchyHelper hierarchyHelper, IEnvironmentService environmentService)
+        public EnvironmentsController(ISettingsDbContext context, 
+            Queries queries, 
+            IEnvironmentService environmentService,
+            IAuthorizationService authorizationService)
         {
-            _context = context;
-            _queries = queries;
-            _hierarchyHelper = hierarchyHelper;
-            _environmentService = environmentService;
+            this._context = context;
+            this._queries = queries;
+            this._environmentService = environmentService;
+            this._authorizationService = authorizationService;
         }
+
+        //todo: project Environment object
         [HttpGet("{environmentName}")]
         [ProducesResponseType(typeof(HierarchicalModel), 200)]
         public IActionResult Index(string environmentName)
         {
-            var environments = _queries.GetEnvironmentAndChildren(environmentName)
-                .ToList();
-            if (!environments.Any())
+            var environment = _queries.LoadEnvironmentAndAllChildrenByName(environmentName);
+            if (environment == null)
             {
                 return NotFound();
             }
-            var envsTree = _hierarchyHelper.GetHierarchicalTree(environments.First());
-            return Ok(envsTree);
+
+            // todo: don't want to return the environment object directlh in case EF Voodoo
+            return Ok(environment);
         }
 
         [HttpGet("")]
         [ProducesResponseType(typeof(HierarchicalModel), 200)]
         public IActionResult GetAll()
         {
-            var environments = _context
-                .Environments
-                .Include(x => x.Parent)
-
-                .OrderBy(x => x.ParentId)
-                
-                .ThenBy(x => x.Id)
-                .ToList();
-
-            var environmentsTree = _hierarchyHelper
-                .GetHierarchicalTree(environments.First());
-
-            return Ok(environmentsTree);
+            var permissions = _authorizationService.GetPermissionsForUserWithId(this.UserId);
+            if (permissions.Any()) {
+                // todo: need to do more than just get first permission entry here
+                var envId = permissions.First().EnvironmentId;
+                var env = _context.Environments.First(x => x.Id == envId);
+                var model = _queries.LoadEnvironmentAndAllChildren(env);
+                return Ok(model);
+            } else {
+                return Forbid();
+            }
         }
 
 

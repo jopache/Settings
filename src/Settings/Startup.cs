@@ -20,6 +20,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
+using IAuthorizationService = Settings.Common.Interfaces.IAuthorizationService;
 
 namespace Settings
 {
@@ -98,20 +100,20 @@ namespace Settings
                 })
                 .AddCookie(cfg => cfg.SlidingExpiration = true);
 
-
+            
 
             services.AddTransient<AuthDbSeeder>();
-          
-
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<ISettingsProcessor, SettingsProcessor>();
             services.AddTransient<ISettingsDbContext, SettingsDbContext>();
             services.AddTransient<IApplicationService, ApplicationService>();
             services.AddTransient<IEnvironmentService, EnvironmentService>();
             services.AddTransient<Queries>();
-            services.AddTransient<HierarchyHelper>();
+            services.AddTransient<IAuthorizationService, AuthorizationService>();
+            
             services.AddSingleton(GetLogger());
-
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            
             if (Convert.ToBoolean(Configuration["EnableAuthentication"])) {
                 services.AddMvc(config =>
                 {

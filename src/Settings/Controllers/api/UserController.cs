@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Settings.Controllers.api
 {
     [Route("/api/users/")]
-    public class UserController : Controller {
+    public class UserController : SettingsApiController {
         private readonly UserManager<User> userManager;
 
         public UserController(UserManager<User> userManager) {

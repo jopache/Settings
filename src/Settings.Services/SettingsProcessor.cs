@@ -58,10 +58,10 @@ namespace Settings.Services
                 {
                     ApplicationId = settings.ApplicationId,
                     ApplicationName = settings.ApplicationName,
-                    ApplicationLeftWeight = settings.ApplicationLeftWeight,
+                    ApplicationDepth = settings.ApplicationDepth,
                     EnvironmentId = settings.EnvironmentId,
                     EnvironmentName = settings.EnvironmentName,
-                    EnvironmentLeftWeight = settings.EnvironmentLeftWeight,
+                    EnvironmentDepth = settings.EnvironmentDepth,
                     Name = x.Key,
                     Value = x.Value.ToString()
                 };

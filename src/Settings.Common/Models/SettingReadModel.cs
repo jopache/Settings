@@ -13,7 +13,7 @@ namespace Settings.Common.Models
         public int EnvironmentId { get; set; }
         public string ApplicationName { get; set; }
         public string EnvironmentName { get; set; }
-        public int ApplicationLeftWeight { get; set; }
-        public int EnvironmentLeftWeight { get; set; }
+        public int ApplicationDepth { get; set; }
+        public int EnvironmentDepth { get; set; }
     }
 }

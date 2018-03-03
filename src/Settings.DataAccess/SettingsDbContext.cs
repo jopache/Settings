@@ -13,7 +13,7 @@ namespace Settings.DataAccess
         IQueryable<Setting> ISettingsDbContext.Settings => Settings;
         IQueryable<Application> ISettingsDbContext.Applications => Applications;
         IQueryable<Environment> ISettingsDbContext.Environments => Environments;
-        
+        IQueryable<Permission> ISettingsDbContext.Permissions => Permissions;
 
         public SettingsDbContext(DbContextOptions<SettingsDbContext> options) : base(options)
         {}
@@ -23,6 +23,8 @@ namespace Settings.DataAccess
         public DbSet<Application> Applications { get; set; }
 
         public DbSet<Environment> Environments { get; set; }
+
+        public DbSet<Permission> Permissions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

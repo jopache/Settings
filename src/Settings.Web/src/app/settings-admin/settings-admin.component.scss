@@ -28,6 +28,11 @@ h1 {
     padding-top: 5px;
     height: 260px;
     overflow: scroll;
+    ul.tree-node-list {
+      list-style-type: none;
+      padding-left: 12px;
+      margin-top: 5px;
+    }
   }
 
   div.tree-node-wrapper {

@@ -79,7 +79,6 @@ namespace Settings.Controllers.api
           }
           
         }
-
         return BadRequest("Could not create token");
       }
 

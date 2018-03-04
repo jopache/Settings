@@ -44,7 +44,6 @@ export class SettingsAdminComponent implements OnInit {
         if (!this.appsLoaded) {
           this.appsLoaded = true;
         }
-        console.log('setting root application');
         this.applications = applications;
         this.applicationService.setActiveNode(applications[0]);
       });

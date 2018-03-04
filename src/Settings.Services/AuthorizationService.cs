@@ -126,48 +126,6 @@ namespace Settings.Services {
             });
 
             return rootNodes;
-
-
-
-
-            // var xquery = from node in appAncestorPermissionModel
-            //              from ancestor in appAncestorPermissionModel
-            //                         .Where(ancestor => node.AncestorId == ancestor.NodeId)
-            //                         .DefaultIfEmpty()
-            //              where ancestor == null
-            //              select new {
-            //                  NodeId = node.NodeId,
-            //                  AncestorId = ancestor?.NodeId
-            //              };
-
-            //var rootNodeIds = permThings.Where( x => x.AncestorId == null).Select(x => x.NodeId);
         }
-
-/* 
-        public bool UserCanAccessApplication(string userId, string applicationName) {
-            var userPermissions = GetPermissionsForUserWithId(userId);
-            if (!userPermissions.Any()) {
-                return false;
-            }
-            var userCanReadSettings = false;
-            foreach(var permission in userPermissions) {
-                if (!permission.CanReadSettings) {
-                    continue;
-                }
-                var application = _settingsDbContext.Applications
-                    .FirstOrDefault(app => app.Id == permission.ApplicationId);
-
-                var applicationHierarchyModel = _queries.LoadApplicationAndAllChildren(application);
-                var appIdsInHierarchy = HierarchicalModel.FlattenChildren(applicationHierarchyModel);
-
-                // todo: don't like the way im doing this by name
-                var appIncludedInPermission = appIdsInHierarchy.Any(x => x.Name == applicationName);
-
-                if (appIncludedInPermission) {
-                    userCanReadSettings = true;
-                    break;
-            }
-            return userCanReadSettings;
-        } */
     } 
 }

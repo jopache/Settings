@@ -42,11 +42,10 @@ export class EnvironmentService implements TreeNodeService {
     return this.http.post(url, {})
     .toPromise()
     .then(response => {
-      console.log('success');
       return response as TreeNode;
     })
     .catch(blah => {
-      console.log('fail');
+      console.error('failure creating environment.');
     });
   }
 }

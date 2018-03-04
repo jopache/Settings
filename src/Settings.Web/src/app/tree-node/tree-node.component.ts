@@ -25,7 +25,6 @@ export class TreeNodeComponent implements OnInit {
   ngOnInit() {
     this.treeNodeService.activeNode.subscribe(treeNode => {
     if (this.node.id === treeNode.id) {
-      console.log('setting active true. component node', this.node.name, 'selected node', treeNode.name);
       this.active = true;
     } else {
       this.active = false;

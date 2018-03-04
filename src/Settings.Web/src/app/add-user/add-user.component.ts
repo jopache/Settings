@@ -34,7 +34,6 @@ export class AddUserComponent implements OnInit {
       return;
     }
 
-    console.log('user being created: ', this.username, this.isAdmin);
     this.userService.createUser(this.username, this.isAdmin, this.password).then(x => {
       this.response = 'successfully created user: ' + this.username;
       this.username = '';
@@ -52,7 +51,7 @@ export class AddUserComponent implements OnInit {
       } else {
         this.errorResponse = `failed to create user: ${this.username}`;
       }
+      console.error('create user error', x);
     });
   }
-
 }

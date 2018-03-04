@@ -41,11 +41,10 @@ export class ApplicationService implements TreeNodeService {
     return this.http.post(url, {})
     .toPromise()
     .then(response => {
-      console.log('success');
       return response as TreeNode;
     })
-    .catch(blah => {
-      console.log('fail');
+    .catch(error => {
+      console.error('failure creating application', error);
     });
   }
 }

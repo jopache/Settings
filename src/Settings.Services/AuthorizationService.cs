@@ -79,7 +79,7 @@ namespace Settings.Services {
         }
 
         public IEnumerable<HierarchicalModel> GetUserApplications(string userId){
-            var currentUserPermissions = GetPermissionsForUserWithId( userId );
+            var currentUserPermissions = GetPermissionsForUserWithId( userId ).ToList();
             var appIdsSpecifiedOnPermissionsObjects = currentUserPermissions
                                                 .Select( x => x.ApplicationId )
                                                 .Distinct();
@@ -108,13 +108,36 @@ namespace Settings.Services {
                 .Select( x => x.NodeId)
                 .ToList();
             
-            var appIdsOfRootPermissions = appIdsSpecifiedOnPermissionsObjects
+            var rootPermissionAppIds = appIdsSpecifiedOnPermissionsObjects
                 .Where( x => !appIdsOfNonRootPermissions.Contains(x));
 
-            var rootNodes = appIdsOfRootPermissions 
+            var rootNodes = rootPermissionAppIds 
                 .Select( rootId => rootAppDescendantsModelFlattenned
                     .First (appModel  => appModel.Id == rootId))
                 .ToList();
+
+            // copy permissions to each individual node where it stands
+            currentUserPermissions.ForEach( permission => {
+                var appNodeForPermission = rootAppDescendantsModelFlattenned
+                    .First( x => x.Id == permission.ApplicationId);
+                
+                if (appNodeForPermission.AggregatePermissions == null) {
+                    appNodeForPermission.AggregatePermissions = new PermissionsAggregateModel();
+                }
+                appNodeForPermission.AggregatePermissions.Permissions.Add(new PermissionModel {
+                    CanRead = permission.CanReadSettings,
+                    CanWrite = permission.CanWriteSettings,
+                    CanAddChildren = permission.CanCreateChildApplications,
+                    CanDecrypt = permission.CanDecryptSetting,
+                    ApplicationId = permission.ApplicationId,
+                    EnvironmentId = permission.EnvironmentId
+                });
+            });
+
+            //propagate permissions down from each root node. 
+            rootNodes.ForEach(rootNode => {
+                PropagatePermissionsToChildren(rootNode, true);
+            });
             
             //todo find a place to put this, doest seem like it should belong;
             //kill the parent to get rid of cyclical serialization issue
@@ -126,6 +149,21 @@ namespace Settings.Services {
             });
 
             return rootNodes;
+        }
+
+        public void PropagatePermissionsToChildren(HierarchicalModel model, 
+            bool isRootNodeForPermission) {
+                if (isRootNodeForPermission && model.AggregatePermissions == null) {
+                    throw new InvalidOperationException("root node being calculated can not have null permissions");
+                }
+
+                if (model.AggregatePermissions == null) {
+                    model.AggregatePermissions = model.Parent.AggregatePermissions;
+                }
+
+                model.Children.ToList().ForEach(child => {
+                    PropagatePermissionsToChildren(child, false);
+                });
         }
     } 
 }

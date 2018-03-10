@@ -67,19 +67,25 @@ namespace Settings.Data{
                 };
                 var developmentEnv = _settingsContext.Environments.First( x => x.Name == "Development");
                 appsToGivePermissionsTo.ForEach( app => {
-                    _settingsContext.Permissions.Add(new Permission {
+                    var permission = new Permission {
                         UserId = nonAdminUser.Id,
-                        CanCreateChildApplications = true,
-                        CanCreateChildEnvironments = true,
-                        CanDecryptSetting = true,
+                        CanCreateChildApplications = false,
+                        CanCreateChildEnvironments = false,
+                        CanDecryptSetting = false,
                         CanReadSettings = true,
                         CanWriteSettings = false,
                         EnvironmentId = developmentEnv.Id,
                         ApplicationId = app.Id
-                    });
+                    };
+
+                    if (app.Name == "DataIntegration") {
+                        permission.CanWriteSettings = true;
+                        permission.CanDecryptSetting = true;
+                        permission.CanCreateChildApplications = true;
+                        permission.CanCreateChildEnvironments = true;
+                    }
+                    _settingsContext.Permissions.Add(permission);
                 });
-                
-                
 
                 _settingsContext.SaveChanges();
             }

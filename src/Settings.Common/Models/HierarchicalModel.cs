@@ -10,8 +10,9 @@ namespace Settings.Common.Models
         public ICollection<HierarchicalModel> Children { get; set; }
         public HierarchicalModel Parent { get; set; }
         public string Name { get; set; }
-
         public int Depth { get; set; }
+
+        public PermissionsAggregateModel AggregatePermissions { get; set;}
 
         public IEnumerable<int> GetDescendantIds() {
             return GetIdsOfSelfAndAllDescendants()

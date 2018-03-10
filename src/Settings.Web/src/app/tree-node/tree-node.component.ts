@@ -36,6 +36,7 @@ export class TreeNodeComponent implements OnInit {
     this.treeNodeService.createChildNode(this.node.id, this.childName)
       .then(result => {
         const childNode = result as TreeNode;
+        childNode.aggregatePermissions = this.node.aggregatePermissions;
         this.node.children.push(childNode);
         this.childName = '';
         this.showChildren = true;

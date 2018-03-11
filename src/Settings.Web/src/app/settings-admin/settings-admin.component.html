@@ -1,13 +1,20 @@
 <div class="container">
-      <div *ngIf="!rootApplication || !rootEnvironment">
+      <div *ngIf="!appsLoaded || !rootEnvironment">
         Loading...
       </div>
     
-      <div class="heading-selector" *ngIf="rootApplication && rootEnvironment">
+      <div class="heading-selector" *ngIf="appsLoaded && rootEnvironment">
         <div class="applications-list panel panel-primary">
           <div class="panel-heading">Applications</div>
           <div class="panel-body">
-              <app-tree-node [node]="rootApplication" [treeNodeService]="applicationService" [nodeLabel]="Application"></app-tree-node>
+            <ul class="tree-node-list">
+                <li *ngFor="let app of applications">
+                    <app-tree-node  [node]="app" 
+                                    [treeNodeService]="applicationService" 
+                                    [nodeLabel]="Application">
+                    </app-tree-node>
+                </li>
+            </ul>
           </div>
         </div>
         <div class="environments-list panel panel-primary">

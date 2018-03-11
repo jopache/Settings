@@ -20,13 +20,13 @@ export class ApplicationService implements TreeNodeService {
   setActiveNode(node: TreeNode): void {
     this._activeNode.next(node);
   }
-  getRootApplication(): Promise<TreeNode> {
+  getApplications(): Promise<TreeNode[]> {
     return this.http
       .get(this.baseUrl)
       .toPromise()
       .then(response => {
-        const node = response as TreeNode;
-        return node;
+        const nodes = response as TreeNode[];
+        return nodes;
       })
       .catch((error: any ): Promise<any> => {
         return Promise.reject('fail');
@@ -41,11 +41,10 @@ export class ApplicationService implements TreeNodeService {
     return this.http.post(url, {})
     .toPromise()
     .then(response => {
-      console.log('success');
       return response as TreeNode;
     })
-    .catch(blah => {
-      console.log('fail');
+    .catch(error => {
+      console.error('failure creating application', error);
     });
   }
 }

@@ -19,10 +19,10 @@ export class UserService {
     })
     .toPromise()
     .then( () => {
-      console.log('success adding user');
       return Promise.resolve();
     })
     .catch(resp => {
+      console.error('error creating user', resp);
       return Promise.reject(resp.error);
     });
   }

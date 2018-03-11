@@ -9,7 +9,7 @@ h1 {
     div.applications-list, div.environments-list, div.setting-crud {
       display: inline-block;
       height: 300px;
-      width: 300px;
+      width: 400px;
       overflow-y: auto;
     }
   
@@ -26,8 +26,13 @@ h1 {
   div.panel-body {
     padding-left: 5px;
     padding-top: 5px;
-    height: 260px;
+    height: 300px;
     overflow: scroll;
+    ul.tree-node-list {
+      list-style-type: none;
+      padding-left: 12px;
+      margin-top: 5px;
+    }
   }
 
   div.tree-node-wrapper {

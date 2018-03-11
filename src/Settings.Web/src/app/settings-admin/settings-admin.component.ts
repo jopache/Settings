@@ -19,8 +19,10 @@ export class SettingsAdminComponent implements OnInit {
   selectedApplication: TreeNode = null;
   selectedEnvironment: TreeNode = null;
 
-  // need to rethink this. Eventually there may not be a root, there may be several "roots"
-  rootApplication: TreeNode = null;
+  appsLoaded = false;
+  envsLoaded = false;
+
+  applications: TreeNode[] = null;
   rootEnvironment: TreeNode = null;
 
   ngOnInit(): void {
@@ -37,11 +39,13 @@ export class SettingsAdminComponent implements OnInit {
     });
 
     this.applicationService
-      .getRootApplication()
-      .then(application => {
-        console.log('setting root application');
-        this.rootApplication = application;
-        this.applicationService.setActiveNode(application);
+      .getApplications()
+      .then(applications => {
+        if (!this.appsLoaded) {
+          this.appsLoaded = true;
+        }
+        this.applications = applications;
+        this.applicationService.setActiveNode(applications[0]);
       });
 
     this.environmentService

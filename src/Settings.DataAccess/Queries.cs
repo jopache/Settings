@@ -28,17 +28,18 @@ namespace Settings.DataAccess
                 return null;
             }
 
-            return LoadApplicationAndAllChildren(application, 0);
+            return LoadApplicationAndAllChildren(application);
         }
         public HierarchicalModel LoadApplicationAndAllChildren(Application app){
-            return LoadApplicationAndAllChildren(app, 0);
+            return LoadApplicationAndAllChildren(app, null, 0);
         }
 
-        private HierarchicalModel LoadApplicationAndAllChildren(Application app, int depth) {
+        private HierarchicalModel LoadApplicationAndAllChildren(Application app, HierarchicalModel parent, int depth) {
            var hm = new HierarchicalModel{
                Name = app.Name,
                Id = app.Id,
-               ParentId = app.ParentId,
+               ParentId = parent?.Id,
+               Parent = parent,
                Children = new List<HierarchicalModel>(),
                Depth = depth
            };
@@ -48,20 +49,21 @@ namespace Settings.DataAccess
                .ToList();
 
            foreach(var childApp in childApps) {
-               hm.Children.Add(LoadApplicationAndAllChildren(childApp, depth + 1));
+               hm.Children.Add(LoadApplicationAndAllChildren(childApp, hm, depth + 1));
            }
            return hm;
         }
 
         public HierarchicalModel LoadEnvironmentAndAllChildren(Environment env) {
-            return LoadEnvironmentAndAllChildren(env, 0);
+            return LoadEnvironmentAndAllChildren(env, null, 0);
         }
 
-        private HierarchicalModel LoadEnvironmentAndAllChildren(Environment env, int depth) {
+        private HierarchicalModel LoadEnvironmentAndAllChildren(Environment env, HierarchicalModel parent, int depth) {
             var hm = new HierarchicalModel {
                 Name = env.Name,
                 Id = env.Id,
-                ParentId = env.ParentId,
+                ParentId = parent?.Id,
+                Parent = parent,
                 Children = new List<HierarchicalModel>(),
                 Depth = depth
             };
@@ -71,7 +73,7 @@ namespace Settings.DataAccess
                .ToList();
 
            foreach(var childEnv in childEnvs) {
-               hm.Children.Add(LoadEnvironmentAndAllChildren(childEnv, depth + 1));
+               hm.Children.Add(LoadEnvironmentAndAllChildren(childEnv, parent, depth + 1));
            }
            return hm;
         }
@@ -83,7 +85,7 @@ namespace Settings.DataAccess
             if (environment == null) {
                 return  null;
             }
-            return LoadEnvironmentAndAllChildren(environment, 0);
+            return LoadEnvironmentAndAllChildren(environment);
         }
 
         public HierarchicalModel LoadApplicationAndItsAncestors(Application app) {

@@ -25,7 +25,6 @@ export class TreeNodeComponent implements OnInit {
   ngOnInit() {
     this.treeNodeService.activeNode.subscribe(treeNode => {
     if (this.node.id === treeNode.id) {
-      console.log('setting active true. component node', this.node.name, 'selected node', treeNode.name);
       this.active = true;
     } else {
       this.active = false;
@@ -37,6 +36,7 @@ export class TreeNodeComponent implements OnInit {
     this.treeNodeService.createChildNode(this.node.id, this.childName)
       .then(result => {
         const childNode = result as TreeNode;
+        childNode.aggregatePermissions = this.node.aggregatePermissions;
         this.node.children.push(childNode);
         this.childName = '';
         this.showChildren = true;

@@ -36,11 +36,11 @@ namespace Settings.Services
                 return null;
             }
 
-            var appAndAncestorIds = HierarchicalModel.GetIdOfSelfAndAncestors(appHierarchyModel);
-            var envAndAncestorIds = HierarchicalModel.GetIdOfSelfAndAncestors(envHierarchyModel);
+            var appAndAncestorIds = appHierarchyModel.GetIdsOfSelfAndAncestors();
+            var envAndAncestorIds = envHierarchyModel.GetIdsOfSelfAndAncestors();
 
-            var flattennedAppAncestors = HierarchicalModel.FlattenAncestors(appHierarchyModel);
-            var flattennedEnvAncestors = HierarchicalModel.FlattenAncestors(envHierarchyModel);
+            var flattennedAppAncestors = appHierarchyModel.FlattenAncestors();
+            var flattennedEnvAncestors = envHierarchyModel.FlattenAncestors();
 
             var appEnvSettingsQuery = from app in _context.Applications
                     join setting in _context.Settings 
@@ -57,6 +57,7 @@ namespace Settings.Services
                             EnvironmentName = env.Name,
                             ConfigurationJson = setting.Contents
                         };
+
             var appSettingsList = appEnvSettingsQuery.ToList();
             var appEnvSettingsList = (from setting in appSettingsList
                     join app in flattennedAppAncestors 
@@ -82,7 +83,6 @@ namespace Settings.Services
             }
 
             return _settingsProcessor.CalculateEnvironmentSettings(appEnvSettingsList, applicationName, environmentName);
-        
         }
 
         public void CreateOrEditSettings(string applicationName, string environmentName, SettingsWriteModel writeModel)

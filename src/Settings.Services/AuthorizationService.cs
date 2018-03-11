@@ -2,6 +2,7 @@ using Settings.Common.Domain;
 using Settings.Common.Interfaces;
 using Settings.Common.Models;
 using Settings.DataAccess;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -22,6 +23,17 @@ namespace Settings.Services {
             return _settingsDbContext.Permissions
                 .Where(x => x.UserId == userId)
                 .ToList();
+        }
+
+        public class AppPermissionsModel {
+            public int NodeId;
+
+            public int ParentId;
+
+            public Permission permission;
+            public AppPermissionsModel parent;
+
+            public HierarchicalModel model;
         }
 
         public bool UserCanReadSettings(string userId, string applicationName, string environmentName) {
@@ -45,8 +57,8 @@ namespace Settings.Services {
                 var applicationHierarchyModel = _queries.LoadApplicationAndAllChildren(application);
                 var envHierarchyModel = _queries.LoadEnvironmentAndAllChildren(environment);
 
-                var appIdsInHierarchy = HierarchicalModel.FlattenChildren(applicationHierarchyModel);
-                var envIdsInHierarchy = HierarchicalModel.FlattenChildren(envHierarchyModel);
+                var appIdsInHierarchy = applicationHierarchyModel.FlattenChildren();
+                var envIdsInHierarchy = envHierarchyModel.FlattenChildren();
 
                 // todo: don't like the way im doing this by name
                 var appIncludedInPermission = appIdsInHierarchy.Any(x => x.Name == applicationName);
@@ -60,32 +72,98 @@ namespace Settings.Services {
             }
             return userCanReadSettings;
         }
+        
+        private class NodeAncestorPair {
+            public int NodeId { get; set; }
+            public int?  AncestorId { get; set; }
+        }
 
-/* 
-        public bool UserCanAccessApplication(string userId, string applicationName) {
-            var userPermissions = GetPermissionsForUserWithId(userId);
-            if (!userPermissions.Any()) {
-                return false;
+        public IEnumerable<HierarchicalModel> GetUserApplications(string userId){
+            var currentUserPermissions = GetPermissionsForUserWithId( userId ).ToList();
+            var appIdsSpecifiedOnPermissionsObjects = currentUserPermissions
+                                                .Select( x => x.ApplicationId )
+                                                .Distinct();
+                        
+            var rootApp = _settingsDbContext.Applications.First(x => x.ParentId == null);
+            var rootAppDescendantsModel = _queries.LoadApplicationAndAllChildren(rootApp);
+            var rootAppDescendantsModelFlattenned = rootAppDescendantsModel.FlattenChildren();
+
+            var appAncestorPermissionModel = new List<NodeAncestorPair>();
+
+            foreach(var appId in appIdsSpecifiedOnPermissionsObjects) {
+                var appModel = rootAppDescendantsModelFlattenned.First( x => x.Id == appId);
+                var appAncestors = appModel.FlattenAncestors();
+                var appToAncestorPairs = appModel.GetAncestorIds().Select(x => new NodeAncestorPair {
+                    NodeId = appId,
+                    AncestorId = x
+                });
+                appAncestorPermissionModel.AddRange(appToAncestorPairs);
             }
-            var userCanReadSettings = false;
-            foreach(var permission in userPermissions) {
-                if (!permission.CanReadSettings) {
-                    continue;
+
+            //if an application's ancestorId is one which we have permissions for
+            //then it is not a root, let's get all the non roots. 
+            //this logic might break later :-(
+            var appIdsOfNonRootPermissions = appAncestorPermissionModel
+                .Where( x => appIdsSpecifiedOnPermissionsObjects.Contains(x.AncestorId.Value))
+                .Select( x => x.NodeId)
+                .ToList();
+            
+            var rootPermissionAppIds = appIdsSpecifiedOnPermissionsObjects
+                .Where( x => !appIdsOfNonRootPermissions.Contains(x));
+
+            var rootNodes = rootPermissionAppIds 
+                .Select( rootId => rootAppDescendantsModelFlattenned
+                    .First (appModel  => appModel.Id == rootId))
+                .ToList();
+
+            // copy permissions to each individual node where it stands
+            currentUserPermissions.ForEach( permission => {
+                var appNodeForPermission = rootAppDescendantsModelFlattenned
+                    .First( x => x.Id == permission.ApplicationId);
+                
+                if (appNodeForPermission.AggregatePermissions == null) {
+                    appNodeForPermission.AggregatePermissions = new PermissionsAggregateModel();
                 }
-                var application = _settingsDbContext.Applications
-                    .FirstOrDefault(app => app.Id == permission.ApplicationId);
+                appNodeForPermission.AggregatePermissions.Permissions.Add(new PermissionModel {
+                    CanRead = permission.CanReadSettings,
+                    CanWrite = permission.CanWriteSettings,
+                    CanAddChildren = permission.CanCreateChildApplications,
+                    CanDecrypt = permission.CanDecryptSetting,
+                    ApplicationId = permission.ApplicationId,
+                    EnvironmentId = permission.EnvironmentId
+                });
+            });
 
-                var applicationHierarchyModel = _queries.LoadApplicationAndAllChildren(application);
-                var appIdsInHierarchy = HierarchicalModel.FlattenChildren(applicationHierarchyModel);
+            //propagate permissions down from each root node. 
+            rootNodes.ForEach(rootNode => {
+                PropagatePermissionsToChildren(rootNode, true);
+            });
+            
+            //todo find a place to put this, doest seem like it should belong;
+            //kill the parent to get rid of cyclical serialization issue
+            rootNodes.ForEach(rootNode => {
+                rootNode.FlattenChildren()
+                    .ToList()
+                    .ForEach( child => { child.Parent = null; });
+                rootNode.Parent = null;
+            });
 
-                // todo: don't like the way im doing this by name
-                var appIncludedInPermission = appIdsInHierarchy.Any(x => x.Name == applicationName);
+            return rootNodes;
+        }
 
-                if (appIncludedInPermission) {
-                    userCanReadSettings = true;
-                    break;
-            }
-            return userCanReadSettings;
-        } */
+        public void PropagatePermissionsToChildren(HierarchicalModel model, 
+            bool isRootNodeForPermission) {
+                if (isRootNodeForPermission && model.AggregatePermissions == null) {
+                    throw new InvalidOperationException("root node being calculated can not have null permissions");
+                }
+
+                if (model.AggregatePermissions == null) {
+                    model.AggregatePermissions = model.Parent.AggregatePermissions;
+                }
+
+                model.Children.ToList().ForEach(child => {
+                    PropagatePermissionsToChildren(child, false);
+                });
+        }
     } 
 }

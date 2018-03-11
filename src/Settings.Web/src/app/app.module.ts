@@ -29,7 +29,6 @@ import { AddUserComponent } from './add-user/add-user.component';
 import { UserListComponent } from './user-list/user-list.component';
 import { UserService } from './services/user.service';
 
-// todo: Add components
 const appRoutes: Routes = [
   { path: '',
     component: SettingsAdminComponent,
@@ -61,7 +60,6 @@ const appRoutes: Routes = [
   imports: [
     RouterModule.forRoot(
       appRoutes,
-      // { enableTracing: true } // <-- debugging purposes only
     ),
     BrowserModule,
     HttpModule,

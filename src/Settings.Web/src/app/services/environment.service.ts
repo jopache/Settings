@@ -20,8 +20,16 @@ export class EnvironmentService implements TreeNodeService {
     this._activeNode.next(node);
   }
 
-  getRootEnvironment(): Promise<TreeNode> {
+  getEnvironmentsForApplication(applicationName: String): Promise<TreeNode[]> {
+    return this.http
+      .get(this.baseUrl + `for-application/${applicationName}`)
+      .toPromise()
+      .then(response => {
+        return response as TreeNode[];
+      });
+  }
 
+  getRootEnvironment(): Promise<TreeNode> {
     return this.http
       .get(this.baseUrl)
       .toPromise()

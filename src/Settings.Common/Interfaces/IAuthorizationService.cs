@@ -8,6 +8,8 @@ namespace Settings.Common.Interfaces {
         IEnumerable<Permission> GetPermissionsForUserWithId(string userId);
         bool UserCanReadSettings(string userId, string applicationName, string environmentName);
         IEnumerable<HierarchicalModel> GetUserApplications(string userId);
+       IEnumerable<HierarchicalModel> GetUserEnvironmentsForApplicationWithId(
+            string userId, int applicationId);
     }
 
 }

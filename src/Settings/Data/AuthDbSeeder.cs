@@ -47,6 +47,7 @@ namespace Settings.Data{
                     await _userManager.UpdateAsync(adminUser);
                 }
 
+                // todo: stop hardcoding ids
                 _settingsContext.Permissions.Add(new Permission {
                     UserId = adminUser.Id,
                     CanCreateChildApplications = true,
@@ -78,11 +79,13 @@ namespace Settings.Data{
                         ApplicationId = app.Id
                     };
 
+                    //todo no more hardcoding ids
                     if (app.Name == "DataIntegration") {
                         permission.CanWriteSettings = true;
                         permission.CanDecryptSetting = true;
                         permission.CanCreateChildApplications = true;
                         permission.CanCreateChildEnvironments = true;
+                        permission.EnvironmentId = 1;
                     }
                     _settingsContext.Permissions.Add(permission);
                 });

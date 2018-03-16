@@ -12,13 +12,20 @@ namespace Settings.Tests.Services
     [TestClass]
     public class HierarchyTests
     {
+        public ISettingsDbContext _context;
         public SettingsDbContext CreateSettingsContext() {
            var optionsBuilder = new DbContextOptionsBuilder<SettingsDbContext>();
            optionsBuilder.UseInMemoryDatabase("Settings");
            return new SettingsDbContext(optionsBuilder.Options);
         }
+        [TestInitialize]
+        public void Initialize() {
+            _context = CreateSettingsContext();
+            
+        }
         
-        public void Lol() {
+        [TestMethod]
+        public void ItShouldDoSomething() {
             using (var context = CreateSettingsContext()) {
 
             }

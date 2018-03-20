@@ -31,7 +31,7 @@ namespace Settings.Common.Models
             return GetIdsOfSelfAndAncestors(this);
         }
 
-        public IEnumerable<HierarchicalModel> FlattenAncestors() { 
+        public IEnumerable<HierarchicalModel> FlattenSelfAndAncestors() { 
             return FlattenAncestors(this);
         }
 

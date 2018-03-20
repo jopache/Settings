@@ -92,7 +92,7 @@ namespace Settings.Services {
 
             foreach(var appId in appIdsSpecifiedOnPermissionsObjects) {
                 var appModel = rootAppDescendantsModelFlattenned.First( x => x.Id == appId);
-                var appAncestors = appModel.FlattenAncestors();
+                var appAncestors = appModel.FlattenSelfAndAncestors();
                 var appToAncestorPairs = appModel.GetAncestorIds().Select(x => new NodeAncestorPair {
                     NodeId = appId,
                     AncestorId = x
@@ -157,13 +157,9 @@ namespace Settings.Services {
             var currentUserPermissions = GetPermissionsForUserWithId( userId )
                 .ToList();
             
-           
-
-            // todo: filter to only permissions for selected app or it's ancestors
-
-           
             var rootApp = _settingsDbContext.Applications
                 .First(x => x.ParentId == null);
+            
             var rootAppDescendantsModelFlattenned = _queries.LoadApplicationAndAllChildren(rootApp)
                 .FlattenChildren();
 
@@ -176,88 +172,156 @@ namespace Settings.Services {
                 .GetIdsOfSelfAndAncestors()
                 .ToList();
 
-            //fiter permissions to those on selected app or higher
-            currentUserPermissions = currentUserPermissions
-                .Where(x => idsOfAppAndItsAncestors.Contains(x.ApplicationId))
+            var userPermissionsForThisAppAndAncenstors = 
+                (from appOrAncestorId in idsOfAppAndItsAncestors
+                join userPermission in currentUserPermissions
+                    on appOrAncestorId equals userPermission.ApplicationId
+                select userPermission)
                 .ToList();
-                //.Where(permission => idsOfAppAndItsAncestors.Contains(permission.ApplicationId));
 
 
-            var envIdsSpecifiedOnPermissionsObjects = currentUserPermissions
-                                                .Select( x => x.EnvironmentId )
-                                                .Distinct();
+            //get root env nodes
+            var myPermsForThisApplication = 
+                            (from env in rootEnvDescendantsModelFlattenned
+                            join perm in userPermissionsForThisAppAndAncenstors
+                                on env.Id equals perm.EnvironmentId
+                            select new {
+                                EnvironmentId = env.Id,
+                                Permission = perm,
+                                Environment = env
+                            })
+                            .ToList();
+
+            var distictPermissionsEnvironmentIds = myPermsForThisApplication.Select( x => x.EnvironmentId )
+                .Distinct()
+                .ToList();
 
             var envAncestorPermissionModel = new List<NodeAncestorPair>();
 
-            foreach(var envId in envIdsSpecifiedOnPermissionsObjects) {
-                var envModel = rootEnvDescendantsModelFlattenned.First( x => x.Id == envId);
-                var envAncestors = envModel.FlattenAncestors();
-                var envToAncestorPairs = envModel.GetAncestorIds().Select(x => new NodeAncestorPair {
-                    NodeId = envId,
-                    AncestorId = x
-                });
-                envAncestorPermissionModel.AddRange(envToAncestorPairs);
+            foreach (var envIdOnPermissions in distictPermissionsEnvironmentIds) {
+                var envModel = rootEnvDescendantsModelFlattenned.First( x => x.Id == envIdOnPermissions);
+                var envAncestorIds = envModel.GetAncestorIds().ToList();
+                //is a root node
+                if (envAncestorIds.Count == 0) {
+                    envAncestorPermissionModel.Add(new NodeAncestorPair{
+                        NodeId = envIdOnPermissions,
+                        AncestorId = null
+                    });
+                } else {
+                    envAncestorPermissionModel.AddRange(
+                        envModel.GetAncestorIds()
+                            .Select( x => new NodeAncestorPair {
+                                NodeId = envIdOnPermissions,
+                                AncestorId = x
+                            })
+                    );
+                }
             }
+            distictPermissionsEnvironmentIds.ForEach(envIdOnPermissions => {
+                
 
-            //if an application's ancestorId is one which we have permissions for
-            //then it is not a root, let's get all the non roots. 
-            //this logic might break later :-(
-            var envIdsofNonRootPermissions = envAncestorPermissionModel
-                .Where( x => envIdsSpecifiedOnPermissionsObjects.Contains(x.AncestorId.Value))
-                .Select( x => x.NodeId)
+                
+            });
+
+            var rootNodeIds = (from environmentNodePermission in envAncestorPermissionModel
+                join environmentAncestorNode in envAncestorPermissionModel
+                    on environmentNodePermission.AncestorId
+                        equals environmentAncestorNode.NodeId into wtfbbq
+                from environmentAncestorNode in wtfbbq.DefaultIfEmpty()
+                where environmentAncestorNode == null
+                select environmentNodePermission.NodeId)
+                .Distinct()
                 .ToList();
-            
-            var rootPermissionEnvIds = envIdsSpecifiedOnPermissionsObjects
-                .Where( x => !envIdsofNonRootPermissions.Contains(x));
 
-            var rootNodes = rootPermissionEnvIds 
+            var rootEnvNodesWithPermissions = rootNodeIds 
                 .Select( rootId => rootEnvDescendantsModelFlattenned
                     .First (envModel  => envModel.Id == rootId))
                 .ToList();
-
-            // copy permissions to each individual node where it stands
-            currentUserPermissions.ForEach( permission => {
-                var envNodeForPermission = rootEnvDescendantsModelFlattenned
-                    .First( x => x.Id == permission.EnvironmentId);
                 
-                if (envNodeForPermission.AggregatePermissions == null) {
-                    envNodeForPermission.AggregatePermissions = new PermissionsAggregateModel();
-                }
-                envNodeForPermission.AggregatePermissions.Permissions.Add(new PermissionModel {
-                    CanRead = permission.CanReadSettings,
-                    CanWrite = permission.CanWriteSettings,
-                    CanAddChildren = permission.CanCreateChildApplications,
-                    CanDecrypt = permission.CanDecryptSetting,
+            var allEnvNodesWithPermissions = rootEnvNodesWithPermissions
+                .SelectMany(x => x.FlattenChildren())
+                .ToList();
+
+            
+            
+            
+            // todo: reorganize
+            var appAndAncestorData = rootAppDescendantsModelFlattenned
+                .First(x => x.Id == applicationId)
+                .FlattenSelfAndAncestors()
+                .Select( y => new {
+                    ApplicationId = y.Id,
+                    Depth = y.Depth
+                })
+                .ToList();
+
+            var permissionsGroupedByApplication = 
+                (from permission in currentUserPermissions
+                join app in appAndAncestorData 
+                    on permission.ApplicationId equals app.ApplicationId
+                orderby app.Depth descending
+                select new { 
+                    Depth = app.Depth,
+                    Permission = permission,
                     ApplicationId = permission.ApplicationId,
                     EnvironmentId = permission.EnvironmentId
-                });
-            });
+                }) 
+                .GroupBy(x => x.Depth)
+                .ToList();
+
+            foreach (var permissionGrouping in permissionsGroupedByApplication) {
+                var allPermissionsForApplication = permissionGrouping.ToList();
+                
+                foreach (var permissionForApplication in allPermissionsForApplication) {
+                    var envNodeForPermission = allEnvNodesWithPermissions
+                        .First(env => env.Id == permissionForApplication.EnvironmentId);
+
+                    if (envNodeForPermission.AggregatePermissions == null) {
+                        envNodeForPermission.AggregatePermissions = new PermissionsAggregateModel();
+                    }
+                    if(!envNodeForPermission.AggregatePermissions.Permissions.Any()) {
+                        envNodeForPermission.AggregatePermissions.Permissions.Add(new PermissionModel {
+                            CanRead = permissionForApplication.Permission.CanReadSettings,
+                            CanWrite = permissionForApplication.Permission.CanWriteSettings,
+                            CanDecrypt = permissionForApplication.Permission.CanDecryptSetting,
+                            CanAddChildren = permissionForApplication.Permission.CanCreateChildEnvironments
+                        });
+                        PropagatePermissionsToChildren(envNodeForPermission, false);
+                    }
+                }
+        
+            }
+                //todo optimize this
+                //if (allPermissionsForApplication.Count == 1) {
+                    
+                //}
+
 
             //propagate permissions down from each root node. 
-            rootNodes.ForEach(rootNode => {
+            foreach (var rootNode in rootEnvNodesWithPermissions) {
                 PropagatePermissionsToChildren(rootNode, true);
-            });
+            }
             
             //todo find a place to put this, doest seem like it should belong;
             //kill the parent to get rid of cyclical serialization issue
-            rootNodes.ForEach(rootNode => {
+            foreach (var rootNode in rootEnvNodesWithPermissions) {
                 rootNode.FlattenChildren()
-                    .ToList()
-                    .ForEach( child => { child.Parent = null; });
+                .ToList()
+                .ForEach( child => { child.Parent = null; });
                 rootNode.Parent = null;
-            });
+            }
 
-            return rootNodes;
+            return rootEnvNodesWithPermissions;
         }
 
         public void PropagatePermissionsToChildren(HierarchicalModel model, 
             bool isRootNodeForPermission) {
-                if (isRootNodeForPermission && model.AggregatePermissions == null) {
-                    throw new InvalidOperationException("root node being calculated can not have null permissions");
-                }
+                //if (isRootNodeForPermission && model.AggregatePermissions == null) {
+                //    throw new InvalidOperationException("root node being calculated can not have null permissions");
+                //}
 
                 if (model.AggregatePermissions == null) {
-                    model.AggregatePermissions = model.Parent.AggregatePermissions;
+                    model.AggregatePermissions = model.Parent?.AggregatePermissions;
                 }
 
                 model.Children.ToList().ForEach(child => {

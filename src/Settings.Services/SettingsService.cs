@@ -39,8 +39,8 @@ namespace Settings.Services
             var appAndAncestorIds = appHierarchyModel.GetIdsOfSelfAndAncestors();
             var envAndAncestorIds = envHierarchyModel.GetIdsOfSelfAndAncestors();
 
-            var flattennedAppAncestors = appHierarchyModel.FlattenAncestors();
-            var flattennedEnvAncestors = envHierarchyModel.FlattenAncestors();
+            var flattennedAppAncestors = appHierarchyModel.FlattenSelfAndAncestors();
+            var flattennedEnvAncestors = envHierarchyModel.FlattenSelfAndAncestors();
 
             var appEnvSettingsQuery = from app in _context.Applications
                     join setting in _context.Settings 

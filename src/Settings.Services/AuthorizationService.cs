@@ -286,9 +286,15 @@ namespace Settings.Services {
                             CanDecrypt = permissionForApplication.Permission.CanDecryptSetting,
                             CanAddChildren = permissionForApplication.Permission.CanCreateChildEnvironments
                         });
-                        PropagatePermissionsToChildren(envNodeForPermission, false);
                     }
                 }
+
+                foreach (var permissionForApplication in allPermissionsForApplication) {
+                    var envNodeForPermission = allEnvNodesWithPermissions
+                        .First(env => env.Id == permissionForApplication.EnvironmentId);
+                    PropagatePermissionsToChildren(envNodeForPermission, false);
+                }
+                
         
             }
                 //todo optimize this

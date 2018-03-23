@@ -23,12 +23,19 @@ export class SettingsAdminComponent implements OnInit {
   envsLoaded = false;
 
   applications: TreeNode[] = null;
-  rootEnvironment: TreeNode = null;
+  environments: TreeNode[] = null;
 
   ngOnInit(): void {
     this.activeAppNode$.subscribe(app => {
       if (app !== null) {
         this.selectedApplication = app;
+        if (app !== null) {
+          this.environmentService.getEnvironmentsForApplication(app.name)
+            .then(envs => {
+              this.environments = envs;
+              this.envsLoaded = true;
+            });
+        }
       }
     });
 
@@ -46,13 +53,14 @@ export class SettingsAdminComponent implements OnInit {
         }
         this.applications = applications;
         this.applicationService.setActiveNode(applications[0]);
+        this.envsLoaded = false;
       });
 
-    this.environmentService
-      .getRootEnvironment()
-      .then(environment => {
-        this.rootEnvironment = environment;
-        this.environmentService.setActiveNode(environment);
-      });
+    // this.environmentService
+    //   .getRootEnvironment()
+    //   .then(environment => {
+    //     this.rootEnvironment = environment;
+    //     this.environmentService.setActiveNode(environment);
+    //   });
   }
 }

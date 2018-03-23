@@ -73,7 +73,7 @@ namespace Settings.DataAccess
                .ToList();
 
            foreach(var childEnv in childEnvs) {
-               hm.Children.Add(LoadEnvironmentAndAllChildren(childEnv, parent, depth + 1));
+               hm.Children.Add(LoadEnvironmentAndAllChildren(childEnv, hm, depth + 1));
            }
            return hm;
         }

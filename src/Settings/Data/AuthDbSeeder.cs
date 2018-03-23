@@ -47,6 +47,7 @@ namespace Settings.Data{
                     await _userManager.UpdateAsync(adminUser);
                 }
 
+                // todo: stop hardcoding ids
                 _settingsContext.Permissions.Add(new Permission {
                     UserId = adminUser.Id,
                     CanCreateChildApplications = true,
@@ -60,32 +61,86 @@ namespace Settings.Data{
 
                 _settingsContext.SaveChanges();
 
-                var appsToGivePermissionsTo = new List<Application>{
-                    _settingsContext.Applications.First( x => x.Name == "UserPortal"),
-                    _settingsContext.Applications.First( x => x.Name == "PaymentsApi"),
-                    _settingsContext.Applications.First( x => x.Name == "DataIntegration"),
-                };
+                var userPortalApp =  _settingsContext.Applications.First( x => x.Name == "UserPortal");
+                var paymentsApiApp = _settingsContext.Applications.First( x => x.Name == "PaymentsApi");
+                var dataIntegrationApp = _settingsContext.Applications.First( x => x.Name == "DataIntegration");
+                var engineeringApp = _settingsContext.Applications.First( x => x.Name == "Engineering");
+                var allEnv = _settingsContext.Environments.First( x => x.Name == "All");
+                var productionEnv = _settingsContext.Environments.First( x => x.Name == "Production");
+                var stagingEnv = _settingsContext.Environments.First( x => x.Name == "Staging");
                 var developmentEnv = _settingsContext.Environments.First( x => x.Name == "Development");
-                appsToGivePermissionsTo.ForEach( app => {
-                    var permission = new Permission {
-                        UserId = nonAdminUser.Id,
-                        CanCreateChildApplications = false,
-                        CanCreateChildEnvironments = false,
-                        CanDecryptSetting = false,
-                        CanReadSettings = true,
-                        CanWriteSettings = false,
-                        EnvironmentId = developmentEnv.Id,
-                        ApplicationId = app.Id
-                    };
-
-                    if (app.Name == "DataIntegration") {
-                        permission.CanWriteSettings = true;
-                        permission.CanDecryptSetting = true;
-                        permission.CanCreateChildApplications = true;
-                        permission.CanCreateChildEnvironments = true;
-                    }
-                    _settingsContext.Permissions.Add(permission);
+                var developmentJoseEnv = _settingsContext.Environments.First( x => x.Name == "Development-Jose");
+                
+                //read on userportal-all
+                _settingsContext.Permissions.Add(new Permission {
+                    UserId = nonAdminUser.Id,
+                    CanCreateChildApplications = false,
+                    CanCreateChildEnvironments = false,
+                    CanDecryptSetting = false,
+                    CanReadSettings = true,
+                    CanWriteSettings = false,
+                    EnvironmentId = allEnv.Id,
+                    ApplicationId = userPortalApp.Id
                 });
+                //read-write - userportal - development
+                _settingsContext.Permissions.Add(new Permission {
+                    UserId = nonAdminUser.Id,
+                    CanCreateChildApplications = false,
+                    CanCreateChildEnvironments = false,
+                    CanDecryptSetting = false,
+                    CanReadSettings = true,
+                    CanWriteSettings = true,
+                    EnvironmentId = developmentEnv.Id,
+                    ApplicationId = userPortalApp.Id
+                });
+                //read-write-decrypt - userportal - development-jose
+                _settingsContext.Permissions.Add(new Permission {
+                    UserId = nonAdminUser.Id,
+                    CanCreateChildApplications = false,
+                    CanCreateChildEnvironments = false,
+                    CanDecryptSetting = true,
+                    CanReadSettings = true,
+                    CanWriteSettings = true,
+                    EnvironmentId = developmentJoseEnv.Id,
+                    ApplicationId = userPortalApp.Id
+                });
+
+                //read-write-decrypt - all - dataintegration
+                _settingsContext.Permissions.Add(new Permission {
+                    UserId = nonAdminUser.Id,
+                    CanCreateChildApplications = false,
+                    CanCreateChildEnvironments = false,
+                    CanDecryptSetting = true,
+                    CanReadSettings = true,
+                    CanWriteSettings = true,
+                    EnvironmentId = allEnv.Id,
+                    ApplicationId = dataIntegrationApp.Id
+                });
+
+                //read-write- staging - payments
+                _settingsContext.Permissions.Add(new Permission {
+                    UserId = nonAdminUser.Id,
+                    CanCreateChildApplications = false,
+                    CanCreateChildEnvironments = false,
+                    CanDecryptSetting = false,
+                    CanReadSettings = true,
+                    CanWriteSettings = true,
+                    EnvironmentId = stagingEnv.Id,
+                    ApplicationId = paymentsApiApp.Id
+                });
+
+                //read - integration - engin
+                _settingsContext.Permissions.Add(new Permission {
+                    UserId = nonAdminUser.Id,
+                    CanCreateChildApplications = false,
+                    CanCreateChildEnvironments = false,
+                    CanDecryptSetting = false,
+                    CanReadSettings = true,
+                    CanWriteSettings = false,
+                    EnvironmentId = developmentEnv.Id,
+                    ApplicationId = engineeringApp.Id
+                });
+
 
                 _settingsContext.SaveChanges();
             }

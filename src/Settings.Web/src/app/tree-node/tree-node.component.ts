@@ -24,7 +24,8 @@ export class TreeNodeComponent implements OnInit {
 
   ngOnInit() {
     this.treeNodeService.activeNode.subscribe(treeNode => {
-    if (this.node.id === treeNode.id) {
+    if (treeNode != null
+      && this.node.id === treeNode.id) {
       this.active = true;
     } else {
       this.active = false;

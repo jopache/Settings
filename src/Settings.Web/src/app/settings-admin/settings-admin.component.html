@@ -1,9 +1,9 @@
 <div class="container">
-      <div *ngIf="!appsLoaded || !rootEnvironment">
+      <div *ngIf="!appsLoaded">
         Loading...
       </div>
     
-      <div class="heading-selector" *ngIf="appsLoaded && rootEnvironment">
+      <div class="heading-selector">
         <div class="applications-list panel panel-primary">
           <div class="panel-heading">Applications</div>
           <div class="panel-body">
@@ -20,8 +20,15 @@
         <div class="environments-list panel panel-primary">
     
           <div class="panel-heading">Environments</div>
-          <div class="panel-body">
-            <app-tree-node [node]="rootEnvironment" [treeNodeService]="environmentService" [nodeLabel]="Environment"></app-tree-node>
+          <div class="panel-body" *ngIf="envsLoaded">
+              <ul class="tree-node-list">
+                  <li *ngFor="let env of environments">
+                      <app-tree-node  [node]="env" 
+                                      [treeNodeService]="environmentService" 
+                                      [nodeLabel]="Environment">
+                      </app-tree-node>
+                  </li>
+              </ul>
           </div>
         </div>
     

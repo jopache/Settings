@@ -10,7 +10,6 @@
        +
     </span>
     <div class="permissions" *ngIf="node.aggregatePermissions">
-        <div class="permission read" *ngIf="node.aggregatePermissions.canReadAtAnyRelatedNode"> </div>
         <div class="permission write" *ngIf="node.aggregatePermissions.canWriteAtAnyRelatedNode"> </div>  
         <div class="permission decrypt" *ngIf="node.aggregatePermissions.canDecryptAtAnyRelatedNode"> </div>
     </div>

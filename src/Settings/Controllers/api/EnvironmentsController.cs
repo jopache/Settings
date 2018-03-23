@@ -61,6 +61,21 @@ namespace Settings.Controllers.api
             }
         }
 
+        [HttpGet("for-application/{applicationName}")]
+        public IActionResult EnvironmentsForApplication(string applicationName) {
+            var appId = _context.Applications
+                .First(x => x.Name == applicationName)
+                .Id;
+            var rootEnvsForApp = _authorizationService
+                .GetUserEnvironmentsForApplicationWithId(this.UserId, appId);
+                
+            if (rootEnvsForApp.Any()) {
+                return Ok(rootEnvsForApp);
+            } else {
+                return Forbid();
+            }
+        }
+
 
         [HttpPost("add/parent-{parentEnvId}/new-{name}/")]
         [ProducesResponseType(typeof(HierarchicalModel), 200)]

@@ -217,21 +217,29 @@ namespace Settings.Services {
                     );
                 }
             }
-            distictPermissionsEnvironmentIds.ForEach(envIdOnPermissions => {
-                
-
-                
-            });
-
-            var rootNodeIds = (from environmentNodePermission in envAncestorPermissionModel
+            
+            // by joining envAncestorPermissionModel on itself; we find perm-nodes that are 
+            // children of others
+            var nonRootNodeIds = (from environmentNodePermission in envAncestorPermissionModel
                 join environmentAncestorNode in envAncestorPermissionModel
                     on environmentNodePermission.AncestorId
-                        equals environmentAncestorNode.NodeId into wtfbbq
-                from environmentAncestorNode in wtfbbq.DefaultIfEmpty()
-                where environmentAncestorNode == null
+                        equals environmentAncestorNode.NodeId
                 select environmentNodePermission.NodeId)
                 .Distinct()
                 .ToList();
+
+            var rootNodeIds = (myPermsForThisApplication.Select(x => x.EnvironmentId).Distinct().ToList())
+                .Except(nonRootNodeIds);
+
+            // var rootNodeIds = (from environmentNodePermission in envAncestorPermissionModel
+            //     join environmentAncestorNode in envAncestorPermissionModel
+            //         on environmentNodePermission.AncestorId
+            //             equals environmentAncestorNode.NodeId into wtfbbq
+            //     from environmentAncestorNode in wtfbbq.DefaultIfEmpty()
+            //     where environmentAncestorNode == null
+            //     select environmentNodePermission.NodeId)
+            //     .Distinct()
+            //     .ToList();
 
             var rootEnvNodesWithPermissions = rootNodeIds 
                 .Select( rootId => rootEnvDescendantsModelFlattenned
@@ -243,8 +251,7 @@ namespace Settings.Services {
                 .ToList();
 
             
-            
-            
+
             // todo: reorganize
             var appAndAncestorData = rootAppDescendantsModelFlattenned
                 .First(x => x.Id == applicationId)

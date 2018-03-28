@@ -30,9 +30,9 @@ namespace Settings.Data{
                     Email = "admin@admin.com"
                 };
 
-                var nonAdminUser = new User {
-                    UserName = "nonadministrator",
-                    Email = "nonadministrator@admin.com"
+                var feUser = new User {
+                    UserName = "feuser",
+                    Email = "feuser@admin.com"
                 };
 
                 var adminCreateResult = await _userManager.CreateAsync(adminUser, "administrator");
@@ -41,13 +41,10 @@ namespace Settings.Data{
                     await _userManager.UpdateAsync(adminUser);
                 }
 
-                var nonAdminCreateResult = await _userManager.CreateAsync(nonAdminUser, "nonadministrator");
-                if(nonAdminCreateResult.Succeeded) {
-                    adminUser.IsAdmin = true;
-                    await _userManager.UpdateAsync(adminUser);
-                }
+                var feuserCreateResult = await _userManager.CreateAsync(feUser, "feuser");
 
                 // todo: stop hardcoding ids
+                // administrator user gets permission at root level. 
                 _settingsContext.Permissions.Add(new Permission {
                     UserId = adminUser.Id,
                     CanCreateChildApplications = true,
@@ -61,89 +58,64 @@ namespace Settings.Data{
 
                 _settingsContext.SaveChanges();
 
-                var userPortalApp =  _settingsContext.Applications.First( x => x.Name == "UserPortal");
-                var paymentsApiApp = _settingsContext.Applications.First( x => x.Name == "PaymentsApi");
-                var dataIntegrationApp = _settingsContext.Applications.First( x => x.Name == "DataIntegration");
-                var engineeringApp = _settingsContext.Applications.First( x => x.Name == "Engineering");
-                var allEnv = _settingsContext.Environments.First( x => x.Name == "All");
-                var productionEnv = _settingsContext.Environments.First( x => x.Name == "Production");
-                var stagingEnv = _settingsContext.Environments.First( x => x.Name == "Staging");
-                var developmentEnv = _settingsContext.Environments.First( x => x.Name == "Development");
-                var developmentJoseEnv = _settingsContext.Environments.First( x => x.Name == "Development-Jose");
+                var app_frontend =  _settingsContext.Applications.First( x => x.Name == "Frontend");
+                var app_backend = _settingsContext.Applications.First( x => x.Name == "Backend");
+                var app_igaming = _settingsContext.Applications.First( x => x.Name == "iGaming");
+                var app_native = _settingsContext.Applications.First( x => x.Name == "Native");
+                var app_twinspires = _settingsContext.Applications.First (x => x.Name == "TwinSpires");
+                var app_adw = _settingsContext.Applications.First( x => x.Name == "ADW");
+
+                var env_all = _settingsContext.Environments.First( x => x.Name == "All");
+                var env_prod = _settingsContext.Environments.First( x => x.Name == "Production");
+                var env_staging = _settingsContext.Environments.First( x => x.Name == "Staging");
+                var env_development = _settingsContext.Environments.First( x => x.Name == "Development");
+                var env_development_2800 = _settingsContext.Environments.First(x => x.Name == "Dev-2800");
+                var env_development_2800_local_jose = _settingsContext.Environments.First( x => x.Name == "Dev-2800-local-jose-pacheco");
                 
-                //read on userportal-all
-                _settingsContext.Permissions.Add(new Permission {
-                    UserId = nonAdminUser.Id,
-                    CanCreateChildApplications = false,
-                    CanCreateChildEnvironments = false,
-                    CanDecryptSetting = false,
-                    CanReadSettings = true,
-                    CanWriteSettings = false,
-                    EnvironmentId = allEnv.Id,
-                    ApplicationId = userPortalApp.Id
-                });
-                //read-write - userportal - development
-                _settingsContext.Permissions.Add(new Permission {
-                    UserId = nonAdminUser.Id,
-                    CanCreateChildApplications = false,
-                    CanCreateChildEnvironments = false,
-                    CanDecryptSetting = false,
-                    CanReadSettings = true,
-                    CanWriteSettings = true,
-                    EnvironmentId = developmentEnv.Id,
-                    ApplicationId = userPortalApp.Id
-                });
-                //read-write-decrypt - userportal - development-jose
-                _settingsContext.Permissions.Add(new Permission {
-                    UserId = nonAdminUser.Id,
-                    CanCreateChildApplications = false,
-                    CanCreateChildEnvironments = false,
-                    CanDecryptSetting = true,
-                    CanReadSettings = true,
-                    CanWriteSettings = true,
-                    EnvironmentId = developmentJoseEnv.Id,
-                    ApplicationId = userPortalApp.Id
-                });
+                
 
-                //read-write-decrypt - all - dataintegration
-                _settingsContext.Permissions.Add(new Permission {
-                    UserId = nonAdminUser.Id,
-                    CanCreateChildApplications = false,
-                    CanCreateChildEnvironments = false,
-                    CanDecryptSetting = true,
-                    CanReadSettings = true,
-                    CanWriteSettings = true,
-                    EnvironmentId = allEnv.Id,
-                    ApplicationId = dataIntegrationApp.Id
-                });
+                //igaming permissions
+                
+                // feuser - igaming - all - read
+                AddPermission(feUser.Id, app_igaming.Id, env_all.Id, true, false, false);
+                // feuser - igaming - development - read/write/decrypt
+                AddPermission(feUser.Id, app_igaming.Id, env_development.Id, true, true, true);
+                // feuser - igaming - staging - read/write
+                AddPermission(feUser.Id, app_igaming.Id, env_staging.Id, true, true, false);
+                
+                //twinspires permissions
+                // feuser - twinspires - development - read/write/decrypt
+                AddPermission(feUser.Id, app_twinspires.Id, env_development.Id, true, true, true);
+                // feuser - twinspires - staging - read/write
+                AddPermission(feUser.Id, app_twinspires.Id, env_staging.Id, true, true, false);
+                // feuser - twinspires - production - read
+                AddPermission(feUser.Id, app_twinspires.Id, env_prod.Id, true, false, false);
 
-                //read-write- staging - payments
-                _settingsContext.Permissions.Add(new Permission {
-                    UserId = nonAdminUser.Id,
-                    CanCreateChildApplications = false,
-                    CanCreateChildEnvironments = false,
-                    CanDecryptSetting = false,
-                    CanReadSettings = true,
-                    CanWriteSettings = true,
-                    EnvironmentId = stagingEnv.Id,
-                    ApplicationId = paymentsApiApp.Id
-                });
+                // feuser - native - all - read/write
+                AddPermission(feUser.Id, app_native.Id, env_all.Id, true, true, true);
 
-                //read - integration - engin
-                _settingsContext.Permissions.Add(new Permission {
-                    UserId = nonAdminUser.Id,
-                    CanCreateChildApplications = false,
-                    CanCreateChildEnvironments = false,
-                    CanDecryptSetting = false,
-                    CanReadSettings = true,
-                    CanWriteSettings = false,
-                    EnvironmentId = developmentEnv.Id,
-                    ApplicationId = engineeringApp.Id
-                });
+                // feuser - adw
+                AddPermission(feUser.Id, app_adw.Id, env_development_2800_local_jose.Id, true, true, true);
 
 
                 _settingsContext.SaveChanges();
             }
+
+
+        }
+
+        protected void AddPermission(string userId, int appId, int envId, bool read, bool write, bool decrypt) {
+            _settingsContext.Permissions.Add(new Permission {
+                    UserId = userId,
+                    CanCreateChildApplications = false,
+                    CanCreateChildEnvironments = false,
+                    CanDecryptSetting = decrypt,
+                    CanReadSettings = read,
+                    CanWriteSettings = write,
+                    EnvironmentId = envId,
+                    ApplicationId = appId
+                });
+
         }
     }
 }

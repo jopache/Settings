@@ -13,7 +13,7 @@ export class TreeNodeComponent implements OnInit {
   @Input() nodeLabel: String;
   active = false;
   childName = '';
-  showChildren = true;
+  showChildren = false;
   showAddChild = false;
 
   constructor() { }

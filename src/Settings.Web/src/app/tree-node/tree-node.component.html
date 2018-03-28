@@ -1,6 +1,6 @@
 ﻿<div [ngClass]="{'active' : active, 'node-info' : true, 'btn-primary' : true, 'btn' : true }"
     (click)="onSelect($event)">
-    <div>
+    <div class="node-info-inner">
 
         <!--todo: look in to https://stackoverflow.com/questions/35274028/stop-event-propagation-in-angular-2-->
     <span *ngIf="showChildren && node.children.length > 0"(click)="showChildren = !showChildren; $event.stopPropagation();">

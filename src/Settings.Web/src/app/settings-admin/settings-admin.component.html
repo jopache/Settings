@@ -4,33 +4,41 @@
       </div>
     
       <div class="heading-selector">
-        <div class="applications-list panel panel-primary">
-          <div class="panel-heading">Applications</div>
-          <div class="panel-body">
-            <ul class="tree-node-list">
-                <li *ngFor="let app of applications">
-                    <app-tree-node  [node]="app" 
-                                    [treeNodeService]="applicationService" 
-                                    [nodeLabel]="Application">
-                    </app-tree-node>
-                </li>
-            </ul>
-          </div>
+        
+
+
+        <div class="heading-app-env-selector">
+            <div class="applications-list panel panel-primary">
+                <div class="panel-heading">Applications</div>
+                <div class="panel-body">
+                  <ul class="tree-node-list">
+                      <li *ngFor="let app of applications">
+                          <app-tree-node  [node]="app" 
+                                          [treeNodeService]="applicationService" 
+                                          [nodeLabel]="Application">
+                          </app-tree-node>
+                      </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="environments-list panel panel-primary">
+          
+                <div class="panel-heading">Environments</div>
+                <div class="panel-body" *ngIf="envsLoaded">
+                    <ul class="tree-node-list">
+                        <li *ngFor="let env of environments">
+                            <app-tree-node  [node]="env" 
+                                            [treeNodeService]="environmentService" 
+                                            [nodeLabel]="Environment">
+                            </app-tree-node>
+                        </li>
+                    </ul>
+                </div>
+              </div>
+
         </div>
-        <div class="environments-list panel panel-primary">
-    
-          <div class="panel-heading">Environments</div>
-          <div class="panel-body" *ngIf="envsLoaded">
-              <ul class="tree-node-list">
-                  <li *ngFor="let env of environments">
-                      <app-tree-node  [node]="env" 
-                                      [treeNodeService]="environmentService" 
-                                      [nodeLabel]="Environment">
-                      </app-tree-node>
-                  </li>
-              </ul>
-          </div>
-        </div>
+
+        
     
         
         <app-settings-view *ngIf="selectedEnvironment && selectedApplication"

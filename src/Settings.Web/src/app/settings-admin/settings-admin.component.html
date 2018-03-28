@@ -32,17 +32,17 @@
           </div>
         </div>
     
-        <div class="setting-crud panel panel-primary" *ngIf="selectedEnvironment && selectedApplication">
-          <div class="panel-heading">Add - Edit Setting </div>
-          <div class="panel-body">
-            <app-crud-setting [selectedApplication]="selectedApplication"
-                              [selectedEnvironment]="selectedEnvironment"></app-crud-setting>
-          </div>
-        </div>
-    
+        
         <app-settings-view *ngIf="selectedEnvironment && selectedApplication"
                            [selectedApplication]="selectedApplication"
                            [selectedEnvironment]="selectedEnvironment"></app-settings-view>
+
+        <div class="setting-crud panel panel-primary" *ngIf="selectedEnvironment && selectedApplication && selectedAppEnvPermissions.canWriteAtAnyRelatedNode">
+         <div class="panel-heading">Add - Edit Setting </div>
+         <div class="panel-body">
+           <app-crud-setting [selectedApplication]="selectedApplication"
+                             [selectedEnvironment]="selectedEnvironment"></app-crud-setting>
+         </div>
       </div>
     </div>
     

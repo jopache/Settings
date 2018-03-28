@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TreeNode } from '../treenode';
+import { TreeNode, PermissionsAggregateModel } from '../treenode';
 import { ApplicationService } from '../services/application.service';
 import { EnvironmentService } from '../services/environment.service';
 import { SettingsService } from '../services/settings.service';
@@ -18,6 +18,7 @@ export class SettingsAdminComponent implements OnInit {
 
   selectedApplication: TreeNode = null;
   selectedEnvironment: TreeNode = null;
+  selectedAppEnvPermissions: PermissionsAggregateModel = null;
 
   appsLoaded = false;
   envsLoaded = false;
@@ -42,6 +43,7 @@ export class SettingsAdminComponent implements OnInit {
     this.activeEnvNode$.subscribe(env => {
       if (env !== null) {
         this.selectedEnvironment = env;
+        this.selectedAppEnvPermissions = env.aggregatePermissions;
       }
     });
 

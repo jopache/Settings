@@ -1,17 +1,25 @@
 <div class="container">
-      <div *ngIf="!appsLoaded">
-        Loading...
+      <app-settings-view *ngIf="selectedEnvironment && selectedApplication"
+        [selectedApplication]="selectedApplication"
+        [selectedEnvironment]="selectedEnvironment"></app-settings-view>
+
+      <div class="setting-crud panel panel-primary" *ngIf="selectedEnvironment && selectedApplication && selectedAppEnvPermissions.canWriteAtAnyRelatedNode">
+        <div class="panel-heading">Add - Edit Setting </div>
+        <div class="panel-body">
+          <app-crud-setting [selectedApplication]="selectedApplication"
+                 [selectedEnvironment]="selectedEnvironment"></app-crud-setting>
+        </div>
       </div>
     
       <div class="heading-selector">
-        
-
-
         <div class="heading-app-env-selector">
             <div class="applications-list panel panel-primary">
                 <div class="panel-heading">Applications</div>
                 <div class="panel-body">
-                  <ul class="tree-node-list">
+                  <div *ngIf="!appsLoaded">
+                        Loading...
+                  </div>
+                  <ul *ngIf="appsLoaded" class="tree-node-list">
                       <li *ngFor="let app of applications">
                           <app-tree-node  [node]="app" 
                                           [treeNodeService]="applicationService" 
@@ -23,35 +31,24 @@
               </div>
               <div class="environments-list panel panel-primary">
           
-                <div class="panel-heading">Environments</div>
-                <div class="panel-body" *ngIf="envsLoaded">
-                    <ul class="tree-node-list">
-                        <li *ngFor="let env of environments">
-                            <app-tree-node  [node]="env" 
-                                            [treeNodeService]="environmentService" 
-                                            [nodeLabel]="Environment">
-                            </app-tree-node>
-                        </li>
-                    </ul>
+              <div class="panel-heading">Environments</div>
+                <div class="panel-body">
+                  <div *ngIf="envsLoading">
+                    Loading...
+                  </div>
+                  <div *ngIf="!envsLoading">
+                      <ul class="tree-node-list">
+                          <li *ngFor="let env of environments">
+                              <app-tree-node  [node]="env" 
+                                              [treeNodeService]="environmentService" 
+                                              [nodeLabel]="Environment">
+                              </app-tree-node>
+                          </li>
+                      </ul>
+                  </div>
                 </div>
               </div>
-
         </div>
-
-        
-    
-        
-        <app-settings-view *ngIf="selectedEnvironment && selectedApplication"
-                           [selectedApplication]="selectedApplication"
-                           [selectedEnvironment]="selectedEnvironment"></app-settings-view>
-
-        <div class="setting-crud panel panel-primary" *ngIf="selectedEnvironment && selectedApplication && selectedAppEnvPermissions.canWriteAtAnyRelatedNode">
-         <div class="panel-heading">Add - Edit Setting </div>
-         <div class="panel-body">
-           <app-crud-setting [selectedApplication]="selectedApplication"
-                             [selectedEnvironment]="selectedEnvironment"></app-crud-setting>
-         </div>
-      </div>
     </div>
     
     

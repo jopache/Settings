@@ -10,6 +10,7 @@ import { SettingsService } from '../services/settings.service';
 export class SettingsViewComponent implements OnChanges {
   @Input() selectedApplication: TreeNode;
   @Input() selectedEnvironment: TreeNode;
+  settingsLoading = false;
   settings: any;
 
   ngOnChanges(changes: SimpleChanges) {
@@ -28,6 +29,7 @@ export class SettingsViewComponent implements OnChanges {
 
 
   updateSettings(): void {
+    this.settingsLoading = true;
     if (this.selectedApplication && this.selectedEnvironment) {
       const appName = this.selectedApplication.name;
       const envName = this.selectedEnvironment.name;
@@ -43,6 +45,7 @@ export class SettingsViewComponent implements OnChanges {
             }
           }
           this.settings = settings;
+          this.settingsLoading = false;
         });
     }
   }

@@ -6,7 +6,10 @@
     </div>
   </div>
   <div class="panel-body">
-    <ul *ngIf="settings">
+    <div *ngIf="settingsLoading">
+      Loading...
+    </div>
+    <ul *ngIf="!settingsLoading">
       <li class="settings-list-item heading">
         <div class="setting-name">Name</div>
         <div class="setting-value">Value</div>

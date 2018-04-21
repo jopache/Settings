@@ -21,7 +21,7 @@ export class SettingsAdminComponent implements OnInit {
   selectedAppEnvPermissions: PermissionsAggregateModel = null;
 
   appsLoaded = false;
-  envsLoaded = false;
+  envsLoading = true;
 
   applications: TreeNode[] = null;
   environments: TreeNode[] = null;
@@ -30,13 +30,12 @@ export class SettingsAdminComponent implements OnInit {
     this.activeAppNode$.subscribe(app => {
       if (app !== null) {
         this.selectedApplication = app;
-        if (app !== null) {
-          this.environmentService.getEnvironmentsForApplication(app.name)
-            .then(envs => {
-              this.environments = envs;
-              this.envsLoaded = true;
-            });
-        }
+        this.envsLoading = true;
+        this.environmentService.getEnvironmentsForApplication(app.name)
+        .then(envs => {
+          this.environments = envs;
+          this.envsLoading = false;
+        });
       }
     });
 
@@ -50,19 +49,9 @@ export class SettingsAdminComponent implements OnInit {
     this.applicationService
       .getApplications()
       .then(applications => {
-        if (!this.appsLoaded) {
-          this.appsLoaded = true;
-        }
+        this.appsLoaded = true;
         this.applications = applications;
         this.applicationService.setActiveNode(applications[0]);
-        this.envsLoaded = false;
       });
-
-    // this.environmentService
-    //   .getRootEnvironment()
-    //   .then(environment => {
-    //     this.rootEnvironment = environment;
-    //     this.environmentService.setActiveNode(environment);
-    //   });
   }
 }

@@ -1,0 +1,16 @@
+<div class="applications-list panel panel-primary">
+  <div class="panel-heading">Applications</div>
+  <div class="panel-body">
+    <div *ngIf="isLoading">
+          Loading...
+    </div>
+    <ul *ngIf="!isLoading" class="tree-node-list">
+        <li *ngFor="let app of applications">
+            <app-tree-node  [node]="app" 
+                            [treeNodeService]="applicationService" 
+                            [nodeLabel]="Application">
+            </app-tree-node>
+        </li>
+    </ul>
+  </div>
+</div>

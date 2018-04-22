@@ -192,7 +192,7 @@ namespace Settings
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
-            var refreshDataOnAppInint = Convert.ToBoolean(Configuration["RefreshDataOnAppInint"]);
+            var refreshDataOnAppInint = Convert.ToBoolean(Configuration["RefreshDataOnAppInit"]);
             
             DbInitializer.Initialize(context, refreshDataOnAppInint);
             authSeeder.SeedAsync().Wait();

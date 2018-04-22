@@ -28,6 +28,8 @@ import { UserAdministrationComponent } from './user-administration/user-administ
 import { AddUserComponent } from './add-user/add-user.component';
 import { UserListComponent } from './user-list/user-list.component';
 import { UserService } from './services/user.service';
+import { ApplicationListComponent } from './application-list/application-list.component';
+import { EnvironmentListComponent } from './environment-list/environment-list.component';
 
 const appRoutes: Routes = [
   { path: '',
@@ -55,7 +57,9 @@ const appRoutes: Routes = [
     SettingsAdminComponent,
     UserAdministrationComponent,
     AddUserComponent,
-    UserListComponent
+    UserListComponent,
+    ApplicationListComponent,
+    EnvironmentListComponent
   ],
   imports: [
     RouterModule.forRoot(

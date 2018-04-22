@@ -1,0 +1,19 @@
+<div class="environments-list panel panel-primary">
+          
+  <div class="panel-heading">Environments</div>
+    <div class="panel-body">
+      <div *ngIf="isLoading">
+        Loading...
+      </div>
+      <div *ngIf="!isLoading">
+          <ul class="tree-node-list">
+              <li *ngFor="let env of environments">
+                  <app-tree-node  [node]="env" 
+                                  [treeNodeService]="environmentService" 
+                                  [nodeLabel]="Environment">
+                  </app-tree-node>
+              </li>
+          </ul>
+      </div>
+    </div>
+  </div>

@@ -117,27 +117,27 @@ namespace Settings.Services {
                 .ToList();
 
             // copy permissions to each individual node where it stands
-            currentUserPermissions.ForEach( permission => {
-                var appNodeForPermission = rootAppDescendantsModelFlattenned
-                    .First( x => x.Id == permission.ApplicationId);
+            // currentUserPermissions.ForEach( permission => {
+            //     var appNodeForPermission = rootAppDescendantsModelFlattenned
+            //         .First( x => x.Id == permission.ApplicationId);
                 
-                if (appNodeForPermission.AggregatePermissions == null) {
-                    appNodeForPermission.AggregatePermissions = new PermissionsAggregateModel();
-                }
-                appNodeForPermission.AggregatePermissions.Permissions.Add(new PermissionModel {
-                    CanRead = permission.CanReadSettings,
-                    CanWrite = permission.CanWriteSettings,
-                    CanAddChildren = permission.CanCreateChildApplications,
-                    CanDecrypt = permission.CanDecryptSetting,
-                    ApplicationId = permission.ApplicationId,
-                    EnvironmentId = permission.EnvironmentId
-                });
-            });
+            //     if (appNodeForPermission.AggregatePermissions == null) {
+            //         appNodeForPermission.AggregatePermissions = new PermissionsAggregateModel();
+            //     }
+            //     appNodeForPermission.AggregatePermissions.Permissions.Add(new PermissionModel {
+            //         CanRead = permission.CanReadSettings,
+            //         CanWrite = permission.CanWriteSettings,
+            //         CanAddChildren = permission.CanCreateChildApplications,
+            //         CanDecrypt = permission.CanDecryptSetting,
+            //         ApplicationId = permission.ApplicationId,
+            //         EnvironmentId = permission.EnvironmentId
+            //     });
+            // });
 
             //propagate permissions down from each root node. 
-            rootNodes.ForEach(rootNode => {
-                PropagatePermissionsToChildren(rootNode, true);
-            });
+            //rootNodes.ForEach(rootNode => {
+            //    PropagatePermissionsToChildren(rootNode, true);
+            //});
             
             //todo find a place to put this, doest seem like it should belong;
             //kill the parent to get rid of cyclical serialization issue
@@ -198,6 +198,8 @@ namespace Settings.Services {
 
             var envAncestorPermissionModel = new List<NodeAncestorPair>();
 
+            // todo: Seems like there should be a cleaner way to express this? 
+            // it's working so I'm kinda scared to touch it. Needs tests
             foreach (var envIdOnPermissions in distictPermissionsEnvironmentIds) {
                 var envModel = rootEnvDescendantsModelFlattenned.First( x => x.Id == envIdOnPermissions);
                 var envAncestorIds = envModel.GetAncestorIds().ToList();
@@ -217,21 +219,19 @@ namespace Settings.Services {
                     );
                 }
             }
-            distictPermissionsEnvironmentIds.ForEach(envIdOnPermissions => {
-                
-
-                
-            });
-
-            var rootNodeIds = (from environmentNodePermission in envAncestorPermissionModel
+            
+            // by joining envAncestorPermissionModel on itself; we find perm-nodes that are 
+            // children of others
+            var nonRootNodeIds = (from environmentNodePermission in envAncestorPermissionModel
                 join environmentAncestorNode in envAncestorPermissionModel
                     on environmentNodePermission.AncestorId
-                        equals environmentAncestorNode.NodeId into wtfbbq
-                from environmentAncestorNode in wtfbbq.DefaultIfEmpty()
-                where environmentAncestorNode == null
+                        equals environmentAncestorNode.NodeId
                 select environmentNodePermission.NodeId)
                 .Distinct()
                 .ToList();
+
+            var rootNodeIds = (myPermsForThisApplication.Select(x => x.EnvironmentId).Distinct().ToList())
+                .Except(nonRootNodeIds);
 
             var rootEnvNodesWithPermissions = rootNodeIds 
                 .Select( rootId => rootEnvDescendantsModelFlattenned
@@ -242,9 +242,6 @@ namespace Settings.Services {
                 .SelectMany(x => x.FlattenChildren())
                 .ToList();
 
-            
-            
-            
             // todo: reorganize
             var appAndAncestorData = rootAppDescendantsModelFlattenned
                 .First(x => x.Id == applicationId)

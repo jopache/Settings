@@ -13,7 +13,7 @@ export class TreeNodeComponent implements OnInit {
   @Input() nodeLabel: String;
   active = false;
   childName = '';
-  showChildren = true;
+  showChildren = false;
   showAddChild = false;
 
   constructor() { }
@@ -23,6 +23,7 @@ export class TreeNodeComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log('tree node init');
     this.treeNodeService.activeNode.subscribe(treeNode => {
     if (treeNode != null
       && this.node.id === treeNode.id) {

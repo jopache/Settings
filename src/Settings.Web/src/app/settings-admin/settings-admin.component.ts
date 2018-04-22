@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TreeNode } from '../treenode';
+import { TreeNode, PermissionsAggregateModel } from '../treenode';
 import { ApplicationService } from '../services/application.service';
 import { EnvironmentService } from '../services/environment.service';
 import { SettingsService } from '../services/settings.service';
@@ -18,9 +18,10 @@ export class SettingsAdminComponent implements OnInit {
 
   selectedApplication: TreeNode = null;
   selectedEnvironment: TreeNode = null;
+  selectedAppEnvPermissions: PermissionsAggregateModel = null;
 
-  appsLoaded = false;
-  envsLoaded = false;
+  appsLoading = true;
+  envsLoading = true;
 
   applications: TreeNode[] = null;
   environments: TreeNode[] = null;
@@ -29,38 +30,29 @@ export class SettingsAdminComponent implements OnInit {
     this.activeAppNode$.subscribe(app => {
       if (app !== null) {
         this.selectedApplication = app;
-        if (app !== null) {
-          this.environmentService.getEnvironmentsForApplication(app.name)
-            .then(envs => {
-              this.environments = envs;
-              this.envsLoaded = true;
-            });
-        }
+        this.envsLoading = true;
+        this.environmentService.setActiveNode(null);
+        this.environmentService.getEnvironmentsForApplication(app.name)
+          .then(envs => {
+            this.environments = envs;
+            this.envsLoading = false;
+          });
       }
     });
 
     this.activeEnvNode$.subscribe(env => {
+      this.selectedEnvironment = env;
       if (env !== null) {
-        this.selectedEnvironment = env;
+        this.selectedAppEnvPermissions = env.aggregatePermissions;
       }
     });
 
     this.applicationService
       .getApplications()
       .then(applications => {
-        if (!this.appsLoaded) {
-          this.appsLoaded = true;
-        }
+        this.appsLoading = false;
         this.applications = applications;
         this.applicationService.setActiveNode(applications[0]);
-        this.envsLoaded = false;
       });
-
-    // this.environmentService
-    //   .getRootEnvironment()
-    //   .then(environment => {
-    //     this.rootEnvironment = environment;
-    //     this.environmentService.setActiveNode(environment);
-    //   });
   }
 }

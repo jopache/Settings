@@ -1,10 +1,12 @@
 ﻿.node-info {
   margin-top: 5px;
   text-align: left;
+  min-height: 25px;
 
   div.permissions {
     display: inline-block;
     padding: 5px 5px;
+    margin-left: 15px;
 
     div.permission {
       display: inline-block;
@@ -23,7 +25,6 @@
     }
   }
   .add-child-link {
-    margin-left: 15px;
     cursor: button;
   }
 

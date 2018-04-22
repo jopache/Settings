@@ -1,50 +1,24 @@
 <div class="container">
-      <div *ngIf="!appsLoaded">
-        Loading...
+  <div class="heading-selector">
+      <div class="heading-app-env-selector">
+        <app-application-list [applications]="applications" [isLoading]="appsLoading"></app-application-list>
+        <app-environment-list [environments]="environments" [isLoading]="envsLoading"></app-environment-list>
       </div>
-    
-      <div class="heading-selector">
-        <div class="applications-list panel panel-primary">
-          <div class="panel-heading">Applications</div>
-          <div class="panel-body">
-            <ul class="tree-node-list">
-                <li *ngFor="let app of applications">
-                    <app-tree-node  [node]="app" 
-                                    [treeNodeService]="applicationService" 
-                                    [nodeLabel]="Application">
-                    </app-tree-node>
-                </li>
-            </ul>
-          </div>
-        </div>
-        <div class="environments-list panel panel-primary">
-    
-          <div class="panel-heading">Environments</div>
-          <div class="panel-body" *ngIf="envsLoaded">
-              <ul class="tree-node-list">
-                  <li *ngFor="let env of environments">
-                      <app-tree-node  [node]="env" 
-                                      [treeNodeService]="environmentService" 
-                                      [nodeLabel]="Environment">
-                      </app-tree-node>
-                  </li>
-              </ul>
-          </div>
-        </div>
-    
-        <div class="setting-crud panel panel-primary" *ngIf="selectedEnvironment && selectedApplication">
-          <div class="panel-heading">Add - Edit Setting </div>
-          <div class="panel-body">
-            <app-crud-setting [selectedApplication]="selectedApplication"
-                              [selectedEnvironment]="selectedEnvironment"></app-crud-setting>
-          </div>
-        </div>
-    
-        <app-settings-view *ngIf="selectedEnvironment && selectedApplication"
-                           [selectedApplication]="selectedApplication"
-                           [selectedEnvironment]="selectedEnvironment"></app-settings-view>
-      </div>
+  </div>
+  
+  <app-settings-view *ngIf="selectedEnvironment && selectedApplication"
+    [selectedApplication]="selectedApplication"
+    [selectedEnvironment]="selectedEnvironment">
+  </app-settings-view>
+
+  <div class="setting-crud panel panel-primary" *ngIf="selectedEnvironment && selectedApplication && selectedAppEnvPermissions.canWriteAtAnyRelatedNode">
+    <div class="panel-heading">Add - Edit Setting </div>
+    <div class="panel-body">
+      <app-crud-setting [selectedApplication]="selectedApplication"
+             [selectedEnvironment]="selectedEnvironment"></app-crud-setting>
     </div>
+  </div>
+</div>
     
     
     
